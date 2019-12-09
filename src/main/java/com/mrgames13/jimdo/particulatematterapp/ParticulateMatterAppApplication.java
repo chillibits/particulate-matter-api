@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ParticulateMatterAppApplication {
 	public static void main(String[] args) {
 		SpringApplication app = new SpringApplication((ParticulateMatterAppApplication.class));
-		app.setAdditionalProfiles("dev");
+		app.setAdditionalProfiles("prod");
 		app.run(args);
 	}
 }
