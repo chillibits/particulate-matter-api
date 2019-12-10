@@ -4,6 +4,7 @@
 
 package com.mrgames13.jimdo.particulatematterapp.datasource;
 
+import com.mrgames13.jimdo.particulatematterapp.tool.Credentials;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -23,8 +24,8 @@ public class DevDataSource implements DataSource {
         return DataSourceBuilder
                 .create()
                 .url("jdbc:mysql://localhost:3306/sensors?serverTimezone=UTC")
-                .username(DataBaseCredentials.USERNAME)
-                .password(DataBaseCredentials.PASSWORD)
+                .username(Credentials.USERNAME)
+                .password(Credentials.PASSWORD)
                 .build();
     }
 }

@@ -31,4 +31,4 @@ build/
 .vscode/
 
 ### Database credentials ###
-/src/main/java/com/mrgames13/jimdo/particulatematterapp/datasource/DataBaseCredentials.java
+/src/main/java/com/mrgames13/jimdo/particulatematterapp/tool/Credentials.java
