@@ -37,9 +37,13 @@ public class SensorController {
             String url = "https://maps.googleapis.com/maps/api/geocode/json?key=" + Credentials.GOOGLE_API_KEY + "&latlng=" + sensor.getLatitude() + "," + sensor.getLongitude() + "&sensor=false&language=de";
             System.out.println(url);
             MapsPlaceResult place = new ObjectMapper().readValue(new URL(url), MapsPlaceResult.class);
-
+            sensor.setCountry(place.getCountry());
+            sensor.setCity(place.getCity());
         } catch (Exception e) {
+            e.printStackTrace();
             //TODO: Write to error log table
+            sensor.setCountry(Constants.BLANK_COLUMN);
+            sensor.setCity(Constants.BLANK_COLUMN);
         }
 
         // Set remaining attributes
@@ -49,6 +53,7 @@ public class SensorController {
         sensor.setCreationDate(creationDate);
         sensor.setLastEdit(creationDate);
         sensor.setLastUpdate(creationDate);
+        sensor.setMapsUrl("https://www.google.com/maps/place/" + sensor.getLatitude() + "," + sensor.getLongitude());
         sensor.setLastValueP1(0);
         sensor.setLastValueP2(0);
 

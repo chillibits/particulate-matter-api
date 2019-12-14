@@ -17,19 +17,19 @@ public class Sensor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @NotNull private long chipId;
-    @NonNull private String firmwareVersion;
-    @NotNull private long creationDate;
-    @NotNull private String notes;
-    @NotNull private long lastUpdate;
-    @NotNull private long lastEdit;
+    private String firmwareVersion;
+    private long creationDate;
+    private String notes;
+    private long lastUpdate;
+    private long lastEdit;
     @NotNull private double latitude;
     @NotNull private double longitude;
     @NotNull private double altitude;
-    @NotNull private String country;
-    @NotNull private String city;
-    @NotNull private String mapsUrl;
-    @NotNull private double lastValueP1;
-    @NotNull private double lastValueP2;
+    private String country;
+    private String city;
+    private String mapsUrl;
+    private double lastValueP1;
+    private double lastValueP2;
 
     public Sensor() {}
 
