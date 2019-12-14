@@ -14,6 +14,7 @@ public class MapsPlaceResult {
     // Variables as objects
     public PlusCode plus_code;
     public Result[] results;
+    public String status;
 
     public String getCountry() {
         String country = UNKNOWN_COUNTRY;
@@ -45,7 +46,7 @@ public class MapsPlaceResult {
 
     //--------------------------------------------------Sub classes-----------------------------------------------------
 
-    private class PlusCode {
+    private static class PlusCode {
         public String compound_code;
         public String global_code;
 
@@ -56,7 +57,7 @@ public class MapsPlaceResult {
         }
     }
 
-    private class Result {
+    private static class Result {
         public AddressComponent[] address_components;
         public String formatted_address;
         public Geometry geometry;
@@ -75,7 +76,7 @@ public class MapsPlaceResult {
         }
     }
 
-    private class AddressComponent {
+    private static class AddressComponent {
         public String long_name;
         public String short_name;
         public String[] types;
@@ -88,7 +89,8 @@ public class MapsPlaceResult {
         }
     }
 
-    private class Geometry {
+    private static class Geometry {
+        public ViewPort bounds;
         public Location location;
         public String location_type;
         public ViewPort viewport;
@@ -101,7 +103,7 @@ public class MapsPlaceResult {
         }
     }
 
-    private class Location {
+    private static class Location {
         public String lat;
         public String lng;
 
@@ -112,7 +114,7 @@ public class MapsPlaceResult {
         }
     }
 
-    private class ViewPort {
+    private static class ViewPort {
         public Location northeast;
         public Location southwest;
 
