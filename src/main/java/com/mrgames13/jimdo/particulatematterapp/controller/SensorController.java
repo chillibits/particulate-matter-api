@@ -10,6 +10,7 @@ import com.mrgames13.jimdo.particulatematterapp.model.Sensor;
 import com.mrgames13.jimdo.particulatematterapp.repository.SensorRepository;
 import com.mrgames13.jimdo.particulatematterapp.tool.Constants;
 import com.mrgames13.jimdo.particulatematterapp.tool.Credentials;
+import com.mrgames13.jimdo.particulatematterapp.tool.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -51,6 +52,8 @@ public class SensorController {
         sensor.setFirmwareVersion(Constants.EMPTY_COLUMN);
         sensor.setNotes(Constants.BLANK_COLUMN);
         sensor.setCreationDate(creationDate);
+        sensor.setLatitude(Tools.round(sensor.getLatitude(), 4));
+        sensor.setLongitude(Tools.round(sensor.getLongitude(), 4));
         sensor.setLastEdit(creationDate);
         sensor.setLastUpdate(creationDate);
         sensor.setMapsUrl("https://www.google.com/maps/place/" + sensor.getLatitude() + "," + sensor.getLongitude());
