@@ -7,7 +7,6 @@ package com.mrgames13.jimdo.particulatematterapp.model;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "sensor")
@@ -16,15 +15,15 @@ public class Sensor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NotNull private long chipId;
+    private long chipId;
     private String firmwareVersion;
     private long creationDate;
     private String notes;
     private long lastUpdate;
     private long lastEdit;
-    @NotNull private double latitude;
-    @NotNull private double longitude;
-    @NotNull private double altitude;
+    private double latitude;
+    private double longitude;
+    private double altitude;
     private String country;
     private String city;
     private String mapsUrl;

@@ -23,7 +23,12 @@ public class ClientInfoAndroidController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/android", produces = MediaType.APPLICATION_JSON_VALUE)
     public ClientInfoAndroid getClientInfoAndroid() {
-        return clientInfoAndroidRepository.findAll().get(0);
+        return clientInfoAndroidRepository.findAll().isEmpty() ? null : clientInfoAndroidRepository.findAll().get(0);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, path = "/android", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ClientInfoAndroid addClientInfo(@RequestBody ClientInfoAndroid info) {
+        return clientInfoAndroidRepository.save(info);
     }
 
     @Transactional

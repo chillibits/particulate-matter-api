@@ -4,8 +4,6 @@
 
 package com.mrgames13.jimdo.particulatematterapp.model;
 
-import org.springframework.lang.NonNull;
-
 import javax.persistence.*;
 
 @Entity
@@ -15,14 +13,14 @@ public class ClientInfoAndroid {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NonNull private String clientName;
-    @NonNull private Integer serverStatus;
-    @NonNull private Integer minAppVersion;
-    @NonNull private String minAppVersionName;
-    @NonNull private Integer latestAppVersion;
-    @NonNull private String latestAppVersionName;
-    @NonNull private String serverOwner;
-    @NonNull private String userMessage;
+    private String clientName;
+    private Integer serverStatus;
+    private Integer minAppVersion;
+    private String minAppVersionName;
+    private Integer latestAppVersion;
+    private String latestAppVersionName;
+    private String serverOwner;
+    private String userMessage;
 
     public ClientInfoAndroid() {}
 
@@ -44,67 +42,59 @@ public class ClientInfoAndroid {
         this.id = id;
     }
 
-    @NonNull
     public String getClientName() {
         return clientName;
     }
-    public void setClientName(@NonNull String clientName) {
+    public void setClientName(String clientName) {
         this.clientName = clientName;
     }
 
-    @NonNull
     public Integer getServerStatus() {
         return serverStatus;
     }
-    public void setServerStatus(@NonNull Integer serverStatus) {
+    public void setServerStatus(Integer serverStatus) {
         this.serverStatus = serverStatus;
     }
 
-    @NonNull
     public Integer getMinAppVersion() {
         return minAppVersion;
     }
-    public void setMinAppVersion(@NonNull Integer minAppVersion) {
+    public void setMinAppVersion(Integer minAppVersion) {
         this.minAppVersion = minAppVersion;
     }
 
-    @NonNull
     public String getMinAppVersionName() {
         return minAppVersionName;
     }
-    public void setMinAppVersionName(@NonNull String minAppVersionName) {
+    public void setMinAppVersionName(String minAppVersionName) {
         this.minAppVersionName = minAppVersionName;
     }
 
-    @NonNull
     public Integer getLatestAppVersion() {
         return latestAppVersion;
     }
-    public void setLatestAppVersion(@NonNull Integer latestAppVersion) {
+    public void setLatestAppVersion(Integer latestAppVersion) {
         this.latestAppVersion = latestAppVersion;
     }
 
-    @NonNull
     public String getLatestAppVersionName() {
         return latestAppVersionName;
     }
-    public void setLatestAppVersionName(@NonNull String latestAppVersionName) {
+    public void setLatestAppVersionName(String latestAppVersionName) {
         this.latestAppVersionName = latestAppVersionName;
     }
 
-    @NonNull
     public String getServerOwner() {
         return serverOwner;
     }
-    public void setServerOwner(@NonNull String serverOwner) {
+    public void setServerOwner(String serverOwner) {
         this.serverOwner = serverOwner;
     }
 
-    @NonNull
     public String getUserMessage() {
         return userMessage;
     }
-    public void setUserMessage(@NonNull String userMessage) {
+    public void setUserMessage(String userMessage) {
         this.userMessage = userMessage;
     }
 }
