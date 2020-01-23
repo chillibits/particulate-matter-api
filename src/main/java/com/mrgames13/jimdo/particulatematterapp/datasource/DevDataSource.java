@@ -23,7 +23,7 @@ public class DevDataSource implements DataSource {
     public javax.sql.DataSource getDataSource() {
         return DataSourceBuilder
                 .create()
-                .url("jdbc:mysql://localhost:3306/main_dev?serverTimezone=UTC")
+                .url("jdbc:mysql://localhost:3306/main?serverTimezone=UTC")
                 .username(Credentials.USERNAME)
                 .password(Credentials.PASSWORD)
                 .build();

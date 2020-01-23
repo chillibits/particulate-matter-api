@@ -27,8 +27,7 @@ public class SensorController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Sensor> getAllSensors() {
-        List<Sensor> sensorList = sensorRepository.findAll();
-        return sensorList;
+        return sensorRepository.findAll();
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -41,8 +40,6 @@ public class SensorController {
             sensor.setCountry(place.getCountry());
             sensor.setCity(place.getCity());
         } catch (Exception e) {
-            e.printStackTrace();
-            //TODO: Write to error log table
             sensor.setCountry(Constants.BLANK_COLUMN);
             sensor.setCity(Constants.BLANK_COLUMN);
         }

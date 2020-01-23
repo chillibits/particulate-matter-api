@@ -1,4 +1,11 @@
+/*
+ * Copyright © 2019 Marc Auberer. All rights reserved.
+ */
+
 package com.mrgames13.jimdo.particulatematterapp.tool;
+
+import javax.xml.bind.DatatypeConverter;
+import java.security.MessageDigest;
 
 public class Tools {
     public static double round(double value, int places) {
@@ -8,5 +15,15 @@ public class Tools {
         value = value * factor;
         long tmp = Math.round(value);
         return (double) tmp / factor;
+    }
+
+    public static String hashMD5(String stringToHash) {
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+            messageDigest.update(stringToHash.getBytes());
+            byte[] digest = messageDigest.digest();
+            return DatatypeConverter.printHexBinary(digest);
+        } catch (Exception ignored) {}
+        return stringToHash;
     }
 }
