@@ -34,7 +34,7 @@ public class SensorController {
     public Sensor addSensor(@RequestBody Sensor sensor) {
         // Retrieve country and city from latitude and longitude
         try {
-            String url = "https://maps.googleapis.com/maps/api/geocode/json?key=" + Credentials.GOOGLE_API_KEY + "&latlng=" + sensor.getLatitude() + "," + sensor.getLongitude() + "&sensor=false&language=de";
+            String url = "https://maps.googleapis.com/maps/api/geocode/json?key=" + Credentials.GOOGLE_API_KEY + "&latlng=" + sensor.getLatitude() + "," + sensor.getLongitude() + "&sensor=false&language=en";
             System.out.println(url);
             MapsPlaceResult place = new ObjectMapper().readValue(new URL(url), MapsPlaceResult.class);
             sensor.setCountry(place.getCountry());
