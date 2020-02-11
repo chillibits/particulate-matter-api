@@ -1,10 +1,10 @@
 /*
- * Copyright © 2019 Marc Auberer. All rights reserved.
+ * Copyright © 2019 - 2020 Marc Auberer. All rights reserved.
  */
 
-package com.mrgames13.jimdo.particulatematterapp.repository;
+package com.chillibits.particulatematterapp.repository;
 
-import com.mrgames13.jimdo.particulatematterapp.model.Sensor;
+import com.chillibits.particulatematterapp.model.Sensor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

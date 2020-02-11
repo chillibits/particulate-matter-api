@@ -1,8 +1,8 @@
 /*
- * Copyright © 2019 Marc Auberer. All rights reserved.
+ * Copyright © 2019 - 2020 Marc Auberer. All rights reserved.
  */
 
-package com.mrgames13.jimdo.particulatematterapp.tool;
+package com.chillibits.particulatematterapp.tool;
 
 import javax.xml.bind.DatatypeConverter;
 import java.security.MessageDigest;

@@ -1,11 +1,11 @@
 /*
- * Copyright © 2019 Marc Auberer. All rights reserved.
+ * Copyright © 2019 - 2020 Marc Auberer. All rights reserved.
  */
 
-package com.mrgames13.jimdo.particulatematterapp.controller;
+package com.chillibits.particulatematterapp.controller;
 
-import com.mrgames13.jimdo.particulatematterapp.model.ClientInfoAndroid;
-import com.mrgames13.jimdo.particulatematterapp.repository.ClientInfoAndroidRepository;
+import com.chillibits.particulatematterapp.model.ClientInfoAndroid;
+import com.chillibits.particulatematterapp.repository.ClientInfoAndroidRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;

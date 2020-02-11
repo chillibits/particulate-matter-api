@@ -1,16 +1,16 @@
 /*
- * Copyright © 2019 Marc Auberer. All rights reserved.
+ * Copyright © 2019 - 2020 Marc Auberer. All rights reserved.
  */
 
-package com.mrgames13.jimdo.particulatematterapp.controller;
+package com.chillibits.particulatematterapp.controller;
 
+import com.chillibits.particulatematterapp.model.MapsPlaceResult;
+import com.chillibits.particulatematterapp.model.Sensor;
+import com.chillibits.particulatematterapp.repository.SensorRepository;
+import com.chillibits.particulatematterapp.tool.Constants;
+import com.chillibits.particulatematterapp.tool.Credentials;
+import com.chillibits.particulatematterapp.tool.Tools;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mrgames13.jimdo.particulatematterapp.model.MapsPlaceResult;
-import com.mrgames13.jimdo.particulatematterapp.model.Sensor;
-import com.mrgames13.jimdo.particulatematterapp.repository.SensorRepository;
-import com.mrgames13.jimdo.particulatematterapp.tool.Constants;
-import com.mrgames13.jimdo.particulatematterapp.tool.Credentials;
-import com.mrgames13.jimdo.particulatematterapp.tool.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
