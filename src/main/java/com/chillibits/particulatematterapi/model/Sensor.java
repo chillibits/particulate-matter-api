@@ -1,8 +1,8 @@
 /*
- * Copyright © 2019 - 2020 Marc Auberer. All rights reserved.
+ * Copyright © 2019 - 2020. All rights reserved.
  */
 
-package com.chillibits.particulatematterapp.model;
+package com.chillibits.particulatematterapi.model;
 
 import org.springframework.lang.NonNull;
 

@@ -31,4 +31,4 @@ build/
 .vscode/
 
 ### Database credentials ###
-/src/main/java/com/chillibits/particulatematterapp/tool/Credentials.java
+/src/main/java/com/chillibits/particulatematterapi/shared/Credentials.java

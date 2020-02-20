@@ -13,4 +13,4 @@ This is the official ChilliBits Particulate Matter REST API.
 
 An API documentation will be published in the future. Please be patient!
 
-© ChilliBits 2019 - 2020 (Designed and developed by Marc Auberer from 2019 to 2020)
+© ChilliBits 2019 - 2020 (Designed and developed by Marc Auberer)

@@ -1,10 +1,10 @@
 /*
- * Copyright © 2019 - 2020 Marc Auberer. All rights reserved.
+ * Copyright © 2019 - 2020. All rights reserved.
  */
 
-package com.chillibits.particulatematterapp.datasource;
+package com.chillibits.particulatematterapi.datasource;
 
-import com.chillibits.particulatematterapp.tool.Credentials;
+import com.chillibits.particulatematterapi.shared.Credentials;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;

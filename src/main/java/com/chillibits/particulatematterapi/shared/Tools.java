@@ -1,8 +1,8 @@
 /*
- * Copyright © 2019 - 2020 Marc Auberer. All rights reserved.
+ * Copyright © 2019 - 2020. All rights reserved.
  */
 
-package com.chillibits.particulatematterapp.tool;
+package com.chillibits.particulatematterapi.shared;
 
 import javax.xml.bind.DatatypeConverter;
 import java.security.MessageDigest;

@@ -1,15 +1,15 @@
 /*
- * Copyright © 2019 - 2020 Marc Auberer. All rights reserved.
+ * Copyright © 2019 - 2020. All rights reserved.
  */
 
-package com.chillibits.particulatematterapp.controller;
+package com.chillibits.particulatematterapi.controller;
 
-import com.chillibits.particulatematterapp.model.MapsPlaceResult;
-import com.chillibits.particulatematterapp.model.Sensor;
-import com.chillibits.particulatematterapp.repository.SensorRepository;
-import com.chillibits.particulatematterapp.tool.Constants;
-import com.chillibits.particulatematterapp.tool.Credentials;
-import com.chillibits.particulatematterapp.tool.Tools;
+import com.chillibits.particulatematterapi.model.MapsPlaceResult;
+import com.chillibits.particulatematterapi.model.Sensor;
+import com.chillibits.particulatematterapi.repository.SensorRepository;
+import com.chillibits.particulatematterapi.shared.Constants;
+import com.chillibits.particulatematterapi.shared.Credentials;
+import com.chillibits.particulatematterapi.shared.Tools;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

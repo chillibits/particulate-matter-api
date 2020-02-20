@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright © 2019 - 2020 Marc Auberer. All rights reserved.
+  ~ Copyright © 2019 - 2020. All rights reserved.
   -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -13,10 +13,10 @@
 		<relativePath/>
 	</parent>
 	<groupId>com.chillibits</groupId>
-	<artifactId>particulate-matter-app</artifactId>
+	<artifactId>particulate-matter-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>particulate-matter-app</name>
-	<description>Demo project for Spring Boot</description>
+	<name>Particulate Matter API</name>
+	<description>Official Particulate Matter REST API. For more information, please visit https://github.com/chillibits/particulate-matter-api</description>
 
 	<properties>
 		<java.version>11</java.version>
@@ -40,6 +40,22 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.vintage</groupId>
+					<artifactId>junit-vintage-engine</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

@@ -1,11 +1,11 @@
 /*
- * Copyright © 2019 - 2020 Marc Auberer. All rights reserved.
+ * Copyright © 2019 - 2020. All rights reserved.
  */
 
-package com.chillibits.particulatematterapp.controller;
+package com.chillibits.particulatematterapi.controller;
 
-import com.chillibits.particulatematterapp.model.ClientInfoAndroid;
-import com.chillibits.particulatematterapp.repository.ClientInfoAndroidRepository;
+import com.chillibits.particulatematterapi.model.ClientInfoAndroid;
+import com.chillibits.particulatematterapi.repository.ClientInfoAndroidRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
