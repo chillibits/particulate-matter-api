@@ -32,3 +32,6 @@ build/
 
 ### Database credentials ###
 /src/main/java/com/chillibits/particulatematterapi/shared/Credentials.java
+
+### HTTPS certificate ###
+/src/main/resources/pmapi.p12
