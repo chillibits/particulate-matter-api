@@ -11,6 +11,7 @@ import com.chillibits.particulatematterapi.shared.Constants;
 import com.chillibits.particulatematterapi.shared.Credentials;
 import com.chillibits.particulatematterapi.shared.Tools;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -26,11 +27,13 @@ public class SensorController {
     SensorRepository sensorRepository;
 
     @RequestMapping(method = RequestMethod.GET, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Returns all sensors, registered in the database")
     public List<Sensor> getAllSensors(@RequestParam(required = false) boolean all, @RequestParam(required = false) boolean compressed) {
         return sensorRepository.findAll();
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Adds a sensor to the database")
     public Sensor addSensor(@RequestBody Sensor sensor) {
         // Retrieve country and city from latitude and longitude
         try {
@@ -62,11 +65,13 @@ public class SensorController {
 
     @Transactional
     @RequestMapping(method = RequestMethod.PUT, path = "/sensor", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Updates a sensor")
     public Integer updateSensor(@RequestBody Sensor sensor) {
         return sensorRepository.updateSensor(sensor.getId(), sensor.getLatitude(), sensor.getLongitude(), sensor.getLastValueP1(), sensor.getLastValueP2());
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/sensor/{id}")
+    @ApiOperation(value = "Deletes a sensor from the database")
     public void deleteSensor(@PathVariable("id") Integer id) {
         sensorRepository.deleteById(id);
     }

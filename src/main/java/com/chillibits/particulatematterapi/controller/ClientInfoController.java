@@ -6,6 +6,7 @@ package com.chillibits.particulatematterapi.controller;
 
 import com.chillibits.particulatematterapi.model.ClientInfo;
 import com.chillibits.particulatematterapi.repository.ClientInfoRepository;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +24,7 @@ public class ClientInfoController {
     ClientInfoRepository clientInfoRepository;
 
     @RequestMapping(method = RequestMethod.GET, path = "/info", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Returns all client info objects, found in the database")
     public List<ClientInfo> getClientInfo() {
         return clientInfoRepository.findAll();
     }
@@ -36,12 +38,14 @@ public class ClientInfoController {
     }*/
 
     @RequestMapping(method = RequestMethod.POST, path = "/info", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Adds a client info object")
     public ClientInfo addClientInfo(@RequestBody ClientInfo info) {
         return clientInfoRepository.save(info);
     }
 
     @Transactional
     @RequestMapping(method = RequestMethod.PUT, path = "/info", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Updates a specific client info object")
     public Integer updateClientInfoAndroid(@RequestBody ClientInfo info) {
         return clientInfoRepository.updateClientInfo(info.getId(), info.getServerStatus(), info.getMinVersion(), info.getMinVersionName(), info.getLatestVersion(), info.getLatestVersionName(), info.getServerOwner(), info.getUserMessage());
     }
