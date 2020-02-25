@@ -13,6 +13,7 @@ public class ClientInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    private int clientType;
     private String clientName;
     private Integer serverStatus;
     private Integer minVersion;
@@ -24,8 +25,9 @@ public class ClientInfo {
 
     public ClientInfo() {}
 
-    public ClientInfo(String clientName, Integer serverStatus, Integer minVersion, String minVersionName, Integer latestVersion, String latestVersionName, String serverOwner, String userMessage) {
+    public ClientInfo(String clientName, Integer clientType, Integer serverStatus, Integer minVersion, String minVersionName, Integer latestVersion, String latestVersionName, String serverOwner, String userMessage) {
         this.clientName = clientName;
+        this.clientType = clientType;
         this.serverStatus = serverStatus;
         this.minVersion = minVersion;
         this.minVersionName = minVersionName;
@@ -40,6 +42,13 @@ public class ClientInfo {
     }
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getClientType() {
+        return clientType;
+    }
+    public void setClientType(int clientType) {
+        this.clientType = clientType;
     }
 
     public String getClientName() {

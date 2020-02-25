@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @RestController
 public class ClientInfoController {
@@ -22,9 +23,17 @@ public class ClientInfoController {
     ClientInfoRepository clientInfoRepository;
 
     @RequestMapping(method = RequestMethod.GET, path = "/info", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ClientInfo getClientInfoAndroid() {
-        return clientInfoRepository.findAll().isEmpty() ? null : clientInfoRepository.findAll().get(0);
+    public List<ClientInfo> getClientInfo() {
+        return clientInfoRepository.findAll();
     }
+
+    /*@RequestMapping(method = RequestMethod.GET, path = "/info", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ClientInfo getClientInfo(@RequestParam Integer type) {
+        for(ClientInfo info : clientInfoRepository.findAll()) {
+            if(info.getClientType() == type) return info;
+        }
+        return null;
+    }*/
 
     @RequestMapping(method = RequestMethod.POST, path = "/info", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ClientInfo addClientInfo(@RequestBody ClientInfo info) {
@@ -34,6 +43,6 @@ public class ClientInfoController {
     @Transactional
     @RequestMapping(method = RequestMethod.PUT, path = "/info", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Integer updateClientInfoAndroid(@RequestBody ClientInfo info) {
-        return clientInfoRepository.updateClientInfoAndroid(info.getId(), info.getServerStatus(), info.getMinVersion(), info.getMinVersionName(), info.getLatestVersion(), info.getLatestVersionName(), info.getServerOwner(), info.getUserMessage());
+        return clientInfoRepository.updateClientInfo(info.getId(), info.getServerStatus(), info.getMinVersion(), info.getMinVersionName(), info.getLatestVersion(), info.getLatestVersionName(), info.getServerOwner(), info.getUserMessage());
     }
 }

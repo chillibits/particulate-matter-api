@@ -26,7 +26,7 @@ public class SensorController {
     SensorRepository sensorRepository;
 
     @RequestMapping(method = RequestMethod.GET, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Sensor> getAllSensors() {
+    public List<Sensor> getAllSensors(@RequestParam(required = false) boolean all, @RequestParam(required = false) boolean compressed) {
         return sensorRepository.findAll();
     }
 
@@ -35,7 +35,6 @@ public class SensorController {
         // Retrieve country and city from latitude and longitude
         try {
             String url = "https://maps.googleapis.com/maps/api/geocode/json?key=" + Credentials.GOOGLE_API_KEY + "&latlng=" + sensor.getLatitude() + "," + sensor.getLongitude() + "&sensor=false&language=en";
-            System.out.println(url);
             MapsPlaceResult place = new ObjectMapper().readValue(new URL(url), MapsPlaceResult.class);
             sensor.setCountry(place.getCountry());
             sensor.setCity(place.getCity());
@@ -48,11 +47,11 @@ public class SensorController {
         long creationDate = System.currentTimeMillis();
         sensor.setFirmwareVersion(Constants.EMPTY_COLUMN);
         sensor.setNotes(Constants.BLANK_COLUMN);
-        sensor.setCreationDate(creationDate);
+        //sensor.setCreationDate(creationDate);
         sensor.setLatitude(Tools.round(sensor.getLatitude(), 4));
         sensor.setLongitude(Tools.round(sensor.getLongitude(), 4));
-        sensor.setLastEdit(creationDate);
-        sensor.setLastUpdate(creationDate);
+        //sensor.setLastEdit(creationDate);
+        sensor.setLastMeasurement(creationDate);
         sensor.setMapsUrl("https://www.google.com/maps/place/" + sensor.getLatitude() + "," + sensor.getLongitude());
         sensor.setLastValueP1(0);
         sensor.setLastValueP2(0);

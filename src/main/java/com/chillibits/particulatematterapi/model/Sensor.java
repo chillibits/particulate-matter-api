@@ -4,9 +4,12 @@
 
 package com.chillibits.particulatematterapi.model;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "sensor")
@@ -17,10 +20,12 @@ public class Sensor {
     private int id;
     private long chipId;
     private String firmwareVersion;
-    private long creationDate;
+    @CreationTimestamp
+    private LocalDateTime creationDate;
     private String notes;
-    private long lastUpdate;
-    private long lastEdit;
+    private long lastMeasurement;
+    @UpdateTimestamp
+    private LocalDateTime lastEdit;
     private double latitude;
     private double longitude;
     private double altitude;
@@ -32,12 +37,12 @@ public class Sensor {
 
     public Sensor() {}
 
-    public Sensor(long chipId, String firmwareVersion, long creationDate, String notes, long lastUpdate, long lastEdit, double latitude, double longitude, double altitude, String country, String city, String mapsUrl, double lastValueP1, double lastValueP2) {
+    public Sensor(long chipId, String firmwareVersion, LocalDateTime creationDate, String notes, long lastMeasurement, LocalDateTime lastEdit, double latitude, double longitude, double altitude, String country, String city, String mapsUrl, double lastValueP1, double lastValueP2) {
         this.chipId = chipId;
         this.firmwareVersion = firmwareVersion;
         this.creationDate = creationDate;
         this.notes = notes;
-        this.lastUpdate = lastUpdate;
+        this.lastMeasurement = lastMeasurement;
         this.lastEdit = lastEdit;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -70,10 +75,10 @@ public class Sensor {
         this.chipId = chipId;
     }
 
-    public long getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
-    public void setCreationDate(long creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -84,17 +89,17 @@ public class Sensor {
         this.notes = notes;
     }
 
-    public long getLastUpdate() {
-        return lastUpdate;
+    public long getLastMeasurement() {
+        return lastMeasurement;
     }
-    public void setLastUpdate(long lastUpdate) {
-        this.lastUpdate = lastUpdate;
+    public void setLastMeasurement(long lastUpdate) {
+        this.lastMeasurement = lastUpdate;
     }
 
-    public long getLastEdit() {
+    public LocalDateTime getLastEdit() {
         return lastEdit;
     }
-    public void setLastEdit(long lastEdit) {
+    public void setLastEdit(LocalDateTime lastEdit) {
         this.lastEdit = lastEdit;
     }
 
