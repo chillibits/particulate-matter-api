@@ -6,6 +6,7 @@ package com.chillibits.particulatematterapi.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.context.ServletContextAware;
 import springfox.documentation.builders.AuthorizationCodeGrantBuilder;
 import springfox.documentation.builders.OAuthBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -13,11 +14,13 @@ import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
+import springfox.documentation.spring.web.paths.RelativePathProvider;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger.web.SecurityConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import javax.servlet.ServletContext;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -25,10 +28,20 @@ import static com.chillibits.particulatematterapi.shared.Credentials.*;
 
 @Configuration
 @EnableSwagger2
-public class SwaggerConfig {
+public class SwaggerConfig implements ServletContextAware {
+    // Variables as objects
+    private ServletContext context;
+
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .host("api.pm.chillibits.com")
+                .pathProvider(new RelativePathProvider(context) {
+                    @Override
+                    public String getApplicationBasePath() {
+                        return "/";
+                    }
+                })
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
@@ -85,5 +98,10 @@ public class SwaggerConfig {
                 .securityReferences(Arrays.asList(new SecurityReference("spring_oauth", scopes())))
                 .forPaths(PathSelectors.any())
                 .build();
+    }
+
+    @Override
+    public void setServletContext(ServletContext servletContext) {
+        context = servletContext;
     }
 }

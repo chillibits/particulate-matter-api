@@ -23,7 +23,7 @@ public class Sensor {
     @CreationTimestamp
     private LocalDateTime creationDate;
     private String notes;
-    private long lastMeasurement;
+    private LocalDateTime lastMeasurement;
     @UpdateTimestamp
     private LocalDateTime lastEdit;
     private double latitude;
@@ -37,7 +37,7 @@ public class Sensor {
 
     public Sensor() {}
 
-    public Sensor(long chipId, String firmwareVersion, LocalDateTime creationDate, String notes, long lastMeasurement, LocalDateTime lastEdit, double latitude, double longitude, double altitude, String country, String city, String mapsUrl, double lastValueP1, double lastValueP2) {
+    public Sensor(long chipId, String firmwareVersion, LocalDateTime creationDate, String notes, LocalDateTime lastMeasurement, LocalDateTime lastEdit, double latitude, double longitude, double altitude, String country, String city, String mapsUrl, double lastValueP1, double lastValueP2) {
         this.chipId = chipId;
         this.firmwareVersion = firmwareVersion;
         this.creationDate = creationDate;
@@ -89,10 +89,10 @@ public class Sensor {
         this.notes = notes;
     }
 
-    public long getLastMeasurement() {
+    public LocalDateTime getLastMeasurement() {
         return lastMeasurement;
     }
-    public void setLastMeasurement(long lastUpdate) {
+    public void setLastMeasurement(LocalDateTime lastUpdate) {
         this.lastMeasurement = lastUpdate;
     }
 
