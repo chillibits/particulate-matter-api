@@ -20,7 +20,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Properties;
 
 import static com.chillibits.particulatematterapi.shared.Credentials.*;
 
@@ -34,29 +33,22 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
                 .build()
-                .securitySchemes(Arrays.asList(securityScheme()))
-                .securityContexts(Arrays.asList(securityContext()));
+                .apiInfo(apiInfo())
+                .securitySchemes(Collections.singletonList(securityScheme()))
+                .securityContexts(Collections.singletonList(securityContext()));
     }
 
-    private ApiInfo metaInfo() {
-        try {
-            Properties properties = new Properties();
-            properties.load(getClass().getClassLoader().getResourceAsStream("config.properties"));
-
-            return new ApiInfo(
-                    properties.getProperty("name"),
-                    properties.getProperty("description"),
-                    properties.getProperty("version"),
-                    "Terms of Service",
-                    new Contact("ChilliBits", "https://chillibits.com", "contact@chillibits.com"),
-                    "Apache License Version 2.0",
-                    "https://www.apache.org/license.html",
-                    Collections.emptyList()
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    private ApiInfo apiInfo() {
+        return new ApiInfo(
+                "Particulate Matter API",
+                "Official Particulate Matter REST API. For more information, please visit https://github.com/chillibits/particulate-matter-api",
+                "1.0.0",
+                "Terms of Service",
+                new Contact("ChilliBits", "https://chillibits.com", "contact@chillibits.com"),
+                "Apache License Version 2.0",
+                "http://www.apache.org/licenses/LICENSE-2.0",
+                Collections.emptyList()
+        );
     }
 
     @Bean

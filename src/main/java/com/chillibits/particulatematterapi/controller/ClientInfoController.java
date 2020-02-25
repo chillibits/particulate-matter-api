@@ -6,6 +6,7 @@ package com.chillibits.particulatematterapi.controller;
 
 import com.chillibits.particulatematterapi.model.ClientInfo;
 import com.chillibits.particulatematterapi.repository.ClientInfoRepository;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -18,6 +19,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
+@Api(value = "ClientInfo REST Endpoint")
 public class ClientInfoController {
 
     @Autowired

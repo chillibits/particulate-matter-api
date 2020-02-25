@@ -11,6 +11,7 @@ import com.chillibits.particulatematterapi.shared.Constants;
 import com.chillibits.particulatematterapi.shared.Credentials;
 import com.chillibits.particulatematterapi.shared.Tools;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,6 +22,7 @@ import java.net.URL;
 import java.util.List;
 
 @RestController
+@Api(value = "Sensor REST Endpoint")
 public class SensorController {
 
     @Autowired

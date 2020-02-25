@@ -6,13 +6,17 @@ package com.chillibits.particulatematterapi.controller;
 
 import com.chillibits.particulatematterapi.model.DataRecord;
 import com.chillibits.particulatematterapi.repository.DataRepository;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@RestController
+@Api(value = "Data REST Endpoint")
 public class DataController {
 
     @Autowired
