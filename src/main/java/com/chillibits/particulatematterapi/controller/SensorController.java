@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -49,14 +50,11 @@ public class SensorController {
         }
 
         // Set remaining attributes
-        long creationDate = System.currentTimeMillis();
         sensor.setFirmwareVersion(Constants.EMPTY_COLUMN);
         sensor.setNotes(Constants.BLANK_COLUMN);
-        //sensor.setCreationDate(creationDate);
         sensor.setLatitude(Tools.round(sensor.getLatitude(), 4));
         sensor.setLongitude(Tools.round(sensor.getLongitude(), 4));
-        //sensor.setLastEdit(creationDate);
-        sensor.setLastMeasurement(creationDate);
+        sensor.setLastMeasurement(LocalDateTime.now());
         sensor.setMapsUrl("https://www.google.com/maps/place/" + sensor.getLatitude() + "," + sensor.getLongitude());
         sensor.setLastValueP1(0);
         sensor.setLastValueP2(0);
