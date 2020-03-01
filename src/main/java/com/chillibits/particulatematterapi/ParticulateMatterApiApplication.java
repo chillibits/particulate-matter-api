@@ -4,9 +4,11 @@
 
 package com.chillibits.particulatematterapi;
 
+import com.chillibits.particulatematterapi.repository.AuthUserRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.ServerResponse;
 
@@ -16,6 +18,7 @@ import static org.springframework.web.servlet.function.RequestPredicates.GET;
 import static org.springframework.web.servlet.function.RouterFunctions.route;
 
 @SpringBootApplication
+@EnableJpaRepositories(basePackageClasses = AuthUserRepository.class)
 public class ParticulateMatterApiApplication {
 	public static void main(String[] args) {
 		SpringApplication app = new SpringApplication((ParticulateMatterApiApplication.class));
