@@ -19,15 +19,12 @@ import java.util.Optional;
 @Primary
 @Service
 public class AuthUserDetailsService implements UserDetailsService {
-
     @Autowired
     AuthUserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByUsername(username);
-        System.out.println(username);
-        System.out.println(user.get().isActive());
         user.orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
         return user.map(AuthUserDetails::new).get();
     }
