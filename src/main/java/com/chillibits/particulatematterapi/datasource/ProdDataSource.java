@@ -23,7 +23,7 @@ public class ProdDataSource implements DataSource {
     public javax.sql.DataSource getDataSource() {
         return DataSourceBuilder
                 .create()
-                .url("jdbc:mysql://localhost:3306/main?serverTimezone=UTC")
+                .url("jdbc:mysql://localhost:3306/main?serverTimezone=UTC&autoreconnect=true")
                 .username(Credentials.USERNAME)
                 .password(Credentials.PASSWORD)
                 .build();

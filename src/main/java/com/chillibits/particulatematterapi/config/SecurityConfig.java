@@ -11,9 +11,12 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.sql.DataSource;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -25,6 +28,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // Variables as objects
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    private DataSource dataSouce;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -34,26 +39,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                // Sensors endpoint
-                .antMatchers(HttpMethod.GET, "/sensor").permitAll()
-                .antMatchers(HttpMethod.POST, "/sensor").hasAnyRole(ADMIN_APPLICATION_ROLE, APPLICATION_ROLE)
-                .antMatchers(HttpMethod.PUT, "/sensor").hasAnyRole(ADMIN_APPLICATION_ROLE, APPLICATION_ROLE)
-                .antMatchers(HttpMethod.DELETE, "/sensor/**").hasRole(ADMIN_APPLICATION_ROLE)
-                // Data endpoint
-                .antMatchers(HttpMethod.GET, "/data").permitAll()
-                .antMatchers(HttpMethod.POST, "/data").hasAnyRole(ADMIN_APPLICATION_ROLE, APPLICATION_ROLE)
-                // ClientInto endpoint
-                .antMatchers(HttpMethod.GET, "/info").permitAll()
-                .antMatchers(HttpMethod.POST, "/info").hasRole(ADMIN_APPLICATION_ROLE)
-                .antMatchers(HttpMethod.PUT, "/info").hasRole(ADMIN_APPLICATION_ROLE)
-                // User endpoint
-                .antMatchers("/user").permitAll()
-                .and().httpBasic();
-
+            // Sensors endpoint
+            .antMatchers(HttpMethod.GET, "/sensor").permitAll()
+            .antMatchers(HttpMethod.POST, "/sensor").hasAnyAuthority(ADMIN_APPLICATION_ROLE, APPLICATION_ROLE)
+            .antMatchers(HttpMethod.PUT, "/sensor").hasAnyAuthority(ADMIN_APPLICATION_ROLE, APPLICATION_ROLE)
+            .antMatchers(HttpMethod.DELETE, "/sensor/**").hasAuthority(ADMIN_APPLICATION_ROLE)
+            // Ranking endpoint
+            .antMatchers(HttpMethod.GET, "/ranking/**").permitAll()
+            // Data endpoint
+            .antMatchers(HttpMethod.GET, "/data").permitAll()
+            .antMatchers(HttpMethod.POST, "/data").hasAnyAuthority(ADMIN_APPLICATION_ROLE, APPLICATION_ROLE)
+            // ClientInto endpoint
+            .antMatchers(HttpMethod.GET, "/info").permitAll()
+            .antMatchers(HttpMethod.POST, "/info").hasAuthority(ADMIN_APPLICATION_ROLE)
+            .antMatchers(HttpMethod.PUT, "/info").hasAuthority(ADMIN_APPLICATION_ROLE)
+            // User endpoint
+            .antMatchers("/user").permitAll()
+            .and().csrf().disable()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and().httpBasic();
     }
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        return NoOpPasswordEncoder.getInstance();
     }
 }
