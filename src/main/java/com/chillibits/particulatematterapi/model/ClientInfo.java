@@ -4,12 +4,20 @@
 
 package com.chillibits.particulatematterapi.model;
 
-import javax.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
-@Table(name = "client_info")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ClientInfo {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -22,88 +30,4 @@ public class ClientInfo {
     private String latestVersionName;
     private String serverOwner;
     private String userMessage;
-
-    public ClientInfo() {}
-
-    public ClientInfo(String clientName, Integer clientType, Integer serverStatus, Integer minVersion, String minVersionName, Integer latestVersion, String latestVersionName, String serverOwner, String userMessage) {
-        this.clientName = clientName;
-        this.clientType = clientType;
-        this.serverStatus = serverStatus;
-        this.minVersion = minVersion;
-        this.minVersionName = minVersionName;
-        this.latestVersion = latestVersion;
-        this.latestVersionName = latestVersionName;
-        this.serverOwner = serverOwner;
-        this.userMessage = userMessage;
-    }
-
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getClientType() {
-        return clientType;
-    }
-    public void setClientType(int clientType) {
-        this.clientType = clientType;
-    }
-
-    public String getClientName() {
-        return clientName;
-    }
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
-    public Integer getServerStatus() {
-        return serverStatus;
-    }
-    public void setServerStatus(Integer serverStatus) {
-        this.serverStatus = serverStatus;
-    }
-
-    public Integer getMinVersion() {
-        return minVersion;
-    }
-    public void setMinVersion(Integer minVersion) {
-        this.minVersion = minVersion;
-    }
-
-    public String getMinVersionName() {
-        return minVersionName;
-    }
-    public void setMinVersionName(String minAppVersionName) {
-        this.minVersionName = minAppVersionName;
-    }
-
-    public Integer getLatestVersion() {
-        return latestVersion;
-    }
-    public void setLatestVersion(Integer latestAppVersion) {
-        this.latestVersion = latestAppVersion;
-    }
-
-    public String getLatestVersionName() {
-        return latestVersionName;
-    }
-    public void setLatestVersionName(String latestAppVersionName) {
-        this.latestVersionName = latestAppVersionName;
-    }
-
-    public String getServerOwner() {
-        return serverOwner;
-    }
-    public void setServerOwner(String serverOwner) {
-        this.serverOwner = serverOwner;
-    }
-
-    public String getUserMessage() {
-        return userMessage;
-    }
-    public void setUserMessage(String userMessage) {
-        this.userMessage = userMessage;
-    }
 }
