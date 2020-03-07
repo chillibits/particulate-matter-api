@@ -19,7 +19,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
-@Api(value = "Client REST Endpoint")
+@Api(value = "Client REST Endpoint", tags = { "client" })
 public class ClientController {
 
     @Autowired

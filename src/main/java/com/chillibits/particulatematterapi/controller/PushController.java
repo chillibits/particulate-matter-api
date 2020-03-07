@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Api(value = "Push REST Endpoint")
+@Api(value = "Push REST Endpoint", tags = { "push" })
 public class PushController {
 
     @Autowired
     DataRepository dataRepository;
 
-    @RequestMapping(method = RequestMethod.POST, path = "/data", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, path = "/push", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Pushes a measurement record to the database")
     public String pushData() {
 

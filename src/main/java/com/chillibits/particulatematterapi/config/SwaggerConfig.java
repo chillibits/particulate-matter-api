@@ -36,7 +36,7 @@ public class SwaggerConfig implements ServletContextAware {
                     }
                 })
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.chillibits.particulatematterapi.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo());

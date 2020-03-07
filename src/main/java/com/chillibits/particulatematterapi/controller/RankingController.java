@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@Api(value = "Ranking REST Endpoint")
+@Api(value = "Ranking REST Endpoint", tags = { "ranking" })
 public class RankingController {
     @Autowired
     SensorRepository sensorRepository;

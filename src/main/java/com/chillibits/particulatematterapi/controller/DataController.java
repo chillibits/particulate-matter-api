@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@Api(value = "Data REST Endpoint")
+@Api(value = "Data REST Endpoint", tags = { "data" })
 public class DataController {
 
     @Autowired

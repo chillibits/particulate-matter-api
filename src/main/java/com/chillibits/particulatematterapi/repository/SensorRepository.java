@@ -14,8 +14,8 @@ import java.util.List;
 
 public interface SensorRepository extends JpaRepository<Sensor, Integer> {
     @Modifying
-    @Query("UPDATE Sensor s SET s.latitude = ?2, s.longitude = ?3, s.lastValueP1 = ?4, s.lastValueP2 = ?5 WHERE s.chipId = ?1")
-    Integer updateSensor(Long chipId, double latitude, double longitude, double lastValueP1, double lastValueP2);
+    @Query("UPDATE Sensor s SET s.gpsLatitude = ?2, s.gpsLongitude = ?3, s.lastValueP1 = ?4, s.lastValueP2 = ?5 WHERE s.chipId = ?1")
+    Integer updateSensor(int chipId, double latitude, double longitude, double lastValueP1, double lastValueP2);
 
     @Query("SELECT new com.chillibits.particulatematterapi.model.RankingItem(s.country, s.city, COUNT(s.city)) FROM Sensor s GROUP BY s.city ORDER BY COUNT(s.city)")
     List<RankingItem> getRankingByCity(int items);

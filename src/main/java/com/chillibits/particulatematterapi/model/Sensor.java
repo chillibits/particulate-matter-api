@@ -20,8 +20,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Sensor {
     @Id
-    private long chipId;
-
+    private int chipId;
     private int userId;
     private String firmwareVersion;
     @CreationTimestamp
@@ -30,9 +29,9 @@ public class Sensor {
     private LocalDateTime lastMeasurement;
     @UpdateTimestamp
     private LocalDateTime lastEdit;
-    private double latitude;
-    private double longitude;
-    private double altitude;
+    private double gpsLatitude;
+    private double gpsLongitude;
+    private double gpsAltitude;
     private String country;
     private String city;
     private String mapsUrl;
