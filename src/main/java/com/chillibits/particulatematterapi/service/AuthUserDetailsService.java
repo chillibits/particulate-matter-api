@@ -5,8 +5,8 @@
 package com.chillibits.particulatematterapi.service;
 
 import com.chillibits.particulatematterapi.model.AuthUserDetails;
-import com.chillibits.particulatematterapi.model.User;
-import com.chillibits.particulatematterapi.repository.AuthUserRepository;
+import com.chillibits.particulatematterapi.model.Client;
+import com.chillibits.particulatematterapi.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,12 +20,12 @@ import java.util.Optional;
 @Service
 public class AuthUserDetailsService implements UserDetailsService {
     @Autowired
-    AuthUserRepository userRepository;
+    ClientRepository authUserReporitory;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByUsername(username);
-        user.orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
+    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
+        Optional<Client> user = authUserReporitory.findByName(name);
+        user.orElseThrow(() -> new UsernameNotFoundException("User " + name + " not found"));
         return user.map(AuthUserDetails::new).get();
     }
 }

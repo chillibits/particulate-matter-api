@@ -11,8 +11,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 
@@ -22,9 +20,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Sensor {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
     private long chipId;
+
+    private int userId;
     private String firmwareVersion;
     @CreationTimestamp
     private LocalDateTime creationDate;

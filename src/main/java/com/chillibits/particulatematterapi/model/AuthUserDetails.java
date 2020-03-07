@@ -16,16 +16,16 @@ import java.util.stream.Collectors;
 public class AuthUserDetails implements UserDetails {
 
     // Variables
-    private String username;
-    private String password;
+    private String name;
+    private String secret;
     private boolean active;
     private List<GrantedAuthority> authorities;
 
-    public AuthUserDetails(User user) {
-        this.username = user.getUsername();
-        this.password = user.getPassword();
-        this.active = user.isActive();
-        this.authorities = Arrays.stream(user.getRoles().split(","))
+    public AuthUserDetails(Client client) {
+        this.name = client.getName();
+        this.secret = client.getSecret();
+        this.active = client.isActive();
+        this.authorities = Arrays.stream(client.getRoles().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
@@ -37,12 +37,12 @@ public class AuthUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return password;
+        return secret;
     }
 
     @Override
     public String getUsername() {
-        return username;
+        return name;
     }
 
     @Override
@@ -62,6 +62,6 @@ public class AuthUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return active;
     }
 }

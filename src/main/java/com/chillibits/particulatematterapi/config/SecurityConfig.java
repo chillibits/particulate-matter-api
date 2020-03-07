@@ -4,6 +4,7 @@
 
 package com.chillibits.particulatematterapi.config;
 
+import com.chillibits.particulatematterapi.model.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -16,20 +17,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.sql.DataSource;
-
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    // Constants
-    private final String ADMIN_APPLICATION_ROLE = "ADMIN_APPLICATION";
-    private final String APPLICATION_ROLE = "APPLICATION";
 
     // Variables as objects
     @Autowired
     private UserDetailsService userDetailsService;
-    @Autowired
-    private DataSource dataSouce;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -41,20 +34,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
             // Sensors endpoint
             .antMatchers(HttpMethod.GET, "/sensor").permitAll()
-            .antMatchers(HttpMethod.POST, "/sensor").hasAnyAuthority(ADMIN_APPLICATION_ROLE, APPLICATION_ROLE)
-            .antMatchers(HttpMethod.PUT, "/sensor").hasAnyAuthority(ADMIN_APPLICATION_ROLE, APPLICATION_ROLE)
-            .antMatchers(HttpMethod.DELETE, "/sensor/**").hasAuthority(ADMIN_APPLICATION_ROLE)
+            .antMatchers(HttpMethod.POST, "/sensor").hasAnyAuthority(Client.ROLE_APPLICATION, Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
+            .antMatchers(HttpMethod.PUT, "/sensor").hasAnyAuthority(Client.ROLE_APPLICATION, Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
+            .antMatchers(HttpMethod.DELETE, "/sensor/**").hasAuthority(Client.ROLE_APPLICATION_ADMIN)
             // Ranking endpoint
             .antMatchers(HttpMethod.GET, "/ranking/**").permitAll()
             // Data endpoint
             .antMatchers(HttpMethod.GET, "/data").permitAll()
-            .antMatchers(HttpMethod.POST, "/data").hasAnyAuthority(ADMIN_APPLICATION_ROLE, APPLICATION_ROLE)
-            // ClientInto endpoint
-            .antMatchers(HttpMethod.GET, "/info").permitAll()
-            .antMatchers(HttpMethod.POST, "/info").hasAuthority(ADMIN_APPLICATION_ROLE)
-            .antMatchers(HttpMethod.PUT, "/info").hasAuthority(ADMIN_APPLICATION_ROLE)
+            .antMatchers(HttpMethod.POST, "/data").hasAnyAuthority(Client.ROLE_APPLICATION_ADMIN)
             // User endpoint
-            .antMatchers("/user").permitAll()
+            .antMatchers(HttpMethod.GET, "/user").hasAnyAuthority(Client.ROLE_APPLICATION, Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
+            .antMatchers(HttpMethod.POST, "/user").hasAnyAuthority(Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
+            .antMatchers(HttpMethod.PUT, "/user").hasAnyAuthority(Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
+            // Client endpoint
+            .antMatchers("/client").permitAll()
+            //.antMatchers("/client").hasAuthority(Client.APPLICATION_ADMIN)
             .and().csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and().httpBasic();
