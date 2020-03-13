@@ -1,32 +1,26 @@
-/*
- * Copyright © Marc Auberer 2019 - 2020. All rights reserved.
- */
-
 package com.chillibits.particulatematterapi.controller;
 
-import com.chillibits.particulatematterapi.model.MapsPlaceResult;
-import com.chillibits.particulatematterapi.model.Sensor;
-import com.chillibits.particulatematterapi.repository.SensorRepository;
+import com.chillibits.particulatematterapi.model.db.Sensor;
+import com.chillibits.particulatematterapi.model.io.MapsPlaceResult;
+import com.chillibits.particulatematterapi.repository.main.SensorRepository;
 import com.chillibits.particulatematterapi.shared.Constants;
 import com.chillibits.particulatematterapi.shared.Credentials;
 import com.chillibits.particulatematterapi.shared.Tools;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 @Api(value = "Sensor REST Endpoint", tags = { "sensor" })
 public class SensorController {
-
-    @Autowired
     SensorRepository sensorRepository;
 
     @RequestMapping(method = RequestMethod.GET, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -55,7 +49,8 @@ public class SensorController {
             sensor.setNotes(Constants.BLANK_COLUMN);
             sensor.setGpsLatitude(Tools.round(sensor.getGpsLatitude(), 4));
             sensor.setGpsLongitude(Tools.round(sensor.getGpsLongitude(), 4));
-            sensor.setLastMeasurement(LocalDateTime.now());
+            sensor.setLastMeasurementTimestamp(System.currentTimeMillis());
+            sensor.setLastEditTimestamp(System.currentTimeMillis());
             sensor.setMapsUrl("https://www.google.com/maps/place/" + sensor.getGpsLatitude() + "," + sensor.getGpsLongitude());
             sensor.setLastValueP1(0);
             sensor.setLastValueP2(0);
@@ -71,7 +66,8 @@ public class SensorController {
     @RequestMapping(method = RequestMethod.PUT, path = "/sensor", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates a sensor")
     public Integer updateSensor(@RequestBody Sensor sensor) {
-        return sensorRepository.updateSensor(sensor.getChipId(), sensor.getGpsLatitude(), sensor.getGpsLongitude(), sensor.getLastValueP1(), sensor.getLastValueP2());
+        //return sensorRepository.updateSensor(sensor.getChipId(), sensor.getGpsLatitude(), sensor.getGpsLongitude(), sensor.getLastValueP1(), sensor.getLastValueP2());
+        return 0;
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/sensor/{id}")

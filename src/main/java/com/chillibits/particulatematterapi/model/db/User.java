@@ -1,25 +1,13 @@
-/*
- * Copyright © Marc Auberer 2019 - 2020. All rights reserved.
- */
-
-package com.chillibits.particulatematterapi.model;
+package com.chillibits.particulatematterapi.model.db;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.time.LocalDateTime;
+import org.springframework.data.annotation.Id;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 public class User {
     // Constants
     public static final int ACTIVE = 1;
@@ -32,7 +20,6 @@ public class User {
 
     // Attributes
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String firstName;
     private String lastName;
@@ -40,8 +27,6 @@ public class User {
     private String password;
     private int role;
     private int status;
-    @CreationTimestamp
-    private LocalDateTime creationDate;
-    @UpdateTimestamp
-    private LocalDateTime lastEdit;
+    private long creationTimestamp;
+    private long lastEditTimestamp;
 }

@@ -1,9 +1,6 @@
-/*
- * Copyright © Marc Auberer 2019 - 2020. All rights reserved.
- */
+package com.chillibits.particulatematterapi.model.io;
 
-package com.chillibits.particulatematterapi.model;
-
+import com.chillibits.particulatematterapi.model.db.Client;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +11,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AuthUserDetails implements UserDetails {
-
     // Variables
     private String name;
     private String secret;

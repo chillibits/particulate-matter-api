@@ -1,18 +1,13 @@
-/*
- * Copyright © Marc Auberer 2019 - 2020. All rights reserved.
- */
+package com.chillibits.particulatematterapi.model.db;
 
-package com.chillibits.particulatematterapi.model;
-
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-@Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Client {
     // Constants
     public static final int STATUS_ONLINE = 1;
@@ -32,7 +27,6 @@ public class Client {
 
     // Attributes
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     private String readableName;

@@ -1,10 +1,6 @@
-/*
- * Copyright © Marc Auberer 2019 - 2020. All rights reserved.
- */
-
 package com.chillibits.particulatematterapi.controller;
 
-import com.chillibits.particulatematterapi.model.Stats;
+import com.chillibits.particulatematterapi.model.io.Stats;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;

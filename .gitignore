@@ -30,9 +30,7 @@ build/
 ### VS Code ###
 .vscode/
 
-### Database credentials ###
-/src/main/java/com/chillibits/particulatematterapi/shared/Credentials.java
-
-### HTTPS certificate ###
-/src/main/resources/pmapi.p12
-/src/main/resources/application.yml
+### Files to keep secure ###
+src/main/resources/application.yml
+src/main/resources/pmapi.p12
+src/main/java/com/chillibits/particulatematterapi/shared/Credentials.java

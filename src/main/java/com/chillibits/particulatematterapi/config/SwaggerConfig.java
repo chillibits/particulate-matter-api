@@ -28,7 +28,7 @@ public class SwaggerConfig implements ServletContextAware {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .host("api.pm.chillibits.com:8444")
+                .host("api.pm.chillibits.com:8080")
                 .pathProvider(new RelativePathProvider(context) {
                     @Override
                     public String getApplicationBasePath() {
@@ -48,7 +48,7 @@ public class SwaggerConfig implements ServletContextAware {
                 "Official Particulate Matter REST API. For more information, please visit https://github.com/chillibits/particulate-matter-api",
                 "1.0.0",
                 "Terms of Service",
-                new Contact("ChilliBits", "https://chillibits.com", "contact@chillibits.com"),
+                new Contact("ChilliBits", "https://www.chillibits.com", "contact@chillibits.com"),
                 "Apache License Version 2.0",
                 "http://www.apache.org/licenses/LICENSE-2.0",
                 Collections.emptyList()

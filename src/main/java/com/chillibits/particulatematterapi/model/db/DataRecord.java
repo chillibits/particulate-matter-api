@@ -1,23 +1,16 @@
-/*
- * Copyright © Marc Auberer 2019 - 2020. All rights reserved.
- */
-
-package com.chillibits.particulatematterapi.model;
+package com.chillibits.particulatematterapi.model.db;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "data_2020_01")
+@NoArgsConstructor
 public class DataRecord {
+    // Attributes
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String time;
     private double pm2_5;

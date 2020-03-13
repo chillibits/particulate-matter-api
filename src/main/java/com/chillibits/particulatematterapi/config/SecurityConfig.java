@@ -4,7 +4,7 @@
 
 package com.chillibits.particulatematterapi.config;
 
-import com.chillibits.particulatematterapi.model.Client;
+import com.chillibits.particulatematterapi.model.db.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;

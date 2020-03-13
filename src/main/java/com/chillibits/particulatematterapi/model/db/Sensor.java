@@ -1,21 +1,11 @@
-/*
- * Copyright © Marc Auberer 2019 - 2020. All rights reserved.
- */
-
-package com.chillibits.particulatematterapi.model;
+package com.chillibits.particulatematterapi.model.db;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import java.time.LocalDateTime;
+import org.springframework.data.annotation.Id;
 
 @Data
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 public class Sensor {
@@ -23,12 +13,10 @@ public class Sensor {
     private int chipId;
     private int userId;
     private String firmwareVersion;
-    @CreationTimestamp
-    private LocalDateTime creationDate;
+    private long creationTimestamp;
     private String notes;
-    private LocalDateTime lastMeasurement;
-    @UpdateTimestamp
-    private LocalDateTime lastEdit;
+    private long lastMeasurementTimestamp;
+    private long lastEditTimestamp;
     private double gpsLatitude;
     private double gpsLongitude;
     private double gpsAltitude;

@@ -1,11 +1,4 @@
-/*
- * Copyright © Marc Auberer 2019 - 2020. All rights reserved.
- */
-
 package com.chillibits.particulatematterapi.shared;
-
-import javax.xml.bind.DatatypeConverter;
-import java.security.MessageDigest;
 
 public class Tools {
     public static double round(double value, int places) {
@@ -17,7 +10,7 @@ public class Tools {
         return (double) tmp / factor;
     }
 
-    public static String hashMD5(String stringToHash) {
+    /*public static String hashMD5(String stringToHash) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");
             messageDigest.update(stringToHash.getBytes());
@@ -25,5 +18,5 @@ public class Tools {
             return DatatypeConverter.printHexBinary(digest);
         } catch (Exception ignored) {}
         return stringToHash;
-    }
+    }*/
 }

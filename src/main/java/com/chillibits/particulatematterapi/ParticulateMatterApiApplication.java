@@ -1,7 +1,3 @@
-/*
- * Copyright © Marc Auberer 2019 - 2020. All rights reserved.
- */
-
 package com.chillibits.particulatematterapi;
 
 import org.springframework.boot.SpringApplication;
@@ -18,14 +14,11 @@ import static org.springframework.web.servlet.function.RouterFunctions.route;
 @SpringBootApplication
 public class ParticulateMatterApiApplication {
 	public static void main(String[] args) {
-		SpringApplication app = new SpringApplication((ParticulateMatterApiApplication.class));
-		app.setAdditionalProfiles("dev");
-		app.run(args);
+		SpringApplication.run(ParticulateMatterApiApplication.class, args);
 	}
 
 	@Bean
 	RouterFunction<ServerResponse> routerFunction() {
-		return route(GET("/"), req ->
-				ServerResponse.permanentRedirect(URI.create("swagger-ui.html")).build());
+		return route(GET("/"), req -> ServerResponse.permanentRedirect(URI.create("swagger-ui.html")).build());
 	}
 }

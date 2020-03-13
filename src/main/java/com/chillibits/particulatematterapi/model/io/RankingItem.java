@@ -1,8 +1,4 @@
-/*
- * Copyright © Marc Auberer 2019 - 2020. All rights reserved.
- */
-
-package com.chillibits.particulatematterapi.model;
+package com.chillibits.particulatematterapi.model.io;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
