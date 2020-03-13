@@ -1,25 +1,19 @@
 package com.chillibits.particulatematterapi.model.db;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class DataRecord {
-    // Attributes
-    @Id
-    private int id;
-    private String time;
-    private double pm2_5;
-    private double pm10;
-    private double temp;
-    private double humidity;
-    private double pressure;
-    private double gps_lat;
-    private double gps_lng;
-    private double gps_alt;
+    @JsonProperty("esp8266id") private long chipId;
+    private long timestamp;
+    @JsonProperty("software_version") private String firmwareVersion;
+    @JsonProperty("sensordatavalues") private SensorDataValues[] sensorDataValues;
     private String note;
+}
+
+@Data
+class SensorDataValues {
+    @JsonProperty("value_type") private String valueType;
+    @JsonProperty("value") private String value;
 }

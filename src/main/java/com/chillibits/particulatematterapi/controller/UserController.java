@@ -32,7 +32,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.POST, path = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Adds an user to the database")
     public User addUser(@RequestBody User user) {
-        return userRepository.save(user);
+        return userRepository.insert(user);
     }
 
     @RequestMapping(method = RequestMethod.PUT, path = "/user", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -3,6 +3,7 @@ package com.chillibits.particulatematterapi.model.db;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 @Data
@@ -27,7 +28,7 @@ public class Client {
 
     // Attributes
     @Id
-    private int id;
+    private ObjectId id;
     private String name;
     private String readableName;
     private String secret;
@@ -41,4 +42,8 @@ public class Client {
     private String latestVersionName;
     private String owner;
     private String userMessage;
+
+    public String getId() {
+        return id.toString();
+    }
 }

@@ -4,6 +4,5 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @Configuration
-@EnableMongoRepositories(basePackages = "com.chillibits.particulatematterapi.repository.main", mongoTemplateRef = "primaryMongoTemplate")
-public class PrimaryMongoConfig {
-}
+@EnableMongoRepositories(basePackages = "com.chillibits.particulatematterapi.repository.data", mongoTemplateRef = "primaryMongoTemplate")
+public class PrimaryMongoConfig {}

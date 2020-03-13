@@ -10,7 +10,7 @@ import org.springframework.data.annotation.Id;
 @AllArgsConstructor
 public class Sensor {
     @Id
-    private int chipId;
+    private long chipId;
     private int userId;
     private String firmwareVersion;
     private long creationTimestamp;

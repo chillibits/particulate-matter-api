@@ -20,9 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    // Variables as objects
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService; // Have to be autowired, cause without it, there is a dependency cycle
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -42,6 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // Data endpoint
             .antMatchers(HttpMethod.GET, "/data").permitAll()
             .antMatchers(HttpMethod.POST, "/data").hasAnyAuthority(Client.ROLE_APPLICATION_ADMIN)
+            // Push endpoint
+            .antMatchers(HttpMethod.POST, "/push").permitAll()
             // User endpoint
             .antMatchers(HttpMethod.GET, "/user").hasAnyAuthority(Client.ROLE_APPLICATION, Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
             .antMatchers(HttpMethod.POST, "/user").hasAnyAuthority(Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)

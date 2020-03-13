@@ -56,7 +56,7 @@ public class SensorController {
             sensor.setLastValueP2(0);
 
             // Save sensor to database
-            return sensorRepository.save(sensor);
+            return sensorRepository.insert(sensor);
         } else {
             return null;
         }
@@ -65,14 +65,13 @@ public class SensorController {
     @Transactional
     @RequestMapping(method = RequestMethod.PUT, path = "/sensor", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates a sensor")
-    public Integer updateSensor(@RequestBody Sensor sensor) {
-        //return sensorRepository.updateSensor(sensor.getChipId(), sensor.getGpsLatitude(), sensor.getGpsLongitude(), sensor.getLastValueP1(), sensor.getLastValueP2());
-        return 0;
+    public void updateSensor(@RequestBody Sensor sensor) {
+        sensorRepository.save(sensor);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/sensor/{id}")
     @ApiOperation(value = "Deletes a sensor from the database")
-    public void deleteSensor(@PathVariable("id") Integer id) {
+    public void deleteSensor(@PathVariable("id") Long id) {
         sensorRepository.deleteById(id);
     }
 }

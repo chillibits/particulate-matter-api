@@ -28,7 +28,7 @@ public class SwaggerConfig implements ServletContextAware {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .host("api.pm.chillibits.com:8080")
+                .host("api.pm.chillibits.com")
                 .pathProvider(new RelativePathProvider(context) {
                     @Override
                     public String getApplicationBasePath() {

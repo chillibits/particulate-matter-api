@@ -11,6 +11,6 @@ This is the official ChilliBits Particulate Matter REST API.
 
 ## Usage
 
-You can find the API documentation at [https://api.pm.chillibits.com:8080](https://api.pm.chillibits.com:8080/swagger-ui.html)
+You can find the API documentation at [https://api.pm.chillibits.com](https://api.pm.chillibits.com/swagger-ui.html)
 
 © ChilliBits 2019 - 2020 (Designed and developed by Marc Auberer)
