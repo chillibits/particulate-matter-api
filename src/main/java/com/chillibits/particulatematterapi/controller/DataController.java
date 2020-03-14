@@ -29,6 +29,6 @@ public class DataController {
     public List<DataRecord> getDataRecords(@PathVariable long chipId, @RequestParam(defaultValue = "0") long from, @RequestParam(defaultValue = "0") long to) {
         if(to == 0) to = System.currentTimeMillis();
         if(from == 0) from = to - Constants.DEFAULT_DATA_TIMESPAN;
-        return operations.findDistinct(Query.query(Criteria.where("timestamp").gte(from).and("timestamp").lte(to)), "timestamp", String.valueOf(chipId), DataRecord.class);
+        return operations.find(Query.query(Criteria.where("timestamp").gte(from).lte(to)), DataRecord.class, String.valueOf(chipId));
     }
 }
