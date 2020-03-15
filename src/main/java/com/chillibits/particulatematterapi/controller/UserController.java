@@ -1,6 +1,10 @@
+/*
+ * Copyright © Marc Auberer 2019 - 2020. All rights reserved
+ */
+
 package com.chillibits.particulatematterapi.controller;
 
-import com.chillibits.particulatematterapi.model.db.User;
+import com.chillibits.particulatematterapi.model.db.main.User;
 import com.chillibits.particulatematterapi.repository.main.UserRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,21 +29,19 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET, path = "/user/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns details for one specific user")
     public User getUserById(@PathVariable("id") Integer id) {
-        //return userRepository.findById(id);
-        return null;
+        return userRepository.findById(id).orElse(null);
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Adds an user to the database")
     public User addUser(@RequestBody User user) {
-        return userRepository.insert(user);
+        return userRepository.save(user);
     }
 
     @RequestMapping(method = RequestMethod.PUT, path = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates an existing user")
     public Integer updateUser(@RequestBody User user) {
-        //return userRepository.updateUser(user.getId(), user.getFirstName(), user.getLastName(), user.getPassword(), user.getRole(), user.getStatus());
-        return 0;
+        return userRepository.updateUser(user.getId(), user.getFirstName(), user.getLastName(), user.getPassword(), user.getRole(), user.getStatus());
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/user/{id}")

@@ -1,6 +1,10 @@
+/*
+ * Copyright © Marc Auberer 2019 - 2020. All rights reserved
+ */
+
 package com.chillibits.particulatematterapi.model.io;
 
-import com.chillibits.particulatematterapi.model.db.Client;
+import com.chillibits.particulatematterapi.model.db.main.Client;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

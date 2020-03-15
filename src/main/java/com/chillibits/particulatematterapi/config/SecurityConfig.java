@@ -1,10 +1,10 @@
 /*
- * Copyright © Marc Auberer 2019 - 2020. All rights reserved.
+ * Copyright © Marc Auberer 2019 - 2020. All rights reserved
  */
 
 package com.chillibits.particulatematterapi.config;
 
-import com.chillibits.particulatematterapi.model.db.Client;
+import com.chillibits.particulatematterapi.model.db.main.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -31,28 +31,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-            // Sensors endpoint
-            .antMatchers(HttpMethod.GET, "/sensor").permitAll()
-            .antMatchers(HttpMethod.POST, "/sensor").hasAnyAuthority(Client.ROLE_APPLICATION, Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
-            .antMatchers(HttpMethod.PUT, "/sensor").hasAnyAuthority(Client.ROLE_APPLICATION, Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
-            .antMatchers(HttpMethod.DELETE, "/sensor/**").hasAuthority(Client.ROLE_APPLICATION_ADMIN)
-            // Ranking endpoint
-            .antMatchers(HttpMethod.GET, "/ranking/**").permitAll()
-            // Data endpoint
-            .antMatchers(HttpMethod.GET, "/data").permitAll()
-            .antMatchers(HttpMethod.POST, "/data").hasAnyAuthority(Client.ROLE_APPLICATION_ADMIN)
-            // Push endpoint
-            .antMatchers(HttpMethod.POST, "/push").permitAll()
-            // User endpoint
-            .antMatchers(HttpMethod.GET, "/user").hasAnyAuthority(Client.ROLE_APPLICATION, Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
-            .antMatchers(HttpMethod.POST, "/user").hasAnyAuthority(Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
-            .antMatchers(HttpMethod.PUT, "/user").hasAnyAuthority(Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
-            // Client endpoint
-            .antMatchers("/client").permitAll()
-            //.antMatchers("/client").hasAuthority(Client.APPLICATION_ADMIN)
-            .and().csrf().disable()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and().httpBasic();
+                // Sensors endpoint
+                .antMatchers(HttpMethod.GET, "/sensor").permitAll()
+                .antMatchers(HttpMethod.POST, "/sensor").hasAnyAuthority(Client.ROLE_APPLICATION, Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
+                .antMatchers(HttpMethod.PUT, "/sensor").hasAnyAuthority(Client.ROLE_APPLICATION, Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
+                .antMatchers(HttpMethod.DELETE, "/sensor/**").hasAuthority(Client.ROLE_APPLICATION_ADMIN)
+                // Ranking endpoint
+                .antMatchers(HttpMethod.GET, "/ranking/**").permitAll()
+                // Data endpoint
+                .antMatchers(HttpMethod.GET, "/data").permitAll()
+                .antMatchers(HttpMethod.POST, "/data").hasAnyAuthority(Client.ROLE_APPLICATION_ADMIN)
+                // Push endpoint
+                .antMatchers(HttpMethod.POST, "/push").permitAll()
+                // User endpoint
+                .antMatchers(HttpMethod.GET, "/user").hasAnyAuthority(Client.ROLE_APPLICATION, Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
+                .antMatchers(HttpMethod.POST, "/user").hasAnyAuthority(Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
+                .antMatchers(HttpMethod.PUT, "/user").hasAnyAuthority(Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
+                // Client endpoint
+                .antMatchers("/client").permitAll()
+                //.antMatchers("/client").hasAuthority(Client.APPLICATION_ADMIN)
+                .and().csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().httpBasic();
     }
 
     @Bean

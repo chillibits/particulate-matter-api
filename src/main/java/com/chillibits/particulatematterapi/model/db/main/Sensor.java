@@ -1,10 +1,17 @@
-package com.chillibits.particulatematterapi.model.db;
+/*
+ * Copyright © Marc Auberer 2019 - 2020. All rights reserved
+ */
+
+package com.chillibits.particulatematterapi.model.db.main;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

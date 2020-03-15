@@ -1,7 +1,12 @@
+/*
+ * Copyright © Marc Auberer 2019 - 2020. All rights reserved
+ */
+
 package com.chillibits.particulatematterapi.controller;
 
-import com.chillibits.particulatematterapi.model.db.Sensor;
+import com.chillibits.particulatematterapi.model.db.main.Sensor;
 import com.chillibits.particulatematterapi.model.io.MapsPlaceResult;
+import com.chillibits.particulatematterapi.model.io.SyncPackage;
 import com.chillibits.particulatematterapi.repository.main.SensorRepository;
 import com.chillibits.particulatematterapi.shared.Constants;
 import com.chillibits.particulatematterapi.shared.Credentials;
@@ -25,8 +30,14 @@ public class SensorController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all sensors, registered in the database")
-    public List<Sensor> getAllSensors(@RequestParam(required = false) boolean all, @RequestParam(required = false) boolean compressed) {
+    public List<Sensor> getAllSensors(@RequestParam(required = false) boolean compressed) {
         return sensorRepository.findAll();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/sensor/sync", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Returns all sensors, registered in the database")
+    public List<Sensor> getAllSensorsSync(@RequestBody SyncPackage syncPackage) {
+        return null;
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -56,7 +67,7 @@ public class SensorController {
             sensor.setLastValueP2(0);
 
             // Save sensor to database
-            return sensorRepository.insert(sensor);
+            return sensorRepository.save(sensor);
         } else {
             return null;
         }
@@ -66,7 +77,7 @@ public class SensorController {
     @RequestMapping(method = RequestMethod.PUT, path = "/sensor", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates a sensor")
     public void updateSensor(@RequestBody Sensor sensor) {
-        sensorRepository.save(sensor);
+        sensorRepository.updateSensor(sensor.getChipId(), sensor.getGpsLatitude(), sensor.getGpsLongitude(), sensor.getLastValueP1(), sensor.getLastValueP2());
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/sensor/{id}")

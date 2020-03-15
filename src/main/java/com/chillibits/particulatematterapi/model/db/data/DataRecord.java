@@ -1,12 +1,18 @@
-package com.chillibits.particulatematterapi.model.db;
+/*
+ * Copyright © Marc Auberer 2019 - 2020. All rights reserved
+ */
+
+package com.chillibits.particulatematterapi.model.db.data;
 
 import com.chillibits.particulatematterapi.shared.Constants;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
+@Document
 @AllArgsConstructor
 @NoArgsConstructor
 public class DataRecord {

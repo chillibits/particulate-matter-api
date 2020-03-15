@@ -1,11 +1,15 @@
+/*
+ * Copyright © Marc Auberer 2019 - 2020. All rights reserved
+ */
+
 package com.chillibits.particulatematterapi.controller;
 
-import com.chillibits.particulatematterapi.model.db.DataRecord;
+import com.chillibits.particulatematterapi.model.db.data.DataRecord;
 import com.chillibits.particulatematterapi.repository.main.SensorRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
-import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +24,7 @@ import java.util.Optional;
 @Api(value = "Push REST Endpoint", tags = { "push" })
 public class PushController {
     SensorRepository sensorRepository;
-    MongoOperations operations;
+    MongoTemplate template;
 
     @RequestMapping(method = RequestMethod.POST, path = "/push", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Pushes a measurement record to the database")
@@ -45,7 +49,7 @@ public class PushController {
             sensorRepository.save(sensor);
         });
         // Save record to data db
-        operations.save(record, String.valueOf(record.getChipId()));
+        template.save(record, String.valueOf(record.getChipId()));
         return "ok";
     }
 }

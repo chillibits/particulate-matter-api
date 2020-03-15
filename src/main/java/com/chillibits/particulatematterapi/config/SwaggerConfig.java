@@ -1,5 +1,5 @@
 /*
- * Copyright © Marc Auberer 2019 - 2020. All rights reserved.
+ * Copyright © Marc Auberer 2019 - 2020. All rights reserved
  */
 
 package com.chillibits.particulatematterapi.config;
@@ -27,7 +27,7 @@ public class SwaggerConfig implements ServletContextAware {
 
     @Bean
     public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
+        return new Docket(DocumentationType.SWAGGER_12)
                 .host("api.pm.chillibits.com")
                 .pathProvider(new RelativePathProvider(context) {
                     @Override
@@ -47,10 +47,10 @@ public class SwaggerConfig implements ServletContextAware {
                 "Particulate Matter API",
                 "Official Particulate Matter REST API. For more information, please visit https://github.com/chillibits/particulate-matter-api",
                 "1.0.0",
-                "Terms of Service",
+                "https://chillibits.com/pmapp?p=privacy",
                 new Contact("ChilliBits", "https://www.chillibits.com", "contact@chillibits.com"),
                 "Apache License Version 2.0",
-                "http://www.apache.org/licenses/LICENSE-2.0",
+                "https://www.apache.org/licenses/LICENSE-2.0",
                 Collections.emptyList()
         );
     }

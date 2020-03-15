@@ -1,11 +1,17 @@
-package com.chillibits.particulatematterapi.model.db;
+/*
+ * Copyright © Marc Auberer 2019 - 2020. All rights reserved
+ */
+
+package com.chillibits.particulatematterapi.model.db.main;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,7 +34,7 @@ public class Client {
 
     // Attributes
     @Id
-    private ObjectId id;
+    private int id;
     private String name;
     private String readableName;
     private String secret;
@@ -42,8 +48,4 @@ public class Client {
     private String latestVersionName;
     private String owner;
     private String userMessage;
-
-    public String getId() {
-        return id.toString();
-    }
 }
