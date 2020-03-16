@@ -14,14 +14,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AuthUserDetails implements UserDetails {
+public class AuthDetails implements UserDetails {
     // Variables
     private String name;
     private String secret;
     private boolean active;
     private List<GrantedAuthority> authorities;
 
-    public AuthUserDetails(Client client) {
+    public AuthDetails(Client client) {
         this.name = client.getName();
         this.secret = client.getSecret();
         this.active = client.isActive();
