@@ -76,8 +76,8 @@ public class SensorController {
     @Transactional
     @RequestMapping(method = RequestMethod.PUT, path = "/sensor", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates a sensor")
-    public void updateSensor(@RequestBody Sensor sensor) {
-        sensorRepository.updateSensor(sensor.getChipId(), sensor.getGpsLatitude(), sensor.getGpsLongitude(), sensor.getLastValueP1(), sensor.getLastValueP2());
+    public Integer updateSensor(@RequestBody Sensor sensor) {
+        return sensorRepository.updateSensor(sensor.getChipId(), sensor.getGpsLatitude(), sensor.getGpsLongitude(), sensor.getLastValueP1(), sensor.getLastValueP2());
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/sensor/{id}")

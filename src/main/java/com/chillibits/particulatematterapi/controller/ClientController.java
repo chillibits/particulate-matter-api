@@ -5,6 +5,7 @@
 package com.chillibits.particulatematterapi.controller;
 
 import com.chillibits.particulatematterapi.model.db.main.Client;
+import com.chillibits.particulatematterapi.model.io.ClientInfo;
 import com.chillibits.particulatematterapi.repository.main.ClientRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,17 +19,17 @@ import java.util.List;
 @AllArgsConstructor
 @Api(value = "Client REST Endpoint", tags = { "client" })
 public class ClientController {
-    ClientRepository clientRepository;
+    private ClientRepository clientRepository;
 
     @RequestMapping(method = RequestMethod.GET, path = "/client", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all client objects, found in the database")
-    public List<Client> getClientInfo() {
-        return clientRepository.findAll();
+    public List<ClientInfo> getClientInfo() {
+        return clientRepository.findAllClients();
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/client/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Client getClientInfo(@PathVariable("name") String name) {
-        return clientRepository.findByName(name).orElse(null);
+    public Object getClientInfo(@PathVariable("name") String name) {
+        return clientRepository.findClientByName(name);
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/client", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

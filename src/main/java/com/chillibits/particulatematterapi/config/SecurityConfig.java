@@ -21,11 +21,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserDetailsService userDetailsService; // Have to be autowired, cause without it, there is a dependency cycle
+    private UserDetailsService userDetailsService; // Has to be autowired. Without it, there is a dependency cycle
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
+        auth.userDetailsService(userDetailsService).passwordEncoder(getPasswordEncoder());
     }
 
     @Override
@@ -50,6 +50,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // Client endpoint
                 .antMatchers("/client").permitAll()
                 //.antMatchers("/client").hasAuthority(Client.APPLICATION_ADMIN)
+                // Stats endpoint
+                .antMatchers("/stats").permitAll()
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().httpBasic();
