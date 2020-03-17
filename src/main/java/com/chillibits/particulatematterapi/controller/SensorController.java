@@ -55,13 +55,15 @@ public class SensorController {
                 sensor.setCity(Constants.BLANK_COLUMN);
             }
 
+            long currentTimestamp = System.currentTimeMillis();
+
             // Set remaining attributes
             sensor.setFirmwareVersion(Constants.EMPTY_COLUMN);
             sensor.setNotes(Constants.BLANK_COLUMN);
             sensor.setGpsLatitude(Tools.round(sensor.getGpsLatitude(), 4));
             sensor.setGpsLongitude(Tools.round(sensor.getGpsLongitude(), 4));
-            sensor.setLastMeasurementTimestamp(System.currentTimeMillis());
-            sensor.setLastEditTimestamp(System.currentTimeMillis());
+            sensor.setCreationTimestamp(currentTimestamp);
+            sensor.setLastEditTimestamp(currentTimestamp);
             sensor.setMapsUrl("https://www.google.com/maps/place/" + sensor.getGpsLatitude() + "," + sensor.getGpsLongitude());
             sensor.setLastValueP1(0);
             sensor.setLastValueP2(0);
