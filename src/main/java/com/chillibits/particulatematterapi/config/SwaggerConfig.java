@@ -29,6 +29,7 @@ public class SwaggerConfig implements ServletContextAware {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_12)
                 .host("api.pm.chillibits.com")
+                .enableUrlTemplating(true)
                 .pathProvider(new RelativePathProvider(context) {
                     @Override
                     public String getApplicationBasePath() {

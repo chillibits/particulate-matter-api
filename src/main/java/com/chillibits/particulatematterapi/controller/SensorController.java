@@ -30,7 +30,7 @@ public class SensorController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all sensors, registered in the database")
-    public List<Sensor> getAllSensors(@RequestParam(required = false) boolean compressed) {
+    public List<Sensor> getAllSensors() {
         return sensorRepository.findAll();
     }
 
