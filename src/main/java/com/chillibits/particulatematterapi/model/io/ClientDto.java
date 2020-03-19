@@ -8,14 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Id;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClientInfo {
-    @Id
-    private int id;
+public class ClientDto {
     private String name;
     private String readableName;
     private int type;
