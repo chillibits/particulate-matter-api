@@ -43,36 +43,34 @@ public class SensorController {
     @RequestMapping(method = RequestMethod.POST, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Adds a sensor to the database")
     public Sensor addSensor(@RequestBody Sensor sensor) {
-        if(!sensorRepository.existsById(sensor.getChipId())) {
-            // Retrieve country and city from latitude and longitude
-            try {
-                String url = "https://maps.googleapis.com/maps/api/geocode/json?key=" + Credentials.GOOGLE_API_KEY + "&latlng=" + sensor.getGpsLatitude() + "," + sensor.getGpsLongitude() + "&sensor=false&language=en";
-                MapsPlaceResult place = new ObjectMapper().readValue(new URL(url), MapsPlaceResult.class);
-                sensor.setCountry(place.getCountry());
-                sensor.setCity(place.getCity());
-            } catch (Exception e) {
-                sensor.setCountry(Constants.BLANK_COLUMN);
-                sensor.setCity(Constants.BLANK_COLUMN);
-            }
-
-            long currentTimestamp = System.currentTimeMillis();
-
-            // Set remaining attributes
-            sensor.setFirmwareVersion(Constants.EMPTY_COLUMN);
-            sensor.setNotes(Constants.BLANK_COLUMN);
-            sensor.setGpsLatitude(Tools.round(sensor.getGpsLatitude(), 4));
-            sensor.setGpsLongitude(Tools.round(sensor.getGpsLongitude(), 4));
-            sensor.setCreationTimestamp(currentTimestamp);
-            sensor.setLastEditTimestamp(currentTimestamp);
-            sensor.setMapsUrl("https://www.google.com/maps/place/" + sensor.getGpsLatitude() + "," + sensor.getGpsLongitude());
-            sensor.setLastValueP1(0);
-            sensor.setLastValueP2(0);
-
-            // Save sensor to database
-            return sensorRepository.save(sensor);
-        } else {
-            return null;
+        // Check if sensor already exists
+        if(sensorRepository.existsById(sensor.getChipId())) return null;
+        // Retrieve country and city from latitude and longitude
+        try {
+            String url = "https://maps.googleapis.com/maps/api/geocode/json?key=" + Credentials.GOOGLE_API_KEY + "&latlng=" + sensor.getGpsLatitude() + "," + sensor.getGpsLongitude() + "&sensor=false&language=en";
+            MapsPlaceResult place = new ObjectMapper().readValue(new URL(url), MapsPlaceResult.class);
+            sensor.setCountry(place.getCountry());
+            sensor.setCity(place.getCity());
+        } catch (Exception e) {
+            sensor.setCountry(Constants.BLANK_COLUMN);
+            sensor.setCity(Constants.BLANK_COLUMN);
         }
+
+        long currentTimestamp = System.currentTimeMillis();
+
+        // Set remaining attributes
+        sensor.setFirmwareVersion(Constants.EMPTY_COLUMN);
+        sensor.setNotes(Constants.BLANK_COLUMN);
+        sensor.setGpsLatitude(Tools.round(sensor.getGpsLatitude(), 4));
+        sensor.setGpsLongitude(Tools.round(sensor.getGpsLongitude(), 4));
+        sensor.setCreationTimestamp(currentTimestamp);
+        sensor.setLastEditTimestamp(currentTimestamp);
+        sensor.setMapsUrl("https://www.google.com/maps/place/" + sensor.getGpsLatitude() + "," + sensor.getGpsLongitude());
+        sensor.setLastValueP1(0);
+        sensor.setLastValueP2(0);
+
+        // Save sensor to database
+        return sensorRepository.save(sensor);
     }
 
     @Transactional

@@ -50,7 +50,7 @@ public class SwaggerConfig implements ServletContextAware {
                 "1.0.0",
                 "https://chillibits.com/pmapp?p=privacy",
                 new Contact("ChilliBits", "https://www.chillibits.com", "contact@chillibits.com"),
-                "ODC DbCL v1.0",
+                "ODC DbCL v1.0 License",
                 "https://opendatacommons.org/licenses/dbcl/1.0/",
                 Collections.emptyList()
         );

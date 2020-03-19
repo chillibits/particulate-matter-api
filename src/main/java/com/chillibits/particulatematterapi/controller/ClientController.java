@@ -33,13 +33,13 @@ public class ClientController {
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/client", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Adds a client object")
+    @ApiOperation(value = "Adds a client object", hidden = true)
     public Client addClientInfo(@RequestBody Client info) {
         return clientRepository.save(info);
     }
 
     @RequestMapping(method = RequestMethod.PUT, path = "/client", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Updates a specific client object")
+    @ApiOperation(value = "Updates a specific client object", hidden = true)
     public void updateClientInfoAndroid(@RequestBody Client info) {
         clientRepository.updateClient(
                 info.getId(),

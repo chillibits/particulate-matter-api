@@ -35,6 +35,14 @@ public class UserController {
     @RequestMapping(method = RequestMethod.POST, path = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Adds an user to the database")
     public User addUser(@RequestBody User user) {
+        // Check if user already exists
+        if(userRepository.existsById(user.getId())) return null;
+        // Add additional information to user object
+        long currentTimestamp = System.currentTimeMillis();
+        user.setCreationTimestamp(currentTimestamp);
+        user.setLastEditTimestamp(currentTimestamp);
+        user.setStatus(User.EMAIL_CONFIRMATION_PENDING);
+        user.setRole(User.USER);
         return userRepository.save(user);
     }
 

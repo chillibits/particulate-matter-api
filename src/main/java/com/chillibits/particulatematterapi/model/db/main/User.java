@@ -18,8 +18,9 @@ import javax.persistence.Id;
 public class User {
     // Constants
     public static final int ACTIVE = 1;
-    public static final int SUSPENDED = 2;
-    public static final int LOCKED = 3;
+    public static final int EMAIL_CONFIRMATION_PENDING = 2;
+    public static final int SUSPENDED = 3;
+    public static final int LOCKED = 4;
 
     public static final int USER = 1;
     public static final int OPERATOR = 2;

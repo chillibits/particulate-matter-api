@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 public class DataController {
     @Autowired
     MongoTemplate template;
-
     @Autowired
     ModelMapper mapper;
 
@@ -54,8 +53,6 @@ public class DataController {
         }
         return Collections.singletonList(records);
     }
-
-
 
     private DataRecordDto convertToDto(DataRecord record) {
         DataRecordDto dataRecordDto = mapper.map(record, DataRecordDto.class);
