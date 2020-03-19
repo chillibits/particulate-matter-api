@@ -24,7 +24,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@Api(value = "Sensor REST Endpoint", tags = { "sensor" })
+@Api(value = "Sensor REST Endpoint", tags = "sensor")
 public class SensorController {
     SensorRepository sensorRepository;
 

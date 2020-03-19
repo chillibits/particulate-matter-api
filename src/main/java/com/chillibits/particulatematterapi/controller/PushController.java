@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
-@Api(value = "Push REST Endpoint", tags = { "push" })
+@Api(value = "Push REST Endpoint", tags = "push")
 public class PushController {
     SensorRepository sensorRepository;
     MongoTemplate template;

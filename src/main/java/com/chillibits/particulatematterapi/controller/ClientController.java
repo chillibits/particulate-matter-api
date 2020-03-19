@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@Api(value = "Client REST Endpoint", tags = { "client" })
+@Api(value = "Client REST Endpoint", tags = "client")
 public class ClientController {
     private ClientRepository clientRepository;
 
@@ -57,5 +57,11 @@ public class ClientController {
                 info.getOwner(),
                 info.getUserMessage()
         );
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, path = "/client/{id}")
+    @ApiOperation(value = "Deletes an user from the database", hidden = true)
+    public void deleteClient(@PathVariable int id) {
+        clientRepository.deleteById(id);
     }
 }

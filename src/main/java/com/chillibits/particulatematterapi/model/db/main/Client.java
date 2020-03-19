@@ -40,11 +40,11 @@ public class Client {
     private String secret;
     private int type;
     private String roles;
-    private Integer status;
+    private int status;
     private boolean active;
-    private Integer minVersion;
+    private int minVersion;
     private String minVersionName;
-    private Integer latestVersion;
+    private int latestVersion;
     private String latestVersionName;
     private String owner;
     private String userMessage;

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-@Api(value = "Stats REST Endpoint", tags = { "stats" })
+@Api(value = "Stats REST Endpoint", tags = "stats")
 public class StatsController {
     private SensorRepository sensorRepository;
 

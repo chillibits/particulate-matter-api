@@ -1,3 +1,7 @@
+/*
+ * Copyright © Marc Auberer 2019 - 2020. All rights reserved
+ */
+
 package com.chillibits.particulatematterapi.controller;
 
 import com.chillibits.particulatematterapi.model.io.RankingItem;
@@ -15,7 +19,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@Api(value = "Ranking REST Endpoint", tags = { "ranking" })
+@Api(value = "Ranking REST Endpoint", tags = "ranking")
 public class RankingController {
     SensorRepository sensorRepository;
 

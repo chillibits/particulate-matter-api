@@ -44,12 +44,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // Push endpoint
                 .antMatchers(HttpMethod.POST, "/push").permitAll()
                 // User endpoint
-                .antMatchers(HttpMethod.GET, "/user").hasAnyAuthority(Client.ROLE_APPLICATION, Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
+                .antMatchers(HttpMethod.GET, "/user/{id}").hasAnyAuthority(Client.ROLE_APPLICATION, Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
+                .antMatchers(HttpMethod.GET, "/user").hasAuthority(Client.ROLE_APPLICATION_ADMIN)
                 .antMatchers(HttpMethod.POST, "/user").hasAnyAuthority(Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
                 .antMatchers(HttpMethod.PUT, "/user").hasAnyAuthority(Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
                 // Client endpoint
-                .antMatchers("/client").permitAll()
-                //.antMatchers("/client").hasAuthority(Client.APPLICATION_ADMIN)
+                .antMatchers(HttpMethod.POST, "/client").hasAuthority(Client.ROLE_APPLICATION_ADMIN)
+                .antMatchers(HttpMethod.PUT, "/client").hasAuthority(Client.ROLE_APPLICATION_ADMIN)
+                .antMatchers(HttpMethod.DELETE, "/client").hasAuthority(Client.ROLE_APPLICATION_ADMIN)
+                .antMatchers(HttpMethod.GET, "/client").permitAll()
                 // Stats endpoint
                 .antMatchers("/stats").permitAll()
                 .and().csrf().disable()

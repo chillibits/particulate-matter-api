@@ -19,10 +19,10 @@ public class ClientInfo {
     private String name;
     private String readableName;
     private int type;
-    private Integer status;
-    private Integer minVersion;
+    private int status;
+    private int minVersion;
     private String minVersionName;
-    private Integer latestVersion;
+    private int latestVersion;
     private String latestVersionName;
     private String owner;
     private String userMessage;
