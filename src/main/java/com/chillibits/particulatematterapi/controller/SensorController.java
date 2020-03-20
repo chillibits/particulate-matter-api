@@ -4,10 +4,13 @@
 
 package com.chillibits.particulatematterapi.controller;
 
+import com.chillibits.particulatematterapi.exception.ErrorCodes;
+import com.chillibits.particulatematterapi.exception.SensorCreationException;
 import com.chillibits.particulatematterapi.model.db.main.Sensor;
 import com.chillibits.particulatematterapi.model.io.MapsPlaceResult;
 import com.chillibits.particulatematterapi.model.io.SyncPackage;
-import com.chillibits.particulatematterapi.repository.main.SensorRepository;
+import com.chillibits.particulatematterapi.repository.SensorRepository;
+import com.chillibits.particulatematterapi.repository.UserRepository;
 import com.chillibits.particulatematterapi.shared.Constants;
 import com.chillibits.particulatematterapi.shared.Credentials;
 import com.chillibits.particulatematterapi.shared.Tools;
@@ -15,6 +18,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +32,9 @@ import java.util.List;
 @Api(value = "Sensor REST Endpoint", tags = "sensor")
 public class SensorController {
     SensorRepository sensorRepository;
+    UserRepository userRepository;
+    @Autowired
+    MongoTemplate mongoTemplate;
 
     @RequestMapping(method = RequestMethod.GET, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all sensors, registered in the database")
@@ -42,12 +50,18 @@ public class SensorController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Adds a sensor to the database")
-    public Sensor addSensor(@RequestBody Sensor sensor) {
-        // Check if sensor already exists
-        if(sensorRepository.existsById(sensor.getChipId())) return null;
+    public Sensor addSensor(@RequestBody Sensor sensor) throws SensorCreationException {
+        // Check for possible faulty data parameters
+        if(sensorRepository.existsById(sensor.getChipId())) throw new SensorCreationException(ErrorCodes.SENSOR_ALREADY_EXISTS);
+        if(sensor.getGpsLatitude() == 0 && sensor.getGpsLongitude() == 0) throw new SensorCreationException(ErrorCodes.INVALID_GPS_COORDINATES);
+        if(sensor.getGpsLatitude() == 200 && sensor.getGpsLongitude() == 200) throw new SensorCreationException(ErrorCodes.INVALID_GPS_COORDINATES);
+        if(!mongoTemplate.getCollectionNames().contains(String.valueOf(sensor.getChipId()))) throw new SensorCreationException(ErrorCodes.NO_DATA_RECORDS);
+        if(!userRepository.existsById(sensor.getUserId())) throw new SensorCreationException(ErrorCodes.CANNOT_ASSIGN_TO_USER);
+
         // Retrieve country and city from latitude and longitude
         try {
-            String url = "https://maps.googleapis.com/maps/api/geocode/json?key=" + Credentials.GOOGLE_API_KEY + "&latlng=" + sensor.getGpsLatitude() + "," + sensor.getGpsLongitude() + "&sensor=false&language=en";
+            String url = "https://maps.googleapis.com/maps/api/geocode/json?key=" + Credentials.GOOGLE_API_KEY + "&latlng="
+                    + sensor.getGpsLatitude() + "," + sensor.getGpsLongitude() + "&sensor=false&language=en";
             MapsPlaceResult place = new ObjectMapper().readValue(new URL(url), MapsPlaceResult.class);
             sensor.setCountry(place.getCountry());
             sensor.setCity(place.getCity());
@@ -77,7 +91,13 @@ public class SensorController {
     @RequestMapping(method = RequestMethod.PUT, path = "/sensor", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates a sensor")
     public Integer updateSensor(@RequestBody Sensor sensor) {
-        return sensorRepository.updateSensor(sensor.getChipId(), sensor.getGpsLatitude(), sensor.getGpsLongitude(), sensor.getLastValueP1(), sensor.getLastValueP2());
+        return sensorRepository.updateSensor(
+                sensor.getChipId(),
+                sensor.getGpsLatitude(),
+                sensor.getGpsLongitude(),
+                sensor.getLastValueP1(),
+                sensor.getLastValueP2()
+        );
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/sensor/{id}")

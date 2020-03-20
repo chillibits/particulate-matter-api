@@ -5,7 +5,7 @@
 package com.chillibits.particulatematterapi.controller;
 
 import com.chillibits.particulatematterapi.model.db.data.DataRecord;
-import com.chillibits.particulatematterapi.repository.main.SensorRepository;
+import com.chillibits.particulatematterapi.repository.SensorRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;

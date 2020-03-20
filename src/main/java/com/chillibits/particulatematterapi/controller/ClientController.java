@@ -6,7 +6,7 @@ package com.chillibits.particulatematterapi.controller;
 
 import com.chillibits.particulatematterapi.model.db.main.Client;
 import com.chillibits.particulatematterapi.model.io.ClientDto;
-import com.chillibits.particulatematterapi.repository.main.ClientRepository;
+import com.chillibits.particulatematterapi.repository.ClientRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;

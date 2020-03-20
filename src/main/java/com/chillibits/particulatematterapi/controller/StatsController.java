@@ -5,7 +5,7 @@
 package com.chillibits.particulatematterapi.controller;
 
 import com.chillibits.particulatematterapi.model.io.Stats;
-import com.chillibits.particulatematterapi.repository.main.SensorRepository;
+import com.chillibits.particulatematterapi.repository.SensorRepository;
 import com.chillibits.particulatematterapi.shared.Constants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

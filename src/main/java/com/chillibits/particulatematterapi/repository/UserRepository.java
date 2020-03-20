@@ -2,7 +2,7 @@
  * Copyright © Marc Auberer 2019 - 2020. All rights reserved
  */
 
-package com.chillibits.particulatematterapi.repository.main;
+package com.chillibits.particulatematterapi.repository;
 
 import com.chillibits.particulatematterapi.model.db.main.User;
 import org.springframework.data.jpa.repository.JpaRepository;

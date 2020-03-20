@@ -6,7 +6,7 @@ package com.chillibits.particulatematterapi.service;
 
 import com.chillibits.particulatematterapi.model.db.main.Client;
 import com.chillibits.particulatematterapi.model.io.AuthDetails;
-import com.chillibits.particulatematterapi.repository.main.ClientRepository;
+import com.chillibits.particulatematterapi.repository.ClientRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

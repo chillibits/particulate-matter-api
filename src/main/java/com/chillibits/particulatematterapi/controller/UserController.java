@@ -5,7 +5,7 @@
 package com.chillibits.particulatematterapi.controller;
 
 import com.chillibits.particulatematterapi.model.db.main.User;
-import com.chillibits.particulatematterapi.repository.main.UserRepository;
+import com.chillibits.particulatematterapi.repository.UserRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
