@@ -32,7 +32,8 @@ public class SensorCreationException extends Exception {
     private int errorCode = 0;
 
     public SensorCreationException(int errorCode) {
-        super("Error code " + errorCode + ": " + descriptions.get(errorCode));
+        // Error description as json string to process the error code on client side for localizing the error messages, presented to the users.
+        super("{\"error_code\": " + errorCode + ", \"description\": \"" + descriptions.get(errorCode) + "\"");
         this.errorCode = errorCode;
     }
 }
