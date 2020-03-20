@@ -28,12 +28,8 @@ public class SensorCreationException extends Exception {
         put(ErrorCodes.USER_NOT_EXISTING, "This user does not exist.");
     }};
 
-    // Variables
-    private int errorCode = 0;
-
     public SensorCreationException(int errorCode) {
         // Error description as json string to process the error code on client side for localizing the error messages, presented to the users.
-        super("{\"error_code\": " + errorCode + ", \"description\": \"" + descriptions.get(errorCode) + "\"");
-        this.errorCode = errorCode;
+        super("{\"error_code\": " + errorCode + ", \"description\": \"" + descriptions.get(errorCode) + "\"}");
     }
 }
