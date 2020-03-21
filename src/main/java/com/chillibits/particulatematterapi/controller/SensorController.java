@@ -38,8 +38,13 @@ public class SensorController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all sensors, registered in the database")
-    public List<Sensor> getAllSensors() {
-        return sensorRepository.findAll();
+    public List<Sensor> getAllSensors(
+            @RequestParam(defaultValue = "0") double latitude,
+            @RequestParam(defaultValue = "0") double longitude,
+            @RequestParam(defaultValue = "0") int radius
+    ) {
+        if(radius == 0) return sensorRepository.findAll();
+        return sensorRepository.findAllInRadius(latitude, longitude, radius);
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/sensor/sync", produces = MediaType.APPLICATION_JSON_VALUE)

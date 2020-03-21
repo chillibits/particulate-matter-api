@@ -13,6 +13,9 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface SensorRepository extends JpaRepository<Sensor, Long> {
+    @Query("SELECT s, (6371000 * acos(cos(radians(?1)) * cos(radians(s.gpsLatitude)) * cos(radians(s.gpsLongitude) - radians(?2)) + sin(radians(?1)) * sin(radians(s.gpsLatitude)))) AS distance FROM Sensor s GROUP BY distance HAVING distance <= ?3 ORDER BY distance ASC")
+    List<Sensor> findAllInRadius(double lat, double lng, int radius);
+
     @Modifying
     @Query("UPDATE Sensor s SET s.gpsLatitude = ?2, s.gpsLongitude = ?3, s.lastValueP1 = ?4, s.lastValueP2 = ?5 WHERE s.chipId = ?1")
     Integer updateSensor(long chipId, double latitude, double longitude, double lastValueP1, double lastValueP2);
