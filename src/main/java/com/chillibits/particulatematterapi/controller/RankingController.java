@@ -21,7 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @Api(value = "Ranking REST Endpoint", tags = "ranking")
 public class RankingController {
-    SensorRepository sensorRepository;
+    private SensorRepository sensorRepository;
 
     @RequestMapping(method = RequestMethod.GET, path = "/ranking/city", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns a ranking of the top cities with the most sensors")

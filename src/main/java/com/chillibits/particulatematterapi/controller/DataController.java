@@ -24,9 +24,9 @@ import java.util.stream.Collectors;
 @Api(value = "Data REST Endpoint", tags = "data")
 public class DataController {
     @Autowired
-    MongoTemplate template;
+    private MongoTemplate template;
     @Autowired
-    ModelMapper mapper;
+    private ModelMapper mapper;
 
     @RequestMapping(method = RequestMethod.GET, path = "/data/{chipId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<DataRecord> getDataRecords(@PathVariable long chipId, @RequestParam(defaultValue = "0") long from, @RequestParam(defaultValue = "0") long to) {

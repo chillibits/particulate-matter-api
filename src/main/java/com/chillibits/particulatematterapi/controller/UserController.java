@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Api(value = "User REST Endpoint", tags = "user")
 public class UserController {
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @RequestMapping(method = RequestMethod.GET, path = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all users, registered in the database")

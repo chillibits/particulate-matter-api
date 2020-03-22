@@ -24,7 +24,7 @@ public class ClientController {
     @Autowired
     private ClientRepository clientRepository;
     @Autowired
-    ModelMapper mapper;
+    private ModelMapper mapper;
 
     @RequestMapping(method = RequestMethod.GET, path = "/client", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all client objects, found in the database")

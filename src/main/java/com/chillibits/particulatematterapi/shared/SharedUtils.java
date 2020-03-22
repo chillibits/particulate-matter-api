@@ -1,12 +1,16 @@
+/*
+ * Copyright © Marc Auberer 2019 - 2020. All rights reserved
+ */
+
 package com.chillibits.particulatematterapi.shared;
 
-public class Tools {
-    public static double round(double value, int places) {
+public class SharedUtils {
+    public static double round(double number, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
         long factor = (long) Math.pow(10, places);
-        value = value * factor;
-        long tmp = Math.round(value);
+        number = number * factor;
+        long tmp = Math.round(number);
         return (double) tmp / factor;
     }
 

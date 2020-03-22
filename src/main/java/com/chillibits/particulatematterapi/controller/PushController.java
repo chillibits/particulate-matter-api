@@ -23,8 +23,8 @@ import java.util.Optional;
 @AllArgsConstructor
 @Api(value = "Push REST Endpoint", tags = "push")
 public class PushController {
-    SensorRepository sensorRepository;
-    MongoTemplate template;
+    private SensorRepository sensorRepository;
+    private MongoTemplate template;
 
     @RequestMapping(method = RequestMethod.POST, path = "/push", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Pushes a measurement record to the database")

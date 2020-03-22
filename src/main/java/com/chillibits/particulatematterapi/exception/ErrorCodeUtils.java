@@ -4,7 +4,7 @@
 
 package com.chillibits.particulatematterapi.exception;
 
-public class ErrorCodes {
+public class ErrorCodeUtils {
     // Client errors (1xx)
 
     // Data errors (2xx)

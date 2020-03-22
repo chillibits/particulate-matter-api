@@ -24,7 +24,7 @@ public class ParticulateMatterApiApplication {
 	}
 
 	@Bean
-	RouterFunction<ServerResponse> routerFunction() {
+	public RouterFunction<ServerResponse> routerFunction() {
 		return route(GET("/"), req -> ServerResponse.permanentRedirect(URI.create("swagger-ui.html")).build());
 	}
 }

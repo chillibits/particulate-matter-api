@@ -4,7 +4,7 @@
 
 package com.chillibits.particulatematterapi.controller;
 
-import com.chillibits.particulatematterapi.exception.ErrorCodes;
+import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
 import com.chillibits.particulatematterapi.exception.SensorCreationException;
 import com.chillibits.particulatematterapi.model.db.main.Sensor;
 import com.chillibits.particulatematterapi.model.io.MapsPlaceResult;
@@ -13,7 +13,7 @@ import com.chillibits.particulatematterapi.repository.SensorRepository;
 import com.chillibits.particulatematterapi.repository.UserRepository;
 import com.chillibits.particulatematterapi.shared.Constants;
 import com.chillibits.particulatematterapi.shared.Credentials;
-import com.chillibits.particulatematterapi.shared.Tools;
+import com.chillibits.particulatematterapi.shared.SharedUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,10 +31,10 @@ import java.util.List;
 @AllArgsConstructor
 @Api(value = "Sensor REST Endpoint", tags = "sensor")
 public class SensorController {
-    SensorRepository sensorRepository;
-    UserRepository userRepository;
+    private SensorRepository sensorRepository;
+    private UserRepository userRepository;
     @Autowired
-    MongoTemplate mongoTemplate;
+    private MongoTemplate mongoTemplate;
 
     @RequestMapping(method = RequestMethod.GET, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all sensors, registered in the database")
@@ -57,11 +57,11 @@ public class SensorController {
     @ApiOperation(value = "Adds a sensor to the database")
     public Sensor addSensor(@RequestBody Sensor sensor) throws SensorCreationException {
         // Check for possible faulty data parameters
-        if(sensorRepository.existsById(sensor.getChipId())) throw new SensorCreationException(ErrorCodes.SENSOR_ALREADY_EXISTS);
-        if(sensor.getGpsLatitude() == 0 && sensor.getGpsLongitude() == 0) throw new SensorCreationException(ErrorCodes.INVALID_GPS_COORDINATES);
-        if(sensor.getGpsLatitude() == 200 && sensor.getGpsLongitude() == 200) throw new SensorCreationException(ErrorCodes.INVALID_GPS_COORDINATES);
-        if(!mongoTemplate.getCollectionNames().contains(String.valueOf(sensor.getChipId()))) throw new SensorCreationException(ErrorCodes.NO_DATA_RECORDS);
-        if(!userRepository.existsById(sensor.getUserId())) throw new SensorCreationException(ErrorCodes.CANNOT_ASSIGN_TO_USER);
+        if(sensorRepository.existsById(sensor.getChipId())) throw new SensorCreationException(ErrorCodeUtils.SENSOR_ALREADY_EXISTS);
+        if(sensor.getGpsLatitude() == 0 && sensor.getGpsLongitude() == 0) throw new SensorCreationException(ErrorCodeUtils.INVALID_GPS_COORDINATES);
+        if(sensor.getGpsLatitude() == 200 && sensor.getGpsLongitude() == 200) throw new SensorCreationException(ErrorCodeUtils.INVALID_GPS_COORDINATES);
+        if(!mongoTemplate.getCollectionNames().contains(String.valueOf(sensor.getChipId()))) throw new SensorCreationException(ErrorCodeUtils.NO_DATA_RECORDS);
+        if(!userRepository.existsById(sensor.getUserId())) throw new SensorCreationException(ErrorCodeUtils.CANNOT_ASSIGN_TO_USER);
 
         // Retrieve country and city from latitude and longitude
         try {
@@ -80,8 +80,8 @@ public class SensorController {
         // Set remaining attributes
         sensor.setFirmwareVersion(Constants.EMPTY_COLUMN);
         sensor.setNotes(Constants.BLANK_COLUMN);
-        sensor.setGpsLatitude(Tools.round(sensor.getGpsLatitude(), 4));
-        sensor.setGpsLongitude(Tools.round(sensor.getGpsLongitude(), 4));
+        sensor.setGpsLatitude(SharedUtils.round(sensor.getGpsLatitude(), 4));
+        sensor.setGpsLongitude(SharedUtils.round(sensor.getGpsLongitude(), 4));
         sensor.setCreationTimestamp(currentTimestamp);
         sensor.setLastEditTimestamp(currentTimestamp);
         sensor.setMapsUrl("https://www.google.com/maps/place/" + sensor.getGpsLatitude() + "," + sensor.getGpsLongitude());
