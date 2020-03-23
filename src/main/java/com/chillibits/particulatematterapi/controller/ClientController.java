@@ -47,7 +47,8 @@ public class ClientController {
     @RequestMapping(method = RequestMethod.PUT, path = "/client", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates a specific client object", hidden = true)
     public void updateClientInfoAndroid(@RequestBody Client info) {
-        clientRepository.updateClient(
+        clientRepository.updateClient(info);
+        /*clientRepository.updateClient(
                 info.getId(),
                 info.getName(),
                 info.getReadableName(),
@@ -62,7 +63,7 @@ public class ClientController {
                 info.getLatestVersionName(),
                 info.getOwner(),
                 info.getUserMessage()
-        );
+        );*/
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/client/{id}")
@@ -75,7 +76,7 @@ public class ClientController {
         return mapper.map(client, ClientDto.class);
     }
 
-    private Client convertToEntity(ClientDto clientDto) {
+    /*private Client convertToEntity(ClientDto clientDto) {
         return mapper.map(clientDto, Client.class);
-    }
+    }*/
 }

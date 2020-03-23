@@ -30,9 +30,9 @@ public class DataController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/data/{chipId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<DataRecord> getDataRecords(@PathVariable long chipId, @RequestParam(defaultValue = "0") long from, @RequestParam(defaultValue = "0") long to) {
-        if(to == 0) to = System.currentTimeMillis();
-        if(from == 0) from = to - ConstantUtils.DEFAULT_DATA_TIMESPAN;
-        return template.find(Query.query(Criteria.where("timestamp").gte(from).lte(to)), DataRecord.class, String.valueOf(chipId));
+        long toTimestamp = to == 0 ? System.currentTimeMillis() : to;
+        long fromTimestamp = from == 0 ? to - ConstantUtils.DEFAULT_DATA_TIMESPAN : from;
+        return template.find(Query.query(Criteria.where("timestamp").gte(fromTimestamp).lte(toTimestamp)), DataRecord.class, String.valueOf(chipId));
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/data/{chipId}", produces = MediaType.APPLICATION_JSON_VALUE, params = "compressed")
