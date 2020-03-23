@@ -5,12 +5,11 @@
 package com.chillibits.particulatematterapi.shared;
 
 public class SharedUtils {
-    public static double round(double number, int places) {
+    public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
-
         long factor = (long) Math.pow(10, places);
-        number = number * factor;
-        long tmp = Math.round(number);
+        double newValue = value * factor;
+        long tmp = Math.round(newValue);
         return (double) tmp / factor;
     }
 

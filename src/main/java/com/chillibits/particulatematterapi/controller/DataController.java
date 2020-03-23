@@ -6,7 +6,7 @@ package com.chillibits.particulatematterapi.controller;
 
 import com.chillibits.particulatematterapi.model.db.data.DataRecord;
 import com.chillibits.particulatematterapi.model.io.DataRecordDto;
-import com.chillibits.particulatematterapi.shared.Constants;
+import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import io.swagger.annotations.Api;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class DataController {
     @RequestMapping(method = RequestMethod.GET, path = "/data/{chipId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<DataRecord> getDataRecords(@PathVariable long chipId, @RequestParam(defaultValue = "0") long from, @RequestParam(defaultValue = "0") long to) {
         if(to == 0) to = System.currentTimeMillis();
-        if(from == 0) from = to - Constants.DEFAULT_DATA_TIMESPAN;
+        if(from == 0) from = to - ConstantUtils.DEFAULT_DATA_TIMESPAN;
         return template.find(Query.query(Criteria.where("timestamp").gte(from).lte(to)), DataRecord.class, String.valueOf(chipId));
     }
 
@@ -42,10 +42,10 @@ public class DataController {
             @RequestParam(defaultValue = "0") long to,
             @RequestParam(defaultValue = "false") boolean compressed
     ) {
-        if(to == 0) to = System.currentTimeMillis();
-        if(from == 0) from = to - Constants.DEFAULT_DATA_TIMESPAN;
+        long toTimestamp = to == 0 ? System.currentTimeMillis() : to;
+        long fromTimestamp = from == 0 ? to - ConstantUtils.DEFAULT_DATA_TIMESPAN : from;
 
-        List<DataRecord> records = template.find(Query.query(Criteria.where("timestamp").gte(from).lte(to)), DataRecord.class, String.valueOf(chipId));
+        List<DataRecord> records = template.find(Query.query(Criteria.where("timestamp").gte(fromTimestamp).lte(toTimestamp)), DataRecord.class, String.valueOf(chipId));
         if(compressed) {
             return records.stream()
                     .map(this::convertToDto)
@@ -60,9 +60,9 @@ public class DataController {
         return dataRecordDto;
     }
 
-    private DataRecord convertToEntity(DataRecordDto recordDto) {
+    /*private DataRecord convertToEntity(DataRecordDto recordDto) {
         DataRecord record = mapper.map(recordDto, DataRecord.class);
         record.setTimestamp(record.getTimestamp() * 1000);
         return record;
-    }
+    }*/
 }

@@ -4,7 +4,7 @@
 
 package com.chillibits.particulatematterapi.model.db.data;
 
-import com.chillibits.particulatematterapi.shared.Constants;
+import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,7 +20,7 @@ public class DataRecord {
     private long timestamp = 0;
     @JsonProperty("software_version") private String firmwareVersion;
     @JsonProperty("sensordatavalues") private SensorDataValues[] sensorDataValues;
-    private String note = Constants.BLANK_COLUMN;
+    private String note = ConstantUtils.BLANK_COLUMN;
 
     @Data
     @AllArgsConstructor

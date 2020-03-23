@@ -6,7 +6,7 @@ package com.chillibits.particulatematterapi.controller;
 
 import com.chillibits.particulatematterapi.model.io.Stats;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
-import com.chillibits.particulatematterapi.shared.Constants;
+import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -25,7 +25,7 @@ public class StatsController {
     @ApiOperation(value = "Returns stats about the API")
     public Stats getStats() {
         // Initialization
-        long minMeasurementTimestamp = System.currentTimeMillis() - Constants.MINUTES_UNTIL_INACTIVITY;
+        long minMeasurementTimestamp = System.currentTimeMillis() - ConstantUtils.MINUTES_UNTIL_INACTIVITY;
 
         // Retrieve stats
         Stats stats = new Stats();

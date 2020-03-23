@@ -11,7 +11,7 @@ import com.chillibits.particulatematterapi.model.io.MapsPlaceResult;
 import com.chillibits.particulatematterapi.model.io.SyncPackage;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
 import com.chillibits.particulatematterapi.repository.UserRepository;
-import com.chillibits.particulatematterapi.shared.Constants;
+import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import com.chillibits.particulatematterapi.shared.Credentials;
 import com.chillibits.particulatematterapi.shared.SharedUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -71,15 +71,15 @@ public class SensorController {
             sensor.setCountry(place.getCountry());
             sensor.setCity(place.getCity());
         } catch (Exception e) {
-            sensor.setCountry(Constants.BLANK_COLUMN);
-            sensor.setCity(Constants.BLANK_COLUMN);
+            sensor.setCountry(ConstantUtils.BLANK_COLUMN);
+            sensor.setCity(ConstantUtils.BLANK_COLUMN);
         }
 
         long currentTimestamp = System.currentTimeMillis();
 
         // Set remaining attributes
-        sensor.setFirmwareVersion(Constants.EMPTY_COLUMN);
-        sensor.setNotes(Constants.BLANK_COLUMN);
+        sensor.setFirmwareVersion(ConstantUtils.EMPTY_COLUMN);
+        sensor.setNotes(ConstantUtils.BLANK_COLUMN);
         sensor.setGpsLatitude(SharedUtils.round(sensor.getGpsLatitude(), 4));
         sensor.setGpsLongitude(SharedUtils.round(sensor.getGpsLongitude(), 4));
         sensor.setCreationTimestamp(currentTimestamp);
