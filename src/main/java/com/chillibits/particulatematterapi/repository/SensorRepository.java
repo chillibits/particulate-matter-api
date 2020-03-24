@@ -26,6 +26,9 @@ public interface SensorRepository extends JpaRepository<Sensor, Long> {
     @Query("SELECT new com.chillibits.particulatematterapi.model.io.RankingItem(s.country, '', COUNT(s.country)) FROM Sensor s GROUP BY s.country ORDER BY COUNT(s.country)")
     List<RankingItem> getRankingByCountry(int items);
 
+    @Query("SELECT s.chipId FROM Sensor s WHERE country = ?1")
+    List<Long> getChipIdsOfSensorFromCountry(String country);
+
     @Query("SELECT COUNT(s.chipId) FROM Sensor s")
     Integer getSensorsMapTotal();
 

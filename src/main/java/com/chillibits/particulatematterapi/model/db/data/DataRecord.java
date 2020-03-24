@@ -19,13 +19,13 @@ public class DataRecord {
     @JsonProperty("esp8266id") private long chipId;
     private long timestamp = 0;
     @JsonProperty("software_version") private String firmwareVersion;
-    @JsonProperty("sensordatavalues") private SensorDataValues[] sensorDataValues;
+    @JsonProperty("sensordatavalues") private SensorDataValue[] sensorDataValues;
     private String note = ConstantUtils.BLANK_COLUMN;
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class SensorDataValues {
+    public static class SensorDataValue {
         @JsonProperty("value_type") private String valueType;
         @JsonProperty("value") private double value;
     }

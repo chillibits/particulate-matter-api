@@ -33,6 +33,7 @@ public class ClientController {
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/client/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Returns info about a specific client, identified by its name")
     public ClientDto getClientInfo(@PathVariable("name") String name) {
         Optional<Client> client = clientRepository.findByName(name);
         return client.map(this::convertToDto).orElse(null);
@@ -46,24 +47,8 @@ public class ClientController {
 
     @RequestMapping(method = RequestMethod.PUT, path = "/client", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates a specific client object", hidden = true)
-    public void updateClientInfoAndroid(@RequestBody Client info) {
-        clientRepository.updateClient(info);
-        /*clientRepository.updateClient(
-                info.getId(),
-                info.getName(),
-                info.getReadableName(),
-                info.getSecret(),
-                info.getType(),
-                info.getRoles(),
-                info.getStatus(),
-                info.isActive(),
-                info.getMinVersion(),
-                info.getMinVersionName(),
-                info.getLatestVersion(),
-                info.getLatestVersionName(),
-                info.getOwner(),
-                info.getUserMessage()
-        );*/
+    public Integer updateClientInfoAndroid(@RequestBody Client info) {
+        return clientRepository.updateClient(info);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/client/{id}")

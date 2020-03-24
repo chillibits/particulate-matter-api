@@ -37,9 +37,9 @@ public class PushController {
             sensor.setLastMeasurementTimestamp(timestamp);
             sensor.setFirmwareVersion(record.getFirmwareVersion());
             // Set gps coordinates, if they were passed
-            Optional<DataRecord.SensorDataValues> pairLat = Arrays.stream(record.getSensorDataValues()).filter(keyValuePair -> keyValuePair.getValueType().equals("GPS_lat")).findAny();
-            Optional<DataRecord.SensorDataValues> pairLng = Arrays.stream(record.getSensorDataValues()).filter(keyValuePair -> keyValuePair.getValueType().equals("GPS_lng")).findAny();
-            Optional<DataRecord.SensorDataValues> pairAlt = Arrays.stream(record.getSensorDataValues()).filter(keyValuePair -> keyValuePair.getValueType().equals("GPS_height")).findAny();
+            Optional<DataRecord.SensorDataValue> pairLat = Arrays.stream(record.getSensorDataValues()).filter(keyValuePair -> keyValuePair.getValueType().equals("GPS_lat")).findAny();
+            Optional<DataRecord.SensorDataValue> pairLng = Arrays.stream(record.getSensorDataValues()).filter(keyValuePair -> keyValuePair.getValueType().equals("GPS_lng")).findAny();
+            Optional<DataRecord.SensorDataValue> pairAlt = Arrays.stream(record.getSensorDataValues()).filter(keyValuePair -> keyValuePair.getValueType().equals("GPS_height")).findAny();
             if(pairLat.isPresent() && pairLng.isPresent() && pairAlt.isPresent()) {
                 sensor.setGpsLatitude(pairLat.get().getValue());
                 sensor.setGpsLongitude(pairLng.get().getValue());
