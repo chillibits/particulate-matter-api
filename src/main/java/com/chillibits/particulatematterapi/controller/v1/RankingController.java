@@ -2,7 +2,7 @@
  * Copyright © Marc Auberer 2019 - 2020. All rights reserved
  */
 
-package com.chillibits.particulatematterapi.controller;
+package com.chillibits.particulatematterapi.controller.v1;
 
 import com.chillibits.particulatematterapi.model.io.RankingItem;
 import com.chillibits.particulatematterapi.repository.SensorRepository;

@@ -2,7 +2,7 @@
  * Copyright © Marc Auberer 2019 - 2020. All rights reserved
  */
 
-package com.chillibits.particulatematterapi.controller;
+package com.chillibits.particulatematterapi.controller.v1;
 
 import com.chillibits.particulatematterapi.model.db.data.DataRecord;
 import com.chillibits.particulatematterapi.model.io.DataRecordDto;
@@ -35,19 +35,24 @@ public class DataController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/data/{chipId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all data records for a specific sensor")
-    public List<Object> getDataRecordsCompressed(
+    public List<DataRecord> getDataRecordsUncompressed(
+        @PathVariable long chipId,
+        @RequestParam(defaultValue = "0") long from,
+        @RequestParam(defaultValue = "0") long to
+    ) {
+        return getDataRecords(chipId, from, to);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/data/{chipId}", params = "compressed")
+    @ApiOperation(value = "Returns all data records for a specific sensor in a compressed form")
+    public List<DataRecordDto> getDataRecordsCompressed(
             @PathVariable long chipId,
             @RequestParam(defaultValue = "0") long from,
-            @RequestParam(defaultValue = "0") long to,
-            @RequestParam(defaultValue = "false") boolean compressed
+            @RequestParam(defaultValue = "0") long to
     ) {
-        List<DataRecord> records = getDataRecords(chipId, from, to);
-        if(compressed) {
-            return records.stream()
-                    .map(this::convertToDto)
-                    .collect(Collectors.toList());
-        }
-        return Collections.singletonList(records);
+        return getDataRecords(chipId, from, to).stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/data/{chipId}/latest", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -59,16 +64,27 @@ public class DataController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/data/{chipId}/all", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all data records for a specific sensor", hidden = true)
-    public List<DataRecord> getAllDataRecords(@PathVariable long chipId) {
+    public List<DataRecord> getAllDataRecordsUncompressed(@PathVariable long chipId) {
         return template.find(Query.query(new Criteria()), DataRecord.class, String.valueOf(chipId));
     }
 
+    @RequestMapping(method = RequestMethod.GET, path = "/data/{chipId}/all", produces = MediaType.APPLICATION_JSON_VALUE, params = "compressed")
+    @ApiOperation(value = "Returns all data records for a specific sensor", hidden = true)
+    public List<DataRecordDto> getAllDataRecordsCompressed(@PathVariable long chipId) {
+        return template.find(Query.query(new Criteria()), DataRecord.class, String.valueOf(chipId))
+                .stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
     @RequestMapping(method = RequestMethod.GET, path = "/data/average", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Returns a record with the averages of the latest values of the specified sensors")
     public DataRecordDto getDataAverageFromMultipleSensors(@RequestParam Integer[] chipIds) {
         // Create Map for data values in schema: valueType, value, sensorCount
         Map<String, Map.Entry<Double, Integer>> dataValues = new HashMap<>();
         for(Integer chipId : chipIds) {
             DataRecord currRecord = getLatestDataRecord(chipId);
+            if(currRecord.getTimestamp() < System.currentTimeMillis() - ConstantUtils.MINUTES_UNTIL_INACTIVITY * 60 * 1000) continue;
             for(DataRecord.SensorDataValue currValue : currRecord.getSensorDataValues()) {
                 String valueType = currValue.getValueType();
                 if(dataValues.containsKey(valueType)) {
@@ -93,6 +109,7 @@ public class DataController {
             int valueSensorCount = Integer.parseInt(item.getValue().getValue().toString());
             avgDataValues.add(new DataRecord.SensorDataValue(item.getKey(), SharedUtils.round(value / valueSensorCount, 3)));
         }
+        // Create averageRecord out of dataValues
         DataRecord avgRecord = new DataRecord();
         avgRecord.setTimestamp(System.currentTimeMillis());
         avgRecord.setSensorDataValues(avgDataValues.toArray(DataRecord.SensorDataValue[]::new));
@@ -101,9 +118,9 @@ public class DataController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/data/country/{country}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<DataRecord> getDataCountry(
-            @PathVariable String country,
-            @RequestParam(defaultValue = "0") long from,
-            @RequestParam(defaultValue = "0") long to
+        @PathVariable String country,
+        @RequestParam(defaultValue = "0") long from,
+        @RequestParam(defaultValue = "0") long to
     ) {
         // Get chipIds of the sensors from the requested location
         List<Long> chipIds = sensorRepository.getChipIdsOfSensorFromCountry(country);
@@ -112,6 +129,11 @@ public class DataController {
         List<List<DataRecord>> data = new ArrayList<>();
         for(Long chipId : chipIds) data.add(getDataRecords(chipId, from, to));
 
+        return null;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/data/country/{country}/latest", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<DataRecord> getDataCountryLatest(@PathVariable String country) {
         return null;
     }
 

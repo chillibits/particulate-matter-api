@@ -27,4 +27,8 @@ public class ParticulateMatterApiApplication {
 	public RouterFunction<ServerResponse> routerFunction() {
 		return route(GET("/"), req -> ServerResponse.permanentRedirect(URI.create("swagger-ui.html")).build());
 	}
+
+	public void populateSensorsDatabase() {
+
+	}
 }

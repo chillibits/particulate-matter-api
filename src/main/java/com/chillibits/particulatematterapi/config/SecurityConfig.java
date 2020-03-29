@@ -21,7 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserDetailsService userDetailsService; // Has to be autowired. Without it, there is a dependency cycle
+    private UserDetailsService userDetailsService; // Has to be auto wired. Without it, there is a dependency cycle
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
