@@ -37,8 +37,8 @@ function getAllUrlParams() {
 
 function encodeQueryData(data) {
    const ret = [];
-   for (let d in data) ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
-   return ret.join('&');
+   for (let d in data) ret.push(encodeURIComponent(d) + "=" + encodeURIComponent(data[d]));
+   return ret.join("&");
 }
 
 function drawLineChart(label, category, series) {
@@ -79,7 +79,7 @@ var urlSuffix = encodeQueryData(params);
 $.ajax({
     url: "data/chart?" + urlSuffix,
     success: (result) => {
-        var field = JSON.parse(result).field
+        var field = JSON.parse(result).field;
         var time = JSON.parse(result).time;
         var values = JSON.parse(result).values;
         drawLineChart(field, time, values);
