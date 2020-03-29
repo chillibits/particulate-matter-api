@@ -1,4 +1,4 @@
-// Functions
+// ------------------------------------------------- Functions ---------------------------------------------------------
 
 function getAllUrlParams() {
     var queryString = window.location.search.slice(1);
@@ -35,7 +35,13 @@ function getAllUrlParams() {
     return obj;
 }
 
-function drawLineChart(category, series) {
+function encodeQueryData(data) {
+   const ret = [];
+   for (let d in data) ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
+   return ret.join('&');
+}
+
+function drawLineChart(label, category, series) {
     Highcharts.chart("container", {
         chart: {
             type: "line",
@@ -57,17 +63,25 @@ function drawLineChart(category, series) {
         },
 
         series: [{
+            name: label,
             data: series
         }]
     });
 }
 
-// Main code
+// -------------------------------------------------- Main code --------------------------------------------------------
+
+// Get url parameter
+var params = getAllUrlParams();
+var urlSuffix = encodeQueryData(params);
+
+// Execute request for data
 $.ajax({
-    url: "data/chart/" + getAllUrlParams().chipId,
-    success: result => {
+    url: "data/chart?" + urlSuffix,
+    success: (result) => {
+        var field = JSON.parse(result).field
         var time = JSON.parse(result).time;
         var values = JSON.parse(result).values;
-        drawLineChart(time, values);
+        drawLineChart(field, time, values);
     }
 });

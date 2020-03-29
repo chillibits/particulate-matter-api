@@ -142,22 +142,25 @@ public class DataController {
 
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/data/chart/{chipId}")
+    @RequestMapping(method = RequestMethod.GET, path = "/data/chart")
     @ApiOperation(value = "Returns chart ready data", hidden = true)
     public String getChartData(
-            @PathVariable long chipId,
+            @RequestParam(defaultValue = "0") long chipId,
             @RequestParam(defaultValue = "0") long from,
-            @RequestParam(defaultValue = "0") long to
+            @RequestParam(defaultValue = "0") long to,
+            @RequestParam(defaultValue = "0") int fieldIndex
     ) {
+        JSONObject json = new JSONObject();
         List<DataRecord> records = getDataRecords(chipId, from, to);
+        if(records.isEmpty()) return json.toString();
         JSONArray jsonTime = new JSONArray();
         JSONArray jsonValues = new JSONArray();
-        JSONObject json = new JSONObject();
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat(from == 0 && to == 0 ? "HH:mm:ss" : "yyyy-MM-dd HH:mm:ss");
         records.forEach(record -> {
             jsonTime.put(sdf.format(record.getTimestamp()));
-            jsonValues.put(record.getSensorDataValues()[0].getValue());
+            jsonValues.put(record.getSensorDataValues()[fieldIndex].getValue());
         });
+        json.put("field", records.get(0).getSensorDataValues()[fieldIndex].getValueType());
         json.put("time", jsonTime);
         json.put("values", jsonValues);
         return json.toString();
