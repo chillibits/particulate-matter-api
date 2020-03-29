@@ -43,6 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/data").hasAnyAuthority(Client.ROLE_APPLICATION_ADMIN)
                 // Push endpoint
                 .antMatchers(HttpMethod.POST, "/push").permitAll()
+                // Chart endpoint
+                .antMatchers(HttpMethod.GET, "/chart").permitAll()
                 // User endpoint
                 .antMatchers(HttpMethod.GET, "/user/{id}").hasAnyAuthority(Client.ROLE_APPLICATION, Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
                 .antMatchers(HttpMethod.GET, "/user").hasAuthority(Client.ROLE_APPLICATION_ADMIN)

@@ -11,6 +11,8 @@ import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import com.chillibits.particulatematterapi.shared.SharedUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -20,6 +22,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -126,15 +129,38 @@ public class DataController {
         List<Long> chipIds = sensorRepository.getChipIdsOfSensorFromCountry(country);
 
         // Get data from all selected sensors
-        List<List<DataRecord>> data = new ArrayList<>();
-        for(Long chipId : chipIds) data.add(getDataRecords(chipId, from, to));
+        List<DataRecord> data = new ArrayList<>();
+        for(Long chipId : chipIds) {
+            for(DataRecord record : getDataRecords(chipId, from, to)) data.add(record);
+        }
 
-        return null;
+        return data;
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/data/country/{country}/latest", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<DataRecord> getDataCountryLatest(@PathVariable String country) {
-        return null;
+    public void getDataCountryLatest(@PathVariable String country) {
+
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/data/chart/{chipId}")
+    @ApiOperation(value = "Returns chart ready data", hidden = true)
+    public String getChartData(
+            @PathVariable long chipId,
+            @RequestParam(defaultValue = "0") long from,
+            @RequestParam(defaultValue = "0") long to
+    ) {
+        List<DataRecord> records = getDataRecords(chipId, from, to);
+        JSONArray jsonTime = new JSONArray();
+        JSONArray jsonValues = new JSONArray();
+        JSONObject json = new JSONObject();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        records.forEach(record -> {
+            jsonTime.put(sdf.format(record.getTimestamp()));
+            jsonValues.put(record.getSensorDataValues()[0].getValue());
+        });
+        json.put("time", jsonTime);
+        json.put("values", jsonValues);
+        return json.toString();
     }
 
     // ---------------------------------------------- Utility functions ------------------------------------------------
