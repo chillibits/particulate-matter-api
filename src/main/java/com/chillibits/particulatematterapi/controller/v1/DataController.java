@@ -145,7 +145,7 @@ public class DataController {
     @RequestMapping(method = RequestMethod.GET, path = "/data/chart")
     @ApiOperation(value = "Returns chart ready data", hidden = true)
     public String getChartData(
-            @RequestParam(defaultValue = "0") long chipId,
+            @RequestParam(defaultValue = "3953497") long chipId,
             @RequestParam(defaultValue = "0") long from,
             @RequestParam(defaultValue = "0") long to,
             @RequestParam(defaultValue = "0") int fieldIndex
