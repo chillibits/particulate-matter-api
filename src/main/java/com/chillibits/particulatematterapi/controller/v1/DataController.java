@@ -150,6 +150,7 @@ public class DataController {
             @RequestParam(defaultValue = "0") long to,
             @RequestParam(defaultValue = "0") int fieldIndex
     ) {
+        long startTimestamp = System.currentTimeMillis();
         JSONObject json = new JSONObject();
         List<DataRecord> records = getDataRecords(chipId, from, to);
         if(records.isEmpty()) return json.toString();
@@ -163,6 +164,8 @@ public class DataController {
         json.put("field", records.get(0).getSensorDataValues()[fieldIndex].getValueType());
         json.put("time", jsonTime);
         json.put("values", jsonValues);
+        long responseTime = System.currentTimeMillis() - startTimestamp;
+        json.put("responseTime", responseTime);
         return json.toString();
     }
 

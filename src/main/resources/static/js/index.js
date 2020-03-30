@@ -41,7 +41,7 @@ function encodeQueryData(data) {
    return ret.join("&");
 }
 
-function drawLineChart(label, category, series) {
+function drawLineChart(label, category, series, responseTime) {
     Highcharts.chart("container", {
         chart: {
             type: "line",
@@ -49,7 +49,7 @@ function drawLineChart(label, category, series) {
         },
 
         title: {
-            text: "Particulate matter data"
+            text: "Particulate matter data (Response time: " + responseTime + " ms)"
         },
 
         xAxis: {
@@ -82,6 +82,7 @@ $.ajax({
         var field = JSON.parse(result).field;
         var time = JSON.parse(result).time;
         var values = JSON.parse(result).values;
-        drawLineChart(field, time, values);
+        var responseTime = JSON.parse(result).responseTime;
+        drawLineChart(field, time, values, responseTime);
     }
 });
