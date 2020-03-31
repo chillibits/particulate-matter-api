@@ -169,6 +169,7 @@ public class DataController {
             jsonTime.put(sdf.format(record.getTimestamp()));
             jsonValues.put(record.getSensorDataValues()[fieldIndex].getValue());
         });
+        json.put("chipId", chipId);
         json.put("field", records.get(0).getSensorDataValues()[fieldIndex].getValueType());
         json.put("time", jsonTime);
         json.put("values", jsonValues);
