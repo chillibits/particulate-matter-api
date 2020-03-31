@@ -41,11 +41,12 @@ function encodeQueryData(data) {
    return ret.join("&");
 }
 
-function drawLineChart(label, category, series, responseTime, chipId) {
+function drawLineChart(label, category, series, responseTime, chipId, width, height) {
     Highcharts.chart("container", {
         chart: {
             type: "line",
-            width: 800
+            width: width,
+            height: height
         },
         title: {
             text: "Particulate matter data"
@@ -81,16 +82,18 @@ function drawLineChart(label, category, series, responseTime, chipId) {
 // Get url parameter
 var params = getAllUrlParams();
 var urlSuffix = encodeQueryData(params);
+var chipId = params.chipId;
+var width = params.width ? params.width : 800;
+var height = params.height ? params.height : 500;
 
 // Execute request for data
 $.ajax({
     url: "data/chart?" + urlSuffix,
     success: (result) => {
-        var chipId = JSON.parse(result).chipId;
         var field = JSON.parse(result).field;
         var time = JSON.parse(result).time;
         var values = JSON.parse(result).values;
         var responseTime = JSON.parse(result).responseTime;
-        drawLineChart(field, time, values, responseTime, chipId);
+        drawLineChart(field, time, values, responseTime, chipId, width, height);
     }
 });

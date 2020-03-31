@@ -27,12 +27,26 @@ public class RoutingConfig {
 
     @RequestMapping(method = RequestMethod.GET, value = "/chart")
     @ApiOperation(value = "Returns a chart of the measurements")
-    public String index(
+    public String chart(
             @RequestParam(defaultValue = "3953497") long chipId,
             @RequestParam(defaultValue = "0") long from,
             @RequestParam(defaultValue = "0") long to,
-            @RequestParam(defaultValue = "0") int fieldIndex
+            @RequestParam(defaultValue = "0") int fieldIndex,
+            @RequestParam(defaultValue = "800") int width,
+            @RequestParam(defaultValue = "500") int height
     ) {
-        return "index.html";
+        return "chart.html";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/chart/country/{country}")
+    @ApiOperation(value = "Returns a chart of the measurements")
+    public String chartCountry(
+            @RequestParam(defaultValue = "0") long from,
+            @RequestParam(defaultValue = "0") long to,
+            @RequestParam(defaultValue = "0") int fieldIndex,
+            @RequestParam(defaultValue = "800") int width,
+            @RequestParam(defaultValue = "500") int height
+    ) {
+        return "chart_country.html";
     }
 }
