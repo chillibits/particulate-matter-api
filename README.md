@@ -23,6 +23,8 @@ This is the official ChilliBits Particulate Matter REST API.
     -   Get average of the latest records of specific sensors
     -   Get data records from country in a specific time span
     -   Get average out of the latest data records of sensors within a specific country
+    -   Get data records from city in a specific time span
+    -   Get average out of the latest data records of sensors within a specific city
 
 -   Push endpoint
     -   Endpoint for data transmissions (more details in section 'push endpoint')

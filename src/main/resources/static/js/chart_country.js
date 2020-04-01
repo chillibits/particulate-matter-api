@@ -39,14 +39,14 @@ function drawLineChart(label, categories, series, responseTime, chipId, width, h
 // Get url parameter
 var params = getAllUrlParams();
 var urlSuffix = encodeQueryData(params);
+var country = params.country;
 var width = params.width ? params.width : 800;
 var height = params.height ? params.height : 500;
 
 // Execute request for data
 $.ajax({
-    url: "data/country/chart?" + urlSuffix,
+    url: "data/chart?" + urlSuffix,
     success: (result) => {
-        var country = JSON.parse(result).country;
         var field = JSON.parse(result).field;
         var time = JSON.parse(result).time;
         var values = JSON.parse(result).values;

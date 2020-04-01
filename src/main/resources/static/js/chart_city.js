@@ -46,7 +46,7 @@ var height = params.height ? params.height : 500;
 
 // Execute request for data
 $.ajax({
-    url: "data/city/chart?" + urlSuffix,
+    url: "data/chart?" + urlSuffix,
     success: (result) => {
         var country = JSON.parse(result).country;
         var field = JSON.parse(result).field;

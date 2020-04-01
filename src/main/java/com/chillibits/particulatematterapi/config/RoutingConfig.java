@@ -38,7 +38,7 @@ public class RoutingConfig {
         return "chart.html";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/chart_country")
+    @RequestMapping(method = RequestMethod.GET, value = "/chart", params = "country")
     @ApiOperation(value = "Returns a chart of the measurements for a specific country")
     public String chartCountry(
             @RequestParam String country,
@@ -52,7 +52,7 @@ public class RoutingConfig {
         return "chart_country.html";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/chart/city")
+    @RequestMapping(method = RequestMethod.GET, value = "/chart", params = {"country", "city"})
     @ApiOperation(value = "Returns a chart of the measurements for a specific city")
     public String chartCity(
             @RequestParam String country,

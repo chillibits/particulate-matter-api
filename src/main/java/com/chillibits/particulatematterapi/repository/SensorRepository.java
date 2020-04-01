@@ -29,6 +29,9 @@ public interface SensorRepository extends JpaRepository<Sensor, Long> {
     @Query("SELECT s.chipId FROM Sensor s WHERE country = ?1")
     List<Long> getChipIdsOfSensorFromCountry(String country);
 
+    @Query("SELECT s.chipId FROM Sensor s WHERE country = ?1 AND city = ?2")
+    List<Long> getChipIdsOfSensorFromCity(String country, String city);
+
     @Query("SELECT COUNT(s.chipId) FROM Sensor s")
     Integer getSensorsMapTotal();
 
