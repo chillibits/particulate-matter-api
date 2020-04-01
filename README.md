@@ -1,5 +1,6 @@
 # Particulate Matter API
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a14af7aaa8414e62a4a62a7c9bf0e4db)](https://app.codacy.com/manual/marcauberer/particulate-matter-api?utm_source=github.com&utm_medium=referral&utm_content=marcauberer/particulate-matter-api&utm_campaign=Badge_Grade_Dashboard)
+[![Build Status](https://travis-ci.com/marcauberer/particulate-matter-api.svg?branch=master)](https://travis-ci.com/marcauberer/particulate-matter-api)
 
 This is the official ChilliBits Particulate Matter REST API.
 
