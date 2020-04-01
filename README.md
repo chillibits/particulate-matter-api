@@ -61,7 +61,6 @@ If you have built your own IoT device, you can also send data to our system. Set
 
 The required data format can be found in our API documentation at [api.pm.chillibits.com](https://api.pm.chillibits.com/swagger-ui.html#/push/pushDataUsingPOST)
 
-
 ## Register an application
 If your the developer of a application and you want to consume data from our api, you have to contact us via [email](mailto:contact@chillibits.com?subject=Register%20application%20pmapi).
 The registration process is as follows:

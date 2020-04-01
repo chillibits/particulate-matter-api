@@ -8,10 +8,12 @@ import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
 import com.chillibits.particulatematterapi.exception.SensorCreationException;
 import com.chillibits.particulatematterapi.model.db.main.Sensor;
 import com.chillibits.particulatematterapi.model.db.main.User;
+import com.chillibits.particulatematterapi.model.db.main.UserSensorLink;
 import com.chillibits.particulatematterapi.model.io.MapsPlaceResult;
 import com.chillibits.particulatematterapi.model.io.SyncPackage;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
 import com.chillibits.particulatematterapi.repository.UserRepository;
+import com.chillibits.particulatematterapi.repository.UserSensorLinkRepository;
 import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import com.chillibits.particulatematterapi.shared.Credentials;
 import com.chillibits.particulatematterapi.shared.SharedUtils;
@@ -39,6 +41,7 @@ import java.util.List;
 public class SensorController {
     private SensorRepository sensorRepository;
     private UserRepository userRepository;
+    private UserSensorLinkRepository userSensorLinkRepository;
     @Autowired
     private MongoTemplate mongoTemplate;
 
@@ -62,13 +65,15 @@ public class SensorController {
     @RequestMapping(method = RequestMethod.POST, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Adds a sensor to the database")
     public Sensor addSensor(@RequestBody Sensor sensor) throws SensorCreationException {
+        // Extract requesting user
+        User user = (User) sensor.getUserLinks().toArray()[0];
         // Check for possible faulty data parameters
         if(sensorRepository.existsById(sensor.getChipId())) throw new SensorCreationException(ErrorCodeUtils.SENSOR_ALREADY_EXISTS);
         if(sensor.getGpsLatitude() == 0 && sensor.getGpsLongitude() == 0) throw new SensorCreationException(ErrorCodeUtils.INVALID_GPS_COORDINATES);
         if(sensor.getGpsLatitude() == 200 && sensor.getGpsLongitude() == 200) throw new SensorCreationException(ErrorCodeUtils.INVALID_GPS_COORDINATES);
         if(!mongoTemplate.getCollectionNames().contains(String.valueOf(sensor.getChipId()))) throw new SensorCreationException(ErrorCodeUtils.NO_DATA_RECORDS);
-        int userId = ((User) sensor.getUserLinks().toArray()[0]).getId();
-        if(!userRepository.existsById(userId)) throw new SensorCreationException(ErrorCodeUtils.CANNOT_ASSIGN_TO_USER);
+
+        if(!userRepository.existsById(user.getId())) throw new SensorCreationException(ErrorCodeUtils.CANNOT_ASSIGN_TO_USER);
 
         // Retrieve country and city from latitude and longitude
         try {
@@ -96,7 +101,11 @@ public class SensorController {
         Sensor createdSensor = sensorRepository.save(sensor);
 
         // Save UserSensorLink to the database
-
+        UserSensorLink link = new UserSensorLink();
+        link.setUser(user);
+        link.setSensor(sensor);
+        link.setCreationTimestamp(currentTimestamp);
+        userSensorLinkRepository.save(link);
 
         return createdSensor;
     }
