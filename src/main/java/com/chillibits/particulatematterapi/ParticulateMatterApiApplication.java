@@ -8,7 +8,6 @@ import com.chillibits.particulatematterapi.model.db.main.Sensor;
 import com.chillibits.particulatematterapi.model.dbold.OldSensor;
 import com.chillibits.particulatematterapi.repository.OldSensorRepository;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
-import com.chillibits.particulatematterapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -27,8 +26,6 @@ public class ParticulateMatterApiApplication implements CommandLineRunner {
 	private SensorRepository sensorRepository;
 	@Autowired
 	private OldSensorRepository oldSensorRepository;
-	@Autowired
-	private UserRepository userRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ParticulateMatterApiApplication.class, args);
