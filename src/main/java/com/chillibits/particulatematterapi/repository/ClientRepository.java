@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface ClientRepository extends JpaRepository<Client, Integer> {
+
     Optional<Client> findByName(String name);
 
     /*@Modifying

@@ -7,6 +7,7 @@ package com.chillibits.particulatematterapi.controller.v1;
 import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
 import com.chillibits.particulatematterapi.exception.SensorCreationException;
 import com.chillibits.particulatematterapi.model.db.main.Sensor;
+import com.chillibits.particulatematterapi.model.db.main.User;
 import com.chillibits.particulatematterapi.model.io.MapsPlaceResult;
 import com.chillibits.particulatematterapi.model.io.SyncPackage;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
@@ -66,7 +67,8 @@ public class SensorController {
         if(sensor.getGpsLatitude() == 0 && sensor.getGpsLongitude() == 0) throw new SensorCreationException(ErrorCodeUtils.INVALID_GPS_COORDINATES);
         if(sensor.getGpsLatitude() == 200 && sensor.getGpsLongitude() == 200) throw new SensorCreationException(ErrorCodeUtils.INVALID_GPS_COORDINATES);
         if(!mongoTemplate.getCollectionNames().contains(String.valueOf(sensor.getChipId()))) throw new SensorCreationException(ErrorCodeUtils.NO_DATA_RECORDS);
-        if(!userRepository.existsById(sensor.getUserId())) throw new SensorCreationException(ErrorCodeUtils.CANNOT_ASSIGN_TO_USER);
+        int userId = ((User) sensor.getUserLinks().toArray()[0]).getId();
+        if(!userRepository.existsById(userId)) throw new SensorCreationException(ErrorCodeUtils.CANNOT_ASSIGN_TO_USER);
 
         // Retrieve country and city from latitude and longitude
         try {
@@ -89,25 +91,21 @@ public class SensorController {
         sensor.setGpsLongitude(SharedUtils.round(sensor.getGpsLongitude(), 4));
         sensor.setCreationTimestamp(currentTimestamp);
         sensor.setLastEditTimestamp(currentTimestamp);
-        sensor.setMapsUrl("https://www.google.com/maps/place/" + sensor.getGpsLatitude() + "," + sensor.getGpsLongitude());
-        sensor.setLastValueP1(0);
-        sensor.setLastValueP2(0);
 
         // Save sensor to database
-        return sensorRepository.save(sensor);
+        Sensor createdSensor = sensorRepository.save(sensor);
+
+        // Save UserSensorLink to the database
+
+
+        return createdSensor;
     }
 
     @Transactional
     @RequestMapping(method = RequestMethod.PUT, path = "/sensor", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates a sensor")
     public Integer updateSensor(@RequestBody Sensor sensor) {
-        return sensorRepository.updateSensor(
-                sensor.getChipId(),
-                sensor.getGpsLatitude(),
-                sensor.getGpsLongitude(),
-                sensor.getLastValueP1(),
-                sensor.getLastValueP2()
-        );
+        return sensorRepository.updateSensor(sensor.getChipId(), sensor.getGpsLatitude(), sensor.getGpsLongitude());
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/sensor/{id}")

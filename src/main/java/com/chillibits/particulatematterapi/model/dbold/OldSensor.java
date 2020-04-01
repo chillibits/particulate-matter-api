@@ -2,7 +2,7 @@
  * Copyright © Marc Auberer 2019 - 2020. All rights reserved
  */
 
-package com.chillibits.particulatematterapi.model.db.main;
+package com.chillibits.particulatematterapi.model.dbold;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,27 +12,26 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import java.util.Set;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Sensor {
+public class OldSensor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long chipId;
-    @OneToMany(mappedBy = "sensor")
-    private Set<UserSensorLink> userLinks;
+    private int chipId;
     private String firmwareVersion;
-    private long creationTimestamp;
+    private long creationDate;
     private String notes;
-    private long lastMeasurementTimestamp;
-    private long lastEditTimestamp;
-    private double gpsLatitude;
-    private double gpsLongitude;
-    private double gpsAltitude;
+    private long lastUpdate;
+    private long lastEdit;
+    private String lat;
+    private String lng;
+    private String alt;
     private String country;
     private String city;
+    private String mapsUrl;
+    private double lastValue;
+    private double lastValue_2;
 }

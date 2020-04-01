@@ -25,15 +25,15 @@ public class UserController {
     private UserRepository userRepository;
 
     @RequestMapping(method = RequestMethod.GET, path = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Returns all users, registered in the database")
+    @ApiOperation(value = "Returns all users, registered in the database", hidden = true)
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/user/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, path = "/user/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns details for one specific user")
-    public User getUserById(@PathVariable("id") Integer id) {
-        return userRepository.findById(id).orElse(null);
+    public User getUserByEmail(@PathVariable("email") String email) {
+        return userRepository.findByEmail(email).orElse(null);
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/user", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -161,8 +161,6 @@ public class DataController {
             @RequestParam(defaultValue = "") int period  // in minutes
     ) {
         long startTimestamp = System.currentTimeMillis();
-        // Get chipIds of the sensors from the requested location
-        List<Long> chipIds = sensorRepository.getChipIdsOfSensorFromCountry(country);
         // Loop periodically through the time span
         long periodInMillis = period * 60 * 1000;
         long currFrom = from;
