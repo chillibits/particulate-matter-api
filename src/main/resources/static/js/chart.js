@@ -41,12 +41,12 @@ function encodeQueryData(data) {
    return ret.join("&");
 }
 
-function drawLineChart(label, category, series, responseTime, chipId, width, height) {
+function drawLineChart(label, categories, series, responseTime, chipId, width, height) {
     Highcharts.chart("container", {
         chart: {
             type: "line",
-            width: width,
-            height: height
+            width,
+            height
         },
         title: {
             text: "Particulate matter data"
@@ -55,14 +55,14 @@ function drawLineChart(label, category, series, responseTime, chipId, width, hei
             text: "Sensor-ID: " + chipId + " - (Response time: " + responseTime + " ms)"
         },
         xAxis: {
-            categories: category,
+            categories,
             title: {
                 text: "Time"
             }
         },
         yAxis: {
             title: {
-                text: "PM vales"
+                text: "PM values"
             }
         },
         tooltip: {

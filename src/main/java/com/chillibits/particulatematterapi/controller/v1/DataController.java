@@ -91,12 +91,115 @@ public class DataController {
     @RequestMapping(method = RequestMethod.GET, path = "/data/average_new", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns a record with the averages of the latest values of the specified sensors")
     public DataRecordDto getDataAverageFromMultipleSensors(@RequestParam Long[] chipIds) {
-        // Create Map for data values in schema: valueType, value, sensorCount
+        List<DataRecord> records = new ArrayList<>();
+        for(Long chipId : chipIds) records.add(getLatestDataRecord(chipId));
+        return convertToDto(getAverageDataRecord(records));
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/data/country/{country}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<DataRecord> getDataCountry(
+        @PathVariable String country,
+        @RequestParam(defaultValue = "0") long from,
+        @RequestParam(defaultValue = "0") long to
+    ) {
+        // Get chipIds of the sensors from the requested location
+        List<Long> chipIds = sensorRepository.getChipIdsOfSensorFromCountry(country);
+
+        // Get data from all selected sensors
+        List<DataRecord> data = new ArrayList<>();
+        for(Long chipId : chipIds) data.addAll(getDataRecords(chipId, from, to));
+        return data;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/data/country/{country}/latest", produces = MediaType.APPLICATION_JSON_VALUE)
+    public DataRecordDto getDataCountryLatest(@PathVariable String country) {
+        // Get chipIds of the sensors from the requested location
+        List<Long> chipIds = sensorRepository.getChipIdsOfSensorFromCountry(country);
+        // Get average from these sensors
+        return getDataAverageFromMultipleSensors(chipIds.toArray(new Long[0]));
+    }
+
+    // --------------------------------------------- Chart data functions ----------------------------------------------
+
+    @RequestMapping(method = RequestMethod.GET, path = "/data/chart")
+    @ApiOperation(value = "Returns chart ready data", hidden = true)
+    public String getChartData(
+        @RequestParam long chipId,
+        @RequestParam(defaultValue = "0") long from,
+        @RequestParam(defaultValue = "0") long to,
+        @RequestParam(defaultValue = "0") int fieldIndex
+    ) {
+        long startTimestamp = System.currentTimeMillis();
+        JSONObject json = new JSONObject();
+        // Get data records of this sensor
+        List<DataRecord> records = getDataRecords(chipId, from, to);
+        if(records.isEmpty()) return json.toString();
+        // Bring them into json format
+        JSONArray jsonTime = new JSONArray();
+        JSONArray jsonValues = new JSONArray();
+        SimpleDateFormat sdf = new SimpleDateFormat(from == 0 && to == 0 ? "HH:mm:ss" : "yyyy-MM-dd HH:mm:ss");
+        records.forEach(record -> {
+            jsonTime.put(sdf.format(record.getTimestamp()));
+            jsonValues.put(record.getSensorDataValues()[fieldIndex].getValue());
+        });
+        json.put("time", jsonTime);
+        json.put("values", jsonValues);
+        // Add extra fields for graph display
+        long responseTime = System.currentTimeMillis() - startTimestamp;
+        json.put("responseTime", responseTime);
+        json.put("field", records.get(0).getSensorDataValues()[fieldIndex].getValueType());
+        return json.toString();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/data/country/chart")
+    @ApiOperation(value = "Returns chart ready data for a specific country", hidden = true)
+    public String getChartDataCountry(
+            @RequestParam String country,
+            @RequestParam(defaultValue = "0") long from,
+            @RequestParam(defaultValue = "0") long to,
+            @RequestParam(defaultValue = "0") int fieldIndex,
+            @RequestParam(defaultValue = "") int period  // in minutes
+    ) {
+        long startTimestamp = System.currentTimeMillis();
+        // Get chipIds of the sensors from the requested location
+        List<Long> chipIds = sensorRepository.getChipIdsOfSensorFromCountry(country);
+        // Loop periodically through the time span
+        long periodInMillis = period * 60 * 1000;
+        long currFrom = from;
+        long currTo = from + periodInMillis;
+        List<DataRecord> records = new ArrayList<>();
+        while(currTo < to) {
+            records.add(getAverageDataRecord(getDataCountry(country, currFrom, currTo)));
+            currFrom += periodInMillis;
+            currTo += periodInMillis;
+        }
+        // Bring them into json format
+        JSONObject json = new JSONObject();
+        if(records.isEmpty()) return json.toString();
+        JSONArray jsonTime = new JSONArray();
+        JSONArray jsonValues = new JSONArray();
+        SimpleDateFormat sdf = new SimpleDateFormat(from == 0 && to == 0 ? "HH:mm:ss" : "yyyy-MM-dd HH:mm:ss");
+        records.forEach(record -> {
+            jsonTime.put(sdf.format(record.getTimestamp()));
+            jsonValues.put(record.getSensorDataValues()[fieldIndex].getValue());
+        });
+        json.put("time", jsonTime);
+        json.put("values", jsonValues);
+        // Add extra fields for graph display
+        long responseTime = System.currentTimeMillis() - startTimestamp;
+        json.put("responseTime", responseTime);
+        json.put("field", records.get(0).getSensorDataValues()[fieldIndex].getValueType());
+        json.put("country", country);
+        return json.toString();
+    }
+
+    // ---------------------------------------------- Utility functions ------------------------------------------------
+
+    private DataRecord getAverageDataRecord(List<DataRecord> records) {
         Map<String, Map.Entry<Double, Integer>> dataValues = new HashMap<>();
-        for(Long chipId : chipIds) {
-            DataRecord currRecord = getLatestDataRecord(chipId);
-            if(currRecord.getTimestamp() < System.currentTimeMillis() - ConstantUtils.MINUTES_UNTIL_INACTIVITY * 60 * 1000) continue;
-            for(DataRecord.SensorDataValue currValue : currRecord.getSensorDataValues()) {
+        for(DataRecord record : records) {
+            if(record.getTimestamp() < System.currentTimeMillis() - ConstantUtils.MINUTES_UNTIL_INACTIVITY * 60 * 1000) continue;
+            for(DataRecord.SensorDataValue currValue : record.getSensorDataValues()) {
                 String valueType = currValue.getValueType();
                 if(dataValues.containsKey(valueType)) {
                     // Update map entry
@@ -123,64 +226,10 @@ public class DataController {
         DataRecord avgRecord = new DataRecord();
         avgRecord.setTimestamp(System.currentTimeMillis());
         avgRecord.setSensorDataValues(avgDataValues.toArray(DataRecord.SensorDataValue[]::new));
-        return convertToDto(avgRecord);
+        return avgRecord;
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/data/country/{country}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<DataRecord> getDataCountry(
-        @PathVariable String country,
-        @RequestParam(defaultValue = "0") long from,
-        @RequestParam(defaultValue = "0") long to
-    ) {
-        // Get chipIds of the sensors from the requested location
-        List<Long> chipIds = sensorRepository.getChipIdsOfSensorFromCountry(country);
-
-        // Get data from all selected sensors
-        List<DataRecord> data = new ArrayList<>();
-        for(Long chipId : chipIds) {
-            for(DataRecord record : getDataRecords(chipId, from, to)) data.add(record);
-        }
-
-        return data;
-    }
-
-    @RequestMapping(method = RequestMethod.GET, path = "/data/country/{country}/latest", produces = MediaType.APPLICATION_JSON_VALUE)
-    public DataRecordDto getDataCountryLatest(@PathVariable String country) {
-        // Get chipIds of the sensors from the requested location
-        List<Long> chipIds = sensorRepository.getChipIdsOfSensorFromCountry(country);
-        return getDataAverageFromMultipleSensors(chipIds.toArray(new Long[0]));
-    }
-
-    @RequestMapping(method = RequestMethod.GET, path = "/data/chart")
-    @ApiOperation(value = "Returns chart ready data", hidden = true)
-    public String getChartData(
-        @RequestParam(defaultValue = "3953497") long chipId,
-        @RequestParam(defaultValue = "0") long from,
-        @RequestParam(defaultValue = "0") long to,
-        @RequestParam(defaultValue = "0") int fieldIndex
-    ) {
-        long startTimestamp = System.currentTimeMillis();
-        JSONObject json = new JSONObject();
-        List<DataRecord> records = getDataRecords(chipId, from, to);
-        if(records.isEmpty()) return json.toString();
-        JSONArray jsonTime = new JSONArray();
-        JSONArray jsonValues = new JSONArray();
-        SimpleDateFormat sdf = new SimpleDateFormat(from == 0 && to == 0 ? "HH:mm:ss" : "yyyy-MM-dd HH:mm:ss");
-        records.forEach(record -> {
-            jsonTime.put(sdf.format(record.getTimestamp()));
-            jsonValues.put(record.getSensorDataValues()[fieldIndex].getValue());
-        });
-        json.put("field", records.get(0).getSensorDataValues()[fieldIndex].getValueType());
-        json.put("time", jsonTime);
-        json.put("values", jsonValues);
-        long responseTime = System.currentTimeMillis() - startTimestamp;
-        json.put("responseTime", responseTime);
-        return json.toString();
-    }
-
-    // ---------------------------------------------- Utility functions ------------------------------------------------
-
-    public List<DataRecord> getDataRecords(long chipId, long from, long to) {
+    private List<DataRecord> getDataRecords(long chipId, long from, long to) {
         long toTimestamp = to == 0 ? System.currentTimeMillis() : to;
         long fromTimestamp = from == 0 ? toTimestamp - ConstantUtils.DEFAULT_DATA_TIMESPAN : from;
         return template.find(Query.query(Criteria.where("timestamp").gte(fromTimestamp).lte(toTimestamp)), DataRecord.class, String.valueOf(chipId));

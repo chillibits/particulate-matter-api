@@ -1,4 +1,4 @@
-function drawLineChart(label, categories, series, responseTime, chipId, width, height) {
+function drawLineChart(label, categories, series, responseTime, country, city, width, height) {
     Highcharts.chart("container", {
         chart: {
             type: "line",
@@ -6,10 +6,10 @@ function drawLineChart(label, categories, series, responseTime, chipId, width, h
             height
         },
         title: {
-            text: "Particulate matter data of country"
+            text: "Particulate matter data of city"
         },
         subtitle: {
-            text: "Country: " + chipId + " - (Response time: " + responseTime + " ms)"
+            text: "City: " + city + ", " + country + " - (Response time: " + responseTime + " ms)"
         },
         xAxis: {
             categories,
@@ -39,12 +39,14 @@ function drawLineChart(label, categories, series, responseTime, chipId, width, h
 // Get url parameter
 var params = getAllUrlParams();
 var urlSuffix = encodeQueryData(params);
+var country = params.country;
+var city = params.city;
 var width = params.width ? params.width : 800;
 var height = params.height ? params.height : 500;
 
 // Execute request for data
 $.ajax({
-    url: "data/country/chart?" + urlSuffix,
+    url: "data/city/chart?" + urlSuffix,
     success: (result) => {
         var country = JSON.parse(result).country;
         var field = JSON.parse(result).field;

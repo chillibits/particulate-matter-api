@@ -28,7 +28,7 @@ public class RoutingConfig {
     @RequestMapping(method = RequestMethod.GET, value = "/chart")
     @ApiOperation(value = "Returns a chart of the measurements")
     public String chart(
-            @RequestParam(defaultValue = "3953497") long chipId,
+            @RequestParam long chipId,
             @RequestParam(defaultValue = "0") long from,
             @RequestParam(defaultValue = "0") long to,
             @RequestParam(defaultValue = "0") int fieldIndex,
@@ -38,15 +38,32 @@ public class RoutingConfig {
         return "chart.html";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/chart/country/{country}")
-    @ApiOperation(value = "Returns a chart of the measurements")
+    @RequestMapping(method = RequestMethod.GET, value = "/chart_country")
+    @ApiOperation(value = "Returns a chart of the measurements for a specific country")
     public String chartCountry(
+            @RequestParam String country,
             @RequestParam(defaultValue = "0") long from,
             @RequestParam(defaultValue = "0") long to,
             @RequestParam(defaultValue = "0") int fieldIndex,
+            @RequestParam(defaultValue = "60") int period, // in minutes
             @RequestParam(defaultValue = "800") int width,
             @RequestParam(defaultValue = "500") int height
     ) {
         return "chart_country.html";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/chart/city")
+    @ApiOperation(value = "Returns a chart of the measurements for a specific city")
+    public String chartCity(
+            @RequestParam String country,
+            @RequestParam String city,
+            @RequestParam(defaultValue = "0") long from,
+            @RequestParam(defaultValue = "0") long to,
+            @RequestParam(defaultValue = "0") int fieldIndex,
+            @RequestParam(defaultValue = "60") int period, // in minutes
+            @RequestParam(defaultValue = "800") int width,
+            @RequestParam(defaultValue = "500") int height
+    ) {
+        return "chart_city.html";
     }
 }
