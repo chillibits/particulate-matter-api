@@ -2,12 +2,7 @@ language: java
 jdk:
 - oraclejdk11
 before_install:
-- openssl aes-256-cbc -K $encrypted_bd94bf08c0f4_key -iv $encrypted_bd94bf08c0f4_iv
-  -in src/main/resources/pmapi.p12.enc -out src/main/resources/pmapi.p12 -d
-- openssl aes-256-cbc -K $encrypted_a6d8b8556fee_key -iv $encrypted_a6d8b8556fee_iv
-  -in src/main/resources/application.yml.enc -out src/main/resources/application.yml
-  -d
-- openssl aes-256-cbc -K $encrypted_bae29107280b_key -iv $encrypted_bae29107280b_iv
-  -in src/main/java/com/chillibits/particulatematterapi/shared/Credentials.java.enc
-  -out src/main/java/com/chillibits/particulatematterapi/shared/Credentials.java -d
+- openssl aes-256-cbc -K $encrypted_3b9f0b9d36d1_key -iv $encrypted_3b9f0b9d36d1_iv
+  -in secrets.tar.enc -out secrets.tar -d
 - chmod +x mvnw
+- tar xvf secrets.tar

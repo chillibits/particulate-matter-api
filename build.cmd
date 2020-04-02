@@ -1,4 +1,3 @@
 @echo off
-call travis encrypt-file src/main/java/com/chillibits/particulatematterapi/shared/Credentials.java src/main/java/com/chillibits/particulatematterapi/shared/Credentials.java.enc --add --pro
-call travis encrypt-file src/main/resources/application.yml src/main/resources/application.yml.enc --add --pro
-call travis encrypt-file src/main/resources/pmapi.p12 src/main/resources/pmapi.p12.enc --add --pro
+call tar cvf secrets.tar src\main\java\com\chillibits\particulatematterapi\shared\Credentials.java src\main\resources\application.yml src\main\resources\pmapi.p12
+call travis encrypt-file secrets.tar secrets.tar.enc --add --pro
