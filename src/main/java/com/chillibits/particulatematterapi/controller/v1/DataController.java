@@ -4,6 +4,8 @@
 
 package com.chillibits.particulatematterapi.controller.v1;
 
+import com.chillibits.particulatematterapi.exception.DataAccessException;
+import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
 import com.chillibits.particulatematterapi.model.db.data.DataRecord;
 import com.chillibits.particulatematterapi.model.io.DataRecordDto;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
@@ -52,7 +54,7 @@ public class DataController {
         @PathVariable long chipId,
         @RequestParam(defaultValue = "0") long from,
         @RequestParam(defaultValue = "0") long to
-    ) {
+    ) throws DataAccessException {
         return getDataRecords(chipId, from, to);
     }
 
@@ -62,7 +64,7 @@ public class DataController {
         @PathVariable long chipId,
         @RequestParam(defaultValue = "0") long from,
         @RequestParam(defaultValue = "0") long to
-    ) {
+    ) throws DataAccessException {
         return getDataRecords(chipId, from, to).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -74,12 +76,6 @@ public class DataController {
         Query query = new Query().with(Sort.by(new Sort.Order(Sort.Direction.DESC, "timestamp"))).limit(1);
         List<DataRecord> records = template.find(query, DataRecord.class, String.valueOf(chipId));
         return records.size() > 0 ? records.get(0) : null;
-    }
-
-    @RequestMapping(method = RequestMethod.GET, path = "/data/{chipId}/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Returns all data records for a specific sensor", hidden = true)
-    public List<DataRecord> getAllDataRecordsUncompressed(@PathVariable long chipId) {
-        return template.find(Query.query(new Criteria()), DataRecord.class, String.valueOf(chipId));
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/data/{chipId}/all", produces = MediaType.APPLICATION_JSON_VALUE, params = "compressed")
@@ -111,7 +107,7 @@ public class DataController {
         @PathVariable String country,
         @RequestParam(defaultValue = "0") long from,
         @RequestParam(defaultValue = "0") long to
-    ) {
+    ) throws DataAccessException {
         // Get chipIds of the sensors from the requested location
         List<Long> chipIds = sensorRepository.getChipIdsOfSensorFromCountry(country);
 
@@ -139,7 +135,7 @@ public class DataController {
         @PathVariable String city,
         @RequestParam(defaultValue = "0") long from,
         @RequestParam(defaultValue = "0") long to
-    ) {
+    ) throws DataAccessException {
         // Get chipIds of the sensors from the requested location
         List<Long> chipIds = sensorRepository.getChipIdsOfSensorFromCity(country, city);
 
@@ -168,14 +164,21 @@ public class DataController {
         @RequestParam long chipId,
         @RequestParam(defaultValue = "0") long from,
         @RequestParam(defaultValue = "0") long to,
-        @RequestParam(defaultValue = "0") int fieldIndex
-    ) {
+        @RequestParam(defaultValue = "0") int fieldIndex,
+        @RequestParam(defaultValue = "1") int mergeCount
+    ) throws DataAccessException {
+        // Check input parameters
+        if(fieldIndex < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_FIELD_INDEX);
+        if(mergeCount < 1) throw new DataAccessException(ErrorCodeUtils.INVALID_MERGE_COUNT);
+
         long startTimestamp = System.currentTimeMillis();
         JSONObject json = new JSONObject();
         // Get data records of this sensor
         List<DataRecord> records = getDataRecords(chipId, from, to);
+        // Handle possible errors
         if(records.isEmpty()) return json.toString();
-        // Bring them into json format
+        if(fieldIndex >= records.get(0).getSensorDataValues().length) throw new DataAccessException(ErrorCodeUtils.INVALID_FIELD_INDEX);
+        // Bring the records into json format
         JSONArray jsonTime = new JSONArray();
         JSONArray jsonValues = new JSONArray();
         SimpleDateFormat sdf = new SimpleDateFormat(from == 0 && to == 0 ? "HH:mm:ss" : "yyyy-MM-dd HH:mm:ss");
@@ -200,7 +203,11 @@ public class DataController {
             @RequestParam(defaultValue = "0") long to,
             @RequestParam(defaultValue = "0") int fieldIndex,
             @RequestParam(defaultValue = "60") int period  // in minutes
-    ) {
+    ) throws DataAccessException {
+        // Check input parameters
+        if(from < 0 || to < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_TIME_RANGE);
+        if(fieldIndex < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_FIELD_INDEX);
+
         long startTimestamp = System.currentTimeMillis();
         // Get replace default values, with better ones
         long toTimestamp = to == 0 ? System.currentTimeMillis() : to;
@@ -244,7 +251,12 @@ public class DataController {
             @RequestParam(defaultValue = "0") long to,
             @RequestParam(defaultValue = "0") int fieldIndex,
             @RequestParam(defaultValue = "60") int period  // in minutes
-    ) {
+    ) throws DataAccessException {
+        // Check input parameters
+        if(from < 0 || to < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_TIME_RANGE);
+        if(fieldIndex < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_FIELD_INDEX);
+        if(period < 1) throw new DataAccessException(ErrorCodeUtils.INVALID_PERIOD);
+
         long startTimestamp = System.currentTimeMillis();
         // Get replace default values, with better ones
         long toTimestamp = to == 0 ? System.currentTimeMillis() : to;
@@ -314,7 +326,8 @@ public class DataController {
         return avgRecord;
     }
 
-    private List<DataRecord> getDataRecords(long chipId, long from, long to) {
+    private List<DataRecord> getDataRecords(long chipId, long from, long to) throws DataAccessException {
+        if(from < 0 || to < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_TIME_RANGE);
         long toTimestamp = to == 0 ? System.currentTimeMillis() : to;
         long fromTimestamp = from == 0 ? toTimestamp - ConstantUtils.DEFAULT_DATA_TIMESPAN : from;
         return template.find(Query.query(Criteria.where("timestamp").gte(fromTimestamp).lte(toTimestamp)), DataRecord.class, String.valueOf(chipId));
@@ -325,10 +338,4 @@ public class DataController {
         dataRecordDto.setTimestamp(dataRecordDto.getTimestamp() / 1000);
         return dataRecordDto;
     }
-
-    /*private DataRecord convertToEntity(DataRecordDto recordDto) {
-        DataRecord record = mapper.map(recordDto, DataRecord.class);
-        record.setTimestamp(record.getTimestamp() * 1000);
-        return record;
-    }*/
 }

@@ -5,7 +5,7 @@
 package com.chillibits.particulatematterapi.controller.v1;
 
 import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
-import com.chillibits.particulatematterapi.exception.SensorCreationException;
+import com.chillibits.particulatematterapi.exception.SensorDataException;
 import com.chillibits.particulatematterapi.model.db.main.Sensor;
 import com.chillibits.particulatematterapi.model.db.main.User;
 import com.chillibits.particulatematterapi.model.db.main.UserSensorLink;
@@ -51,8 +51,11 @@ public class SensorController {
             @RequestParam(defaultValue = "0") double latitude,
             @RequestParam(defaultValue = "0") double longitude,
             @RequestParam(defaultValue = "0") int radius
-    ) {
-        if(radius == 0) return sensorRepository.findAll();
+    ) throws SensorDataException {
+        if(radius < 0)
+            throw new SensorDataException(ErrorCodeUtils.INVALID_RADIUS);
+        else if(radius == 0)
+            return sensorRepository.findAll();
         return sensorRepository.findAllInRadius(latitude, longitude, radius);
     }
 
@@ -64,16 +67,14 @@ public class SensorController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Adds a sensor to the database")
-    public Sensor addSensor(@RequestBody Sensor sensor) throws SensorCreationException {
+    public Sensor addSensor(@RequestBody Sensor sensor) throws SensorDataException {
         // Extract requesting user
         User user = (User) sensor.getUserLinks().toArray()[0];
         // Check for possible faulty data parameters
-        if(sensorRepository.existsById(sensor.getChipId())) throw new SensorCreationException(ErrorCodeUtils.SENSOR_ALREADY_EXISTS);
-        if(sensor.getGpsLatitude() == 0 && sensor.getGpsLongitude() == 0) throw new SensorCreationException(ErrorCodeUtils.INVALID_GPS_COORDINATES);
-        if(sensor.getGpsLatitude() == 200 && sensor.getGpsLongitude() == 200) throw new SensorCreationException(ErrorCodeUtils.INVALID_GPS_COORDINATES);
-        if(!mongoTemplate.getCollectionNames().contains(String.valueOf(sensor.getChipId()))) throw new SensorCreationException(ErrorCodeUtils.NO_DATA_RECORDS);
-
-        if(!userRepository.existsById(user.getId())) throw new SensorCreationException(ErrorCodeUtils.CANNOT_ASSIGN_TO_USER);
+        if(sensorRepository.existsById(sensor.getChipId())) throw new SensorDataException(ErrorCodeUtils.SENSOR_ALREADY_EXISTS);
+        if(!mongoTemplate.getCollectionNames().contains(String.valueOf(sensor.getChipId()))) throw new SensorDataException(ErrorCodeUtils.NO_DATA_RECORDS);
+        if(!userRepository.existsById(user.getId())) throw new SensorDataException(ErrorCodeUtils.CANNOT_ASSIGN_TO_USER);
+        validateSensorObject(sensor);
 
         // Retrieve country and city from latitude and longitude
         try {
@@ -113,7 +114,8 @@ public class SensorController {
     @Transactional
     @RequestMapping(method = RequestMethod.PUT, path = "/sensor", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates a sensor")
-    public Integer updateSensor(@RequestBody Sensor sensor) {
+    public Integer updateSensor(@RequestBody Sensor sensor) throws SensorDataException {
+        validateSensorObject(sensor);
         return sensorRepository.updateSensor(sensor.getChipId(), sensor.getGpsLatitude(), sensor.getGpsLongitude());
     }
 
@@ -121,5 +123,10 @@ public class SensorController {
     @ApiOperation(value = "Deletes a sensor from the database")
     public void deleteSensor(@PathVariable("id") Long id) {
         sensorRepository.deleteById(id);
+    }
+
+    private void validateSensorObject(Sensor sensor) throws SensorDataException {
+        if(sensor.getGpsLatitude() == 0 && sensor.getGpsLongitude() == 0) throw new SensorDataException(ErrorCodeUtils.INVALID_GPS_COORDINATES);
+        if(sensor.getGpsLatitude() == 200 && sensor.getGpsLongitude() == 200) throw new SensorDataException(ErrorCodeUtils.INVALID_GPS_COORDINATES);
     }
 }

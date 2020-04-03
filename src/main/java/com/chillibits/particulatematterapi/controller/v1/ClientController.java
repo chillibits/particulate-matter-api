@@ -4,6 +4,8 @@
 
 package com.chillibits.particulatematterapi.controller.v1;
 
+import com.chillibits.particulatematterapi.exception.ClientDataException;
+import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
 import com.chillibits.particulatematterapi.model.db.main.Client;
 import com.chillibits.particulatematterapi.model.io.ClientDto;
 import com.chillibits.particulatematterapi.repository.ClientRepository;
@@ -45,14 +47,15 @@ public class ClientController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/client", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Adds a client object", hidden = true)
-    public Client addClientInfo(@RequestBody Client info) {
-        return clientRepository.save(info);
+    public Client addClientInfo(@RequestBody Client client) {
+        return clientRepository.save(client);
     }
 
     @RequestMapping(method = RequestMethod.PUT, path = "/client", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates a specific client object", hidden = true)
-    public Integer updateClientInfoAndroid(@RequestBody Client info) {
-        return clientRepository.updateClient(info);
+    public Integer updateClientInfoAndroid(@RequestBody Client client) throws ClientDataException {
+        validateClientObject(client);
+        return clientRepository.updateClient(client);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/client/{id}")
@@ -65,7 +68,9 @@ public class ClientController {
         return mapper.map(client, ClientDto.class);
     }
 
-    /*private Client convertToEntity(ClientDto clientDto) {
-        return mapper.map(clientDto, Client.class);
-    }*/
+    private void validateClientObject(Client client) throws ClientDataException {
+        if(client.getName().isBlank() || client.getLatestVersionName().isBlank() || client.getMinVersionName().isBlank() ||
+                client.getRoles().isBlank() || client.getSecret().isBlank() || client.getOwner().isBlank() ||
+                client.getReadableName().isBlank()) throw new ClientDataException(ErrorCodeUtils.INVALID_CLIENT_DATA);
+    }
 }

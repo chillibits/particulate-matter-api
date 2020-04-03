@@ -1,5 +1,3 @@
-// ------------------------------------------------- Functions ---------------------------------------------------------
-
 function getAllUrlParams() {
     var queryString = window.location.search.slice(1);
     var obj = {};
