@@ -31,7 +31,9 @@ This is the official ChilliBits Particulate Matter REST API.
 
 -   Ranking endpoint
     -   Get ranking by country
+    -   Get ranking by country in a compressed form
     -   Get ranking by city
+    -   Get ranking by city in a compressed form
 
 -   Sensor endpoint
     -   Add sensor to the database

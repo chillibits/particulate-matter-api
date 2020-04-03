@@ -10,7 +10,7 @@ import com.chillibits.particulatematterapi.model.db.main.User;
 import com.chillibits.particulatematterapi.repository.UserRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,9 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@AllArgsConstructor
 @Api(value = "User REST Endpoint", tags = "user")
 public class UserController {
+
+    @Autowired
     private UserRepository userRepository;
 
     @RequestMapping(method = RequestMethod.GET, path = "/user", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -20,7 +20,6 @@ import com.chillibits.particulatematterapi.shared.SharedUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.MediaType;
@@ -36,11 +35,14 @@ import java.net.URL;
 import java.util.List;
 
 @RestController
-@AllArgsConstructor
 @Api(value = "Sensor REST Endpoint", tags = "sensor")
 public class SensorController {
+
+    @Autowired
     private SensorRepository sensorRepository;
+    @Autowired
     private UserRepository userRepository;
+    @Autowired
     private UserSensorLinkRepository userSensorLinkRepository;
     @Autowired
     private MongoTemplate mongoTemplate;

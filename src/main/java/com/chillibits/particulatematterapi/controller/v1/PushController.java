@@ -8,7 +8,7 @@ import com.chillibits.particulatematterapi.model.db.data.DataRecord;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,10 +20,12 @@ import java.util.Arrays;
 import java.util.Optional;
 
 @RestController
-@AllArgsConstructor
 @Api(value = "Push REST Endpoint", tags = "push")
 public class PushController {
+
+    @Autowired
     private SensorRepository sensorRepository;
+    @Autowired
     private MongoTemplate template;
 
     @RequestMapping(method = RequestMethod.POST, path = "/push", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

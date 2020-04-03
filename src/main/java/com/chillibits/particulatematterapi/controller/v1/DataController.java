@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
 @RestController
 @Api(value = "Data REST Endpoint", tags = "data")
 public class DataController {
+
     @Autowired
     private MongoTemplate template;
     @Autowired

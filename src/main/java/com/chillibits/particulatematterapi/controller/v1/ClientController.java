@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 @RestController
 @Api(value = "Client REST Endpoint", tags = "client")
 public class ClientController {
+
     @Autowired
     private ClientRepository clientRepository;
     @Autowired
