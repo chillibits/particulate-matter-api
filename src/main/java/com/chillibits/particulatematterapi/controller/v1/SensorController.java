@@ -6,14 +6,14 @@ package com.chillibits.particulatematterapi.controller.v1;
 
 import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
 import com.chillibits.particulatematterapi.exception.SensorDataException;
+import com.chillibits.particulatematterapi.model.db.main.Link;
 import com.chillibits.particulatematterapi.model.db.main.Sensor;
 import com.chillibits.particulatematterapi.model.db.main.User;
-import com.chillibits.particulatematterapi.model.db.main.UserSensorLink;
 import com.chillibits.particulatematterapi.model.io.MapsPlaceResult;
 import com.chillibits.particulatematterapi.model.io.SyncPackage;
+import com.chillibits.particulatematterapi.repository.LinkRepository;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
 import com.chillibits.particulatematterapi.repository.UserRepository;
-import com.chillibits.particulatematterapi.repository.UserSensorLinkRepository;
 import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import com.chillibits.particulatematterapi.shared.Credentials;
 import com.chillibits.particulatematterapi.shared.SharedUtils;
@@ -43,7 +43,7 @@ public class SensorController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private UserSensorLinkRepository userSensorLinkRepository;
+    private LinkRepository linkRepository;
     @Autowired
     private MongoTemplate mongoTemplate;
 
@@ -104,11 +104,11 @@ public class SensorController {
         Sensor createdSensor = sensorRepository.save(sensor);
 
         // Save UserSensorLink to the database
-        UserSensorLink link = new UserSensorLink();
+        Link link = new Link();
         link.setUser(user);
         link.setSensor(sensor);
         link.setCreationTimestamp(currentTimestamp);
-        userSensorLinkRepository.save(link);
+        linkRepository.save(link);
 
         return createdSensor;
     }

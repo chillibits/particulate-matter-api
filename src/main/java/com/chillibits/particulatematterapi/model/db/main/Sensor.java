@@ -21,7 +21,7 @@ public class Sensor {
     @Id
     private long chipId;
     @OneToMany(mappedBy = "sensor")
-    private Set<UserSensorLink> userLinks;
+    private Set<Link> userLinks;
     private String firmwareVersion;
     private long creationTimestamp;
     private String notes;
@@ -32,4 +32,6 @@ public class Sensor {
     private double gpsAltitude;
     private String country;
     private String city;
+    private boolean indoor;
+    private boolean published;
 }

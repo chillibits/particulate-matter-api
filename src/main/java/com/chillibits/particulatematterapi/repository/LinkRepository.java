@@ -4,7 +4,9 @@
 
 package com.chillibits.particulatematterapi.repository;
 
-import com.chillibits.particulatematterapi.model.db.main.UserSensorLink;
+import com.chillibits.particulatematterapi.model.db.main.Link;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserSensorLinkRepository extends JpaRepository<UserSensorLink, Integer> {}
+public interface LinkRepository extends JpaRepository<Link, Integer> {
+
+}

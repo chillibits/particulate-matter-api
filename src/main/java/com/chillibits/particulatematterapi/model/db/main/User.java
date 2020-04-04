@@ -39,7 +39,7 @@ public class User {
     private String email;
     private String password;
     @OneToMany(mappedBy = "user")
-    private Set<UserSensorLink> sensorLinks;
+    private Set<Link> sensorLinks;
     private int role;
     private int status;
     private long creationTimestamp;

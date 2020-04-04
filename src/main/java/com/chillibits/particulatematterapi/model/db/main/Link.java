@@ -18,7 +18,7 @@ import javax.persistence.MapsId;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserSensorLink {
+public class Link {
     @Id
     private int id;
 
@@ -32,5 +32,8 @@ public class UserSensorLink {
     @JoinColumn(name = "sensor_id")
     private Sensor sensor;
 
+    private boolean owner;
+    private String name;
+    private int color;
     private long creationTimestamp;
 }

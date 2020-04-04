@@ -34,7 +34,7 @@ public class ParticulateMatterApiApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		// Imports from the old api
-		//importFromOldSensors();
+		importFromOldSensors();
 
 		// Test space (will not be included in a stable build)
 
@@ -61,9 +61,11 @@ public class ParticulateMatterApiApplication implements CommandLineRunner {
 				oldSensor.getLastEdit(),
 				Double.parseDouble(oldSensor.getLat()),
 				Double.parseDouble(oldSensor.getLng()),
-				Double.parseDouble(oldSensor.getAlt()),
+				Double.parseDouble(oldSensor.getAlt()) * 100,
 				oldSensor.getCountry(),
-				oldSensor.getCity()
+				oldSensor.getCity(),
+				false,
+				true
 		);
 	}
 }
