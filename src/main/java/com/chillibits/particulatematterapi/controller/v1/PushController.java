@@ -5,13 +5,16 @@
 package com.chillibits.particulatematterapi.controller.v1;
 
 import com.chillibits.particulatematterapi.model.db.data.DataRecord;
+import com.chillibits.particulatematterapi.model.db.data.LogItem;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
+import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,9 +33,12 @@ public class PushController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/push", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Pushes a measurement record to the database")
-    public String pushData(@RequestBody DataRecord record) {
+    public String pushData(@RequestBody DataRecord record, @RequestHeader(value = "X-Sensor", defaultValue = "0") String xSensorHeader, @RequestHeader(value = "Sensor", defaultValue = "0") String sensorHeader) {
         long timestamp = System.currentTimeMillis();
         record.setTimestamp(timestamp);
+        // Set chip id value correctly
+        if(record.getChipId() == 0 && xSensorHeader.contains("-")) record.setChipId(Long.parseLong(xSensorHeader.substring(xSensorHeader.indexOf("-") +1)));
+        if(record.getChipId() == 0 && sensorHeader.contains("-")) record.setChipId(Long.parseLong(sensorHeader.substring(xSensorHeader.indexOf("-") +1)));
         // Update Sensor record
         sensorRepository.findById(record.getChipId()).ifPresent(sensor -> {
             // Update live-properties
@@ -52,6 +58,9 @@ public class PushController {
         });
         // Save record to data db
         template.save(record, String.valueOf(record.getChipId()));
+        // Log request
+        template.save(new LogItem(System.currentTimeMillis(), ConstantUtils.UNKNOWN_CLIENT_ID, ConstantUtils.UNKNOWN_USER_ID, LogItem.ACTION_PUSH, String.valueOf(record.getChipId())), ConstantUtils.LOG_TABLE_NAME);
+        // Return success message
         return "ok";
     }
 }

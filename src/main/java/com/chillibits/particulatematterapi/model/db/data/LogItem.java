@@ -14,7 +14,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LogItem {
-    private long id;
+    // Actions
+    public static final String ACTION_PUSH = "Push";
+
+    // Attributes
     private long timestamp;
     private int clientId;
     private int userId;

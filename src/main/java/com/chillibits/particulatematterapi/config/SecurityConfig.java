@@ -39,12 +39,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // Ranking endpoint
                 .antMatchers(HttpMethod.GET, "/ranking/**").permitAll()
                 // Data endpoint
-                .antMatchers(HttpMethod.GET, "/data").permitAll()
-                .antMatchers(HttpMethod.POST, "/data").hasAnyAuthority(Client.ROLE_APPLICATION_ADMIN)
+                .antMatchers(HttpMethod.GET, "/data/**").permitAll()
                 // Push endpoint
                 .antMatchers(HttpMethod.POST, "/push").permitAll()
                 // Chart endpoint
-                .antMatchers(HttpMethod.GET, "/chart").permitAll()
+                .antMatchers(HttpMethod.GET, "/chart/**").permitAll()
                 // User endpoint
                 .antMatchers(HttpMethod.GET, "/user/{email}").hasAnyAuthority(Client.ROLE_APPLICATION, Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
                 .antMatchers(HttpMethod.GET, "/user").hasAuthority(Client.ROLE_APPLICATION_ADMIN)
@@ -60,6 +59,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/link").hasAuthority(Client.ROLE_APPLICATION)
                 .antMatchers(HttpMethod.PUT, "/link").hasAuthority(Client.ROLE_APPLICATION)
                 .antMatchers(HttpMethod.DELETE, "/link").hasAuthority(Client.ROLE_APPLICATION)
+                // Log endpoint
+                .antMatchers(HttpMethod.GET, "/log/**").permitAll()
                 // Stats endpoint
                 .antMatchers("/stats").permitAll()
                 .and().csrf().disable()

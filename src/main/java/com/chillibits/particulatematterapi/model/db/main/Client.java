@@ -28,6 +28,7 @@ public class Client {
     public static final String ROLE_APPLICATION_CHILLIBITS = "CBA";
     public static final String ROLE_APPLICATION_ADMIN = "AA";
 
+    public static final int TYPE_NONE = 0;
     public static final int TYPE_WEBSITE = 1;
     public static final int TYPE_DESKTOP_APPLICATION = 2;
     public static final int TYPE_ANDROID_APP = 3;
