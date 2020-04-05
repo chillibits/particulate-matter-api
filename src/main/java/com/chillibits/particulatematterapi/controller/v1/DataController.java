@@ -206,13 +206,13 @@ public class DataController {
             @RequestParam(defaultValue = "60") int period  // in minutes
     ) throws DataAccessException {
         // Check input parameters
-        if(from < 0 || to < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_TIME_RANGE);
+        if(from < 0 || to < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_TIME_RANGE_DATA);
         if(fieldIndex < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_FIELD_INDEX);
 
         long startTimestamp = System.currentTimeMillis();
         // Get replace default values, with better ones
         long toTimestamp = to == 0 ? System.currentTimeMillis() : to;
-        long fromTimestamp = from == 0 ? toTimestamp - ConstantUtils.DEFAULT_DATA_TIMESPAN : from;
+        long fromTimestamp = from == 0 ? toTimestamp - ConstantUtils.DEFAULT_DATA_TIME_SPAN : from;
         // Loop periodically through the time span
         long periodInMillis = period * 60 * 1000;
         long currFrom = fromTimestamp;
@@ -254,14 +254,14 @@ public class DataController {
             @RequestParam(defaultValue = "60") int period  // in minutes
     ) throws DataAccessException {
         // Check input parameters
-        if(from < 0 || to < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_TIME_RANGE);
+        if(from < 0 || to < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_TIME_RANGE_DATA);
         if(fieldIndex < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_FIELD_INDEX);
         if(period < 1) throw new DataAccessException(ErrorCodeUtils.INVALID_PERIOD);
 
         long startTimestamp = System.currentTimeMillis();
         // Get replace default values, with better ones
         long toTimestamp = to == 0 ? System.currentTimeMillis() : to;
-        long fromTimestamp = from == 0 ? toTimestamp - ConstantUtils.DEFAULT_DATA_TIMESPAN : from;
+        long fromTimestamp = from == 0 ? toTimestamp - ConstantUtils.DEFAULT_DATA_TIME_SPAN : from;
         // Loop periodically through the time span
         long periodInMillis = period * 60 * 1000;
         long currFrom = fromTimestamp;
@@ -328,9 +328,9 @@ public class DataController {
     }
 
     private List<DataRecord> getDataRecords(long chipId, long from, long to) throws DataAccessException {
-        if(from < 0 || to < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_TIME_RANGE);
+        if(from < 0 || to < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_TIME_RANGE_DATA);
         long toTimestamp = to == 0 ? System.currentTimeMillis() : to;
-        long fromTimestamp = from == 0 ? toTimestamp - ConstantUtils.DEFAULT_DATA_TIMESPAN : from;
+        long fromTimestamp = from == 0 ? toTimestamp - ConstantUtils.DEFAULT_DATA_TIME_SPAN : from;
         return template.find(Query.query(Criteria.where("timestamp").gte(fromTimestamp).lte(toTimestamp)), DataRecord.class, String.valueOf(chipId));
     }
 

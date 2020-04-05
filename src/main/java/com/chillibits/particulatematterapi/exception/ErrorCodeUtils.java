@@ -9,7 +9,7 @@ public class ErrorCodeUtils {
     public static final int INVALID_CLIENT_DATA = 100;
 
     // Data errors (2xx)
-    public static final int INVALID_TIME_RANGE = 200;
+    public static final int INVALID_TIME_RANGE_DATA = 200;
     public static final int INVALID_FIELD_INDEX = 201;
     public static final int INVALID_MERGE_COUNT = 202;
     public static final int INVALID_PERIOD = 203;
@@ -35,4 +35,7 @@ public class ErrorCodeUtils {
 
     // Link errors (8xx)
     public static final int INVALID_LINK_DATA = 800;
+
+    // Log errors (9xx)
+    public static final int INVALID_TIME_RANGE_LOG = 900;
 }

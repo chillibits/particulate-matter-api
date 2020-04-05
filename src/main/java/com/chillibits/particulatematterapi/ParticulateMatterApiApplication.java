@@ -5,9 +5,12 @@
 package com.chillibits.particulatematterapi;
 
 import com.chillibits.particulatematterapi.model.db.main.Sensor;
+import com.chillibits.particulatematterapi.model.db.main.User;
 import com.chillibits.particulatematterapi.model.dbold.OldSensor;
 import com.chillibits.particulatematterapi.repository.OldSensorRepository;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
+import com.chillibits.particulatematterapi.repository.UserRepository;
+import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -25,6 +28,8 @@ public class ParticulateMatterApiApplication implements CommandLineRunner {
 	@Autowired
 	private SensorRepository sensorRepository;
 	@Autowired
+	private UserRepository userRepository;
+	@Autowired
 	private OldSensorRepository oldSensorRepository;
 
 	public static void main(String[] args) {
@@ -35,6 +40,20 @@ public class ParticulateMatterApiApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		// Imports from the old api
 		//importFromOldSensors();
+
+		// Create mandatory 'Unknown user'
+		if(userRepository.findById(ConstantUtils.UNKNOWN_USER_ID).isEmpty()) userRepository.save(new User(
+				ConstantUtils.UNKNOWN_USER_ID,
+				"Unknown",
+				"User",
+				"info@chillibits.com",
+				"not set",
+				Collections.emptySet(),
+				User.USER,
+				User.LOCKED,
+				System.currentTimeMillis(),
+				System.currentTimeMillis()
+		));
 
 		// Test space (will not be included in a stable build)
 
