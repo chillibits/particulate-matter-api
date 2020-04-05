@@ -67,6 +67,8 @@ public class UserController {
         userRepository.deleteById(id);
     }
 
+    // ---------------------------------------------- Utility functions ------------------------------------------------
+
     private void validateUserObject(User user) throws UserDataException {
         if(user.getEmail().isBlank() || user.getPassword().isBlank()) throw new UserDataException(ErrorCodeUtils.INVALID_USER_DATA);
     }

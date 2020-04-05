@@ -21,14 +21,18 @@ public class ErrorCodeUtils {
 
     // Sensor errors (5xx)
     public static final int SENSOR_ALREADY_EXISTS = 500;
-    public static final int INVALID_GPS_COORDINATES = 501;
-    public static final int NO_DATA_RECORDS = 502;
-    public static final int CANNOT_ASSIGN_TO_USER = 503;
-    public static final int INVALID_RADIUS = 504;
+    public static final int SENSOR_NOT_EXISTING = 501;
+    public static final int INVALID_GPS_COORDINATES = 502;
+    public static final int NO_DATA_RECORDS = 503;
+    public static final int CANNOT_ASSIGN_TO_USER = 504;
+    public static final int INVALID_RADIUS = 505;
 
     // Stats errors (6xx)
 
     // User errors (7xx)
     public static final int INVALID_USER_DATA = 700;
     public static final int USER_NOT_EXISTING = 701;
+
+    // Link errors (8xx)
+    public static final int INVALID_LINK_DATA = 800;
 }

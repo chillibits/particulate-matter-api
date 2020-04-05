@@ -18,8 +18,18 @@ public interface SensorRepository extends JpaRepository<Sensor, Long> {
     List<Sensor> findAllInRadius(double lat, double lng, int radius);
 
     @Modifying
-    @Query("UPDATE Sensor s SET s.gpsLatitude = ?2, s.gpsLongitude = ?3 WHERE s.chipId = ?1")
-    Integer updateSensor(long chipId, double latitude, double longitude);
+    @Query("UPDATE Sensor s SET s.gpsLatitude = ?2, s.gpsLongitude = ?3, s.country = ?4, s.city = ?5, s.lastEditTimestamp = ?6, s.notes = ?7, s.indoor = ?8, published = ?9 WHERE s.chipId = ?1")
+    Integer updateSensor(
+            long chipId,
+            double latitude,
+            double longitude,
+            String country,
+            String city,
+            long lastEdit,
+            String notes,
+            boolean indoor,
+            boolean published
+    );
 
     @Query(value = "SELECT new com.chillibits.particulatematterapi.model.io.RankingItemCity(s.country, s.city, COUNT(s.city)) FROM Sensor s GROUP BY s.city, s.country ORDER BY COUNT(s.city) DESC, s.country, s.city")
     List<RankingItemCity> getRankingByCity(int items);

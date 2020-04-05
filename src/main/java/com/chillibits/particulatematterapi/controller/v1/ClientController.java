@@ -65,6 +65,8 @@ public class ClientController {
         clientRepository.deleteById(id);
     }
 
+    // ---------------------------------------------- Utility functions ------------------------------------------------
+
     private ClientDto convertToDto(Client client) {
         return mapper.map(client, ClientDto.class);
     }

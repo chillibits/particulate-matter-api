@@ -23,7 +23,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.MediaType;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -78,21 +77,10 @@ public class SensorController {
         if(!userRepository.existsById(user.getId())) throw new SensorDataException(ErrorCodeUtils.CANNOT_ASSIGN_TO_USER);
         validateSensorObject(sensor);
 
-        // Retrieve country and city from latitude and longitude
-        try {
-            String url = "https://maps.googleapis.com/maps/api/geocode/json?key=" + Credentials.GOOGLE_API_KEY + "&latlng="
-                    + sensor.getGpsLatitude() + "," + sensor.getGpsLongitude() + "&sensor=false&language=en";
-            MapsPlaceResult place = new ObjectMapper().readValue(new URL(url), MapsPlaceResult.class);
-            sensor.setCountry(place.getCountry());
-            sensor.setCity(place.getCity());
-        } catch (Exception e) {
-            sensor.setCountry(ConstantUtils.BLANK_COLUMN);
-            sensor.setCity(ConstantUtils.BLANK_COLUMN);
-        }
-
         long currentTimestamp = System.currentTimeMillis();
 
         // Set remaining attributes
+        retrieveCountryCityFromCoordinates(sensor);
         sensor.setFirmwareVersion(ConstantUtils.EMPTY_COLUMN);
         sensor.setNotes(ConstantUtils.BLANK_COLUMN);
         sensor.setGpsLatitude(SharedUtils.round(sensor.getGpsLatitude(), 4));
@@ -113,18 +101,45 @@ public class SensorController {
         return createdSensor;
     }
 
-    @Transactional
     @RequestMapping(method = RequestMethod.PUT, path = "/sensor", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates a sensor")
     public Integer updateSensor(@RequestBody Sensor sensor) throws SensorDataException {
         validateSensorObject(sensor);
-        return sensorRepository.updateSensor(sensor.getChipId(), sensor.getGpsLatitude(), sensor.getGpsLongitude());
+
+        retrieveCountryCityFromCoordinates(sensor);
+        return sensorRepository.updateSensor(
+                sensor.getChipId(),
+                sensor.getGpsLatitude(),
+                sensor.getGpsLongitude(),
+                sensor.getCountry(),
+                sensor.getCity(),
+                System.currentTimeMillis(),
+                sensor.getNotes(),
+                sensor.isIndoor(),
+                sensor.isPublished()
+        );
     }
 
     @RequestMapping(method = RequestMethod.DELETE, path = "/sensor/{id}")
     @ApiOperation(value = "Deletes a sensor from the database")
     public void deleteSensor(@PathVariable("id") Long id) {
         sensorRepository.deleteById(id);
+    }
+
+    // ---------------------------------------------- Utility functions ------------------------------------------------
+
+    private void retrieveCountryCityFromCoordinates(@RequestBody Sensor sensor) {
+        // Retrieve country and city from latitude and longitude
+        try {
+            String url = "https://maps.googleapis.com/maps/api/geocode/json?key=" + Credentials.GOOGLE_API_KEY + "&latlng="
+                    + sensor.getGpsLatitude() + "," + sensor.getGpsLongitude() + "&sensor=false&language=en";
+            MapsPlaceResult place = new ObjectMapper().readValue(new URL(url), MapsPlaceResult.class);
+            sensor.setCountry(place.getCountry());
+            sensor.setCity(place.getCity());
+        } catch (Exception e) {
+            sensor.setCountry(ConstantUtils.BLANK_COLUMN);
+            sensor.setCity(ConstantUtils.BLANK_COLUMN);
+        }
     }
 
     private void validateSensorObject(Sensor sensor) throws SensorDataException {
