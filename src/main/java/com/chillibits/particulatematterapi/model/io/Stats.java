@@ -12,17 +12,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Stats {
-    private int sensorsTotal;
-    private int sensorsActive;
-    private int sensorsMapTotal;
-    private int sensorsMapActive;
-    private int serverRequestsTotal;
-    private int serverRequestsTodayApp;
-    private int serverRequestsTodayWebApp;
-    private int serverRequestsTodayGoogleActions;
-    private int serverRequestsYesterdayApp;
-    private int serverRequestsYesterdayWebApp;
-    private int serverRequestsYesterdayGoogleActions;
+    private long sensorsTotal;
+    private long sensorsActive;
+    private long sensorsMapTotal;
+    private long sensorsMapActive;
+    private long serverRequestsTotal;
+    private long serverRequestsTodayApp;
+    private long serverRequestsTodayWebApp;
+    private long serverRequestsTodayGoogleActions;
+    private long serverRequestsYesterdayApp;
+    private long serverRequestsYesterdayWebApp;
+    private long serverRequestsYesterdayGoogleActions;
     private long dataRecordsTotal;
     private long dataRecordsThisMonth;
     private long dataRecordsPrevMonth;
