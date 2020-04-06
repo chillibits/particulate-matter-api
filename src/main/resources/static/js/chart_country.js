@@ -1,4 +1,4 @@
-function drawLineChart(label, categories, series, responseTime, chipId, width, height) {
+function drawLineChart(label, categories, series, responseTime, country, width, height) {
     Highcharts.chart("container", {
         chart: {
             type: "line",
@@ -9,7 +9,7 @@ function drawLineChart(label, categories, series, responseTime, chipId, width, h
             text: "Particulate matter data of country"
         },
         subtitle: {
-            text: "Country: " + chipId + " - (Response time: " + responseTime + " ms)"
+            text: "Country: " + country + " - (Response time: " + responseTime + " ms)"
         },
         xAxis: {
             categories,

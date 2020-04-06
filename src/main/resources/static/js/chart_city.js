@@ -48,11 +48,10 @@ var height = params.height ? params.height : 500;
 $.ajax({
     url: "data/chart?" + urlSuffix,
     success: (result) => {
-        var country = JSON.parse(result).country;
         var field = JSON.parse(result).field;
         var time = JSON.parse(result).time;
         var values = JSON.parse(result).values;
         var responseTime = JSON.parse(result).responseTime;
-        drawLineChart(field, time, values, responseTime, country, width, height);
+        drawLineChart(field, time, values, responseTime, country, city, width, height);
     }
 });
