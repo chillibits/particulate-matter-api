@@ -13,4 +13,7 @@ public class ConstantUtils {
     public static final int UNKNOWN_CLIENT_ID = 1;
     public static final String LOG_TABLE_NAME = "_access_log";
     public static final boolean IMPORT_SENSORS_IF_TABLE_IS_EMPTY = true;
+    public static final int CLIENT_ID_PMAPP = 1; // Official PMApp
+    public static final int CLIENT_ID_PMAPP_WEB = 2; // Official PMApp Web
+    public static final int CLIENT_ID_PMAPP_GA = 3; // Official Google Actions client
 }

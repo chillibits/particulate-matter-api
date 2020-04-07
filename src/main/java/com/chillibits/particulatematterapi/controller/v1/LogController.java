@@ -20,11 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
 @RestController
-@Api(value = "Log REST Endpoint", tags = "log", hidden = true)
+@Api(value = "Log REST Endpoint", tags = "log")
+@ApiIgnore
 public class LogController {
 
     @Autowired
@@ -33,10 +35,10 @@ public class LogController {
     @RequestMapping(method = RequestMethod.GET, path = "/log", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns the logs for the specified time span", hidden = true)
     public List<LogItem> getAllLogs(
-            @RequestParam long from,
-            @RequestParam long to
+            @RequestParam(defaultValue = "0") long from,
+            @RequestParam(defaultValue = "0") long to
     ) throws LogAccessException {
-        if(from < 0 || to < 0) throw new LogAccessException(ErrorCodeUtils.INVALID_TIME_RANGE_LOG);
+        validateRequest(from, to);
         long toTimestamp = to == 0 ? System.currentTimeMillis() : to;
         long fromTimestamp = from == 0 ? toTimestamp - ConstantUtils.DEFAULT_DATA_TIME_SPAN : from;
 
@@ -47,10 +49,10 @@ public class LogController {
     @ApiOperation(value = "Returns the logs for the specified time span, filtered by target", hidden = true)
     public List<LogItem> getLogsTarget(
             @PathVariable String target,
-            @RequestParam long from,
-            @RequestParam long to
+            @RequestParam(defaultValue = "0") long from,
+            @RequestParam(defaultValue = "0") long to
     ) throws LogAccessException {
-        if(from < 0 || to < 0) throw new LogAccessException(ErrorCodeUtils.INVALID_TIME_RANGE_LOG);
+        validateRequest(from, to);
         long toTimestamp = to == 0 ? System.currentTimeMillis() : to;
         long fromTimestamp = from == 0 ? toTimestamp - ConstantUtils.DEFAULT_DATA_TIME_SPAN : from;
 
@@ -61,10 +63,10 @@ public class LogController {
     @ApiOperation(value = "Returns the logs for the specified time span, filtered by user", hidden = true)
     public List<LogItem> getLogsUser(
             @PathVariable int userId,
-            @RequestParam long from,
-            @RequestParam long to
+            @RequestParam(defaultValue = "0") long from,
+            @RequestParam(defaultValue = "0") long to
     ) throws LogAccessException {
-        if(from < 0 || to < 0) throw new LogAccessException(ErrorCodeUtils.INVALID_TIME_RANGE_LOG);
+        validateRequest(from, to);
         long toTimestamp = to == 0 ? System.currentTimeMillis() : to;
         long fromTimestamp = from == 0 ? toTimestamp - ConstantUtils.DEFAULT_DATA_TIME_SPAN : from;
 
@@ -75,10 +77,10 @@ public class LogController {
     @ApiOperation(value = "Returns the logs for the specified time span, filtered by client", hidden = true)
     public List<LogItem> getLogsClient(
             @PathVariable int clientId,
-            @RequestParam long from,
-            @RequestParam long to
+            @RequestParam(defaultValue = "0") long from,
+            @RequestParam(defaultValue = "0") long to
     ) throws LogAccessException {
-        if(from < 0 || to < 0) throw new LogAccessException(ErrorCodeUtils.INVALID_TIME_RANGE_LOG);
+        validateRequest(from, to);
         long toTimestamp = to == 0 ? System.currentTimeMillis() : to;
         long fromTimestamp = from == 0 ? toTimestamp - ConstantUtils.DEFAULT_DATA_TIME_SPAN : from;
 
@@ -89,13 +91,19 @@ public class LogController {
     @ApiOperation(value = "Returns the logs for the specified time span, filtered by action", hidden = true)
     public List<LogItem> getLogsAction(
             @PathVariable String action,
-            @RequestParam long from,
-            @RequestParam long to
+            @RequestParam(defaultValue = "0") long from,
+            @RequestParam(defaultValue = "0") long to
     ) throws LogAccessException {
-        if(from < 0 || to < 0) throw new LogAccessException(ErrorCodeUtils.INVALID_TIME_RANGE_LOG);
+        validateRequest(from, to);
         long toTimestamp = to == 0 ? System.currentTimeMillis() : to;
         long fromTimestamp = from == 0 ? toTimestamp - ConstantUtils.DEFAULT_DATA_TIME_SPAN : from;
 
         return template.find(Query.query(Criteria.where("timestamp").gte(fromTimestamp).lte(toTimestamp).and("action").regex(action)), LogItem.class);
+    }
+
+    // ---------------------------------------------- Utility functions ------------------------------------------------
+
+    private void validateRequest(@RequestParam(defaultValue = "0") long from, @RequestParam(defaultValue = "0") long to) throws LogAccessException {
+        if (from < 0 || to < 0) throw new LogAccessException(ErrorCodeUtils.INVALID_TIME_RANGE_LOG);
     }
 }

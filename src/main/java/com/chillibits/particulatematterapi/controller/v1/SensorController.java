@@ -60,6 +60,14 @@ public class SensorController {
         return sensorRepository.findAllInRadius(latitude, longitude, radius);
     }
 
+    @RequestMapping(method = RequestMethod.GET, path = "/sensor/{chipId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Returns info for a specific sensor")
+    public Sensor getSingleSensor(
+            @RequestParam long chipId
+    ) {
+        return sensorRepository.findById(chipId).orElse(null);
+    }
+
     @RequestMapping(method = RequestMethod.GET, path = "/sensor/sync", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all sensors, registered in the database")
     public List<Sensor> getAllSensorsSync(@RequestBody SyncPackage syncPackage) {
