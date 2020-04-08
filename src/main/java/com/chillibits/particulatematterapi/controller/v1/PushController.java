@@ -5,9 +5,7 @@
 package com.chillibits.particulatematterapi.controller.v1;
 
 import com.chillibits.particulatematterapi.model.db.data.DataRecord;
-import com.chillibits.particulatematterapi.model.db.data.LogItem;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
-import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,8 +56,6 @@ public class PushController {
         });
         // Save record to data db
         template.save(record, String.valueOf(record.getChipId()));
-        // Log request
-        template.save(new LogItem(System.currentTimeMillis(), ConstantUtils.UNKNOWN_CLIENT_ID, ConstantUtils.UNKNOWN_USER_ID, LogItem.ACTION_PUSH, String.valueOf(record.getChipId())), ConstantUtils.LOG_TABLE_NAME);
         // Return success message
         return "ok";
     }

@@ -17,6 +17,12 @@ public interface SensorRepository extends JpaRepository<Sensor, Long> {
     @Query("SELECT s, (6371000 * acos(cos(radians(?1)) * cos(radians(s.gpsLatitude)) * cos(radians(s.gpsLongitude) - radians(?2)) + sin(radians(?1)) * sin(radians(s.gpsLatitude)))) AS distance FROM Sensor s GROUP BY distance HAVING distance <= ?3 ORDER BY distance ASC")
     List<Sensor> findAllInRadius(double lat, double lng, int radius);
 
+    @Query("SELECT s FROM Sensor s WHERE published = 1")
+    List<Sensor> findAllPublished();
+
+    @Query("SELECT s, (6371000 * acos(cos(radians(?1)) * cos(radians(s.gpsLatitude)) * cos(radians(s.gpsLongitude) - radians(?2)) + sin(radians(?1)) * sin(radians(s.gpsLatitude)))) AS distance FROM Sensor s WHERE published = 1 GROUP BY distance HAVING distance <= ?3 ORDER BY distance ASC")
+    List<Sensor> findAllPublishedInRadius(double lat, double lng, int radius);
+
     @Modifying
     @Query("UPDATE Sensor s SET s.gpsLatitude = ?2, s.gpsLongitude = ?3, s.country = ?4, s.city = ?5, s.lastEditTimestamp = ?6, s.notes = ?7, s.indoor = ?8, published = ?9 WHERE s.chipId = ?1")
     Integer updateSensor(
