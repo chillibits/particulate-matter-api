@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StatsItem {
+    private long chipId;
     private long timestamp;
     private long sensorsTotal;
     private long sensorsMapTotal;

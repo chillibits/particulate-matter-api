@@ -9,20 +9,13 @@ import com.chillibits.particulatematterapi.repository.SensorRepository;
 import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.aggregation.CountOperation;
-import org.springframework.data.mongodb.core.aggregation.MatchOperation;
-import org.springframework.data.mongodb.core.aggregation.ProjectionOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -49,71 +42,73 @@ public class StatsController {
         // Initialization
         long currentTime = System.currentTimeMillis();
         long[] timestamps = calculateTimestamps(currentTime);
-        // Retrieve stats
-        long[] values = new long[5];
-        Set<String> collectionNames = mongoTemplate.getCollectionNames();
-        int i = 0;
-        for(String collectionName : collectionNames) {
-            values[0] += getRecordCountFromTimestamp(collectionName, 0, currentTime);
-            values[1] += getRecordCountFromTimestamp(collectionName, timestamps[1], currentTime);
-            values[2] += getRecordCountFromTimestamp(collectionName, timestamps[2], timestamps[1]);
-            values[3] += getRecordCountFromTimestamp(collectionName, timestamps[3], currentTime);
-            values[4] += getRecordCountFromTimestamp(collectionName, timestamps[4], timestamps[3]);
-            i++;
-            log.info(String.valueOf(i));
-        }
-
-        StatsItem stats = new StatsItem();
+        StatsItem newItem = new StatsItem();
+        // Load already calculated item from cache table
+        List<StatsItem> items = mongoTemplate.find(Query.query(Criteria.where("chipId").is(0)).limit(1), StatsItem.class, ConstantUtils.STATS_TABLE_NAME);
+        if(!items.isEmpty()) newItem = items.get(0);
+        // Retrieve newItem
+        Set<String> collectionNames = getDataCollections();
+        // Data records
+        long dataRecordsToday = 0;
+        for(String collectionName : collectionNames)
+            dataRecordsToday += getRecordCountFromTimestamp(collectionName, timestamps[1], currentTime);
+        newItem.setDataRecordsToday(dataRecordsToday);
         // Sensor count
-        stats.setSensorsMapTotal(sensorRepository.getSensorsMapTotal());
-        stats.setSensorsMapActive(sensorRepository.getSensorsMapActive(timestamps[0]));
-        stats.setSensorsTotal(collectionNames.size());
-        // Records count
-        stats.setDataRecordsTotal(values[0]);
-        stats.setDataRecordsToday(values[1]);
-        stats.setDataRecordsYesterday(values[2]);
-        stats.setDataRecordsThisMonth(values[3]);
-        stats.setDataRecordsPrevMonth(values[4]);
+        newItem.setSensorsMapTotal(sensorRepository.getSensorsMapTotal());
+        newItem.setSensorsMapActive(sensorRepository.getSensorsMapActive(timestamps[0]));
+        newItem.setSensorsTotal(collectionNames.size());
         // Server request count
-        //stats.setServerRequestsTotal(getServerRequestsCountFromTimestampTotal());
-        stats.setServerRequestsTodayApp(getServerRequestsCountFromTimestamp(ConstantUtils.CLIENT_ID_PMAPP, timestamps[1], currentTime));
-        stats.setServerRequestsTodayWebApp(getServerRequestsCountFromTimestamp(ConstantUtils.CLIENT_ID_PMAPP_WEB, timestamps[1], currentTime));
-        stats.setServerRequestsTodayGoogleActions(getServerRequestsCountFromTimestamp(ConstantUtils.CLIENT_ID_PMAPP_GA, timestamps[1], currentTime));
-        stats.setServerRequestsYesterdayApp(getServerRequestsCountFromTimestamp(ConstantUtils.CLIENT_ID_PMAPP, timestamps[2], timestamps[1]));
-        stats.setServerRequestsYesterdayWebApp(getServerRequestsCountFromTimestamp(ConstantUtils.CLIENT_ID_PMAPP_WEB, timestamps[2], timestamps[1]));
-        stats.setServerRequestsYesterdayGoogleActions(getServerRequestsCountFromTimestamp(ConstantUtils.CLIENT_ID_PMAPP_GA, timestamps[2], timestamps[1]));
+        newItem.setServerRequestsTodayApp(getServerRequestsCountFromTimestamp(ConstantUtils.CLIENT_ID_PMAPP, timestamps[1], currentTime));
+        newItem.setServerRequestsTodayWebApp(getServerRequestsCountFromTimestamp(ConstantUtils.CLIENT_ID_PMAPP_WEB, timestamps[1], currentTime));
+        newItem.setServerRequestsTodayGoogleActions(getServerRequestsCountFromTimestamp(ConstantUtils.CLIENT_ID_PMAPP_GA, timestamps[1], currentTime));
 
-        return stats;
+        // Save calculated values to caching table
+        mongoTemplate.remove(Query.query(Criteria.where("chipId").is(0)).limit(1), StatsItem.class, ConstantUtils.STATS_TABLE_NAME);
+        mongoTemplate.save(newItem, ConstantUtils.STATS_TABLE_NAME);
+
+        return newItem;
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/stats/{chipId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns stats about a specific sensor")
     public StatsItem getStatsOfSensor(@PathVariable Long chipId) {
         // Initialization
+        long fromTime = 0;
         String collectionName = String.valueOf(chipId);
         long currentTime = System.currentTimeMillis();
         long[] timestamps = calculateTimestamps(currentTime);
+        StatsItem newItem = new StatsItem();
+        // Load already calculated item from cache table
+        List<StatsItem> items = mongoTemplate.find(Query.query(Criteria.where("sensorsTotal").ne(0)).limit(1), StatsItem.class, ConstantUtils.STATS_TABLE_NAME);
+        if(!items.isEmpty()) {
+            newItem = items.get(0);
+            fromTime = newItem.getTimestamp();
+        }
+        newItem.setChipId(chipId);
 
-        StatsItem stats = new StatsItem();
         // Sensor count
-        stats.setSensorsMapTotal(sensorRepository.getSensorsMapTotal());
-        stats.setSensorsMapActive(sensorRepository.getSensorsMapActive(timestamps[0]));
+        newItem.setSensorsMapTotal(sensorRepository.getSensorsMapTotal());
+        newItem.setSensorsMapActive(sensorRepository.getSensorsMapActive(timestamps[0]));
         // Records count
-        stats.setDataRecordsTotal(getRecordCountFromTimestamp(collectionName, 0, currentTime));
-        stats.setDataRecordsToday(getRecordCountFromTimestamp(collectionName, timestamps[1], currentTime));
-        stats.setDataRecordsYesterday(getRecordCountFromTimestamp(collectionName, timestamps[2], timestamps[1]));
-        stats.setDataRecordsThisMonth(getRecordCountFromTimestamp(collectionName, timestamps[3], currentTime));
-        stats.setDataRecordsPrevMonth(getRecordCountFromTimestamp(collectionName, timestamps[4], timestamps[3]));
+        newItem.setDataRecordsTotal(getRecordCountFromTimestamp(collectionName, 0, currentTime));
+        newItem.setDataRecordsToday(getRecordCountFromTimestamp(collectionName, timestamps[1], currentTime));
+        newItem.setDataRecordsYesterday(getRecordCountFromTimestamp(collectionName, timestamps[2], timestamps[1]));
+        newItem.setDataRecordsThisMonth(getRecordCountFromTimestamp(collectionName, timestamps[3], currentTime));
+        newItem.setDataRecordsPrevMonth(getRecordCountFromTimestamp(collectionName, timestamps[4], timestamps[3]));
         // Server request count
-        //stats.setServerRequestsTotal(getServerRequestsCountFromTimestampSingleTotal(chipId, currentTime));
-        stats.setServerRequestsTodayApp(getServerRequestsCountFromTimestampSingle(ConstantUtils.CLIENT_ID_PMAPP, chipId, timestamps[1], currentTime));
-        stats.setServerRequestsTodayWebApp(getServerRequestsCountFromTimestampSingle(ConstantUtils.CLIENT_ID_PMAPP_WEB, chipId, timestamps[1], currentTime));
-        stats.setServerRequestsTodayGoogleActions(getServerRequestsCountFromTimestampSingle(ConstantUtils.CLIENT_ID_PMAPP_GA, chipId, timestamps[1], currentTime));
-        stats.setServerRequestsYesterdayApp(getServerRequestsCountFromTimestampSingle(ConstantUtils.CLIENT_ID_PMAPP, chipId, timestamps[2], timestamps[1]));
-        stats.setServerRequestsYesterdayWebApp(getServerRequestsCountFromTimestampSingle(ConstantUtils.CLIENT_ID_PMAPP_WEB, chipId, timestamps[2], timestamps[1]));
-        stats.setServerRequestsYesterdayGoogleActions(getServerRequestsCountFromTimestampSingle(ConstantUtils.CLIENT_ID_PMAPP_GA, chipId, timestamps[2], timestamps[1]));
+        newItem.setServerRequestsTotal(getServerRequestsCountFromTimestampSingleTotal(chipId, fromTime, currentTime));
+        newItem.setServerRequestsTodayApp(getServerRequestsCountFromTimestampSingle(ConstantUtils.CLIENT_ID_PMAPP, chipId, timestamps[1], currentTime));
+        newItem.setServerRequestsTodayWebApp(getServerRequestsCountFromTimestampSingle(ConstantUtils.CLIENT_ID_PMAPP_WEB, chipId, timestamps[1], currentTime));
+        newItem.setServerRequestsTodayGoogleActions(getServerRequestsCountFromTimestampSingle(ConstantUtils.CLIENT_ID_PMAPP_GA, chipId, timestamps[1], currentTime));
+        newItem.setServerRequestsYesterdayApp(getServerRequestsCountFromTimestampSingle(ConstantUtils.CLIENT_ID_PMAPP, chipId, timestamps[2], timestamps[1]));
+        newItem.setServerRequestsYesterdayWebApp(getServerRequestsCountFromTimestampSingle(ConstantUtils.CLIENT_ID_PMAPP_WEB, chipId, timestamps[2], timestamps[1]));
+        newItem.setServerRequestsYesterdayGoogleActions(getServerRequestsCountFromTimestampSingle(ConstantUtils.CLIENT_ID_PMAPP_GA, chipId, timestamps[2], timestamps[1]));
 
-        return stats;
+        // Save calculated values to caching table
+        mongoTemplate.remove(Query.query(Criteria.where("chipId").is(chipId)).limit(1), StatsItem.class, ConstantUtils.STATS_TABLE_NAME);
+        mongoTemplate.save(newItem, ConstantUtils.STATS_TABLE_NAME);
+
+        return newItem;
     }
 
     // ---------------------------------------------- Utility functions ------------------------------------------------
@@ -158,99 +153,62 @@ public class StatsController {
 
     // ---------------------------------------------------- Cron jobs --------------------------------------------------
 
-    //@Scheduled(cron = "0 0 0 * * ?") // Every day at midnight
-    //@Scheduled(cron = "10 * * * * ?")
+    @Scheduled(cron = "0 0 0 * * ?") // Every day at midnight
+    //@Scheduled(cron = "30 * * * * ?")
     public void calculateStats() {
         log.info("Calculating stats ...");
         // Initialization
         long fromTime = 0;
-        long currentTime = 1541026800000L; //System.currentTimeMillis();
+        long currentTime = System.currentTimeMillis();
         long[] timestamps = calculateTimestamps(currentTime);
-        long recordsTotal, recordsYesterday, recordsThisMonth, recordsPrevMonth, serverRequestsTotal,
-                serverRequestsYesterdayApp, serverRequestsYesterdayWebApp, serverRequestsYesterdayGoogleActions;
-        recordsTotal = recordsYesterday = recordsThisMonth = recordsPrevMonth = serverRequestsTotal = 0;
-        // Get old values from caching table
-        List<StatsItem> items = mongoTemplate.find(Query.query(Criteria.where("sensorsTotal").ne(0)).limit(1), StatsItem.class, ConstantUtils.STATS_TABLE_NAME);
-        StatsItem item = null;
+        long recordsTotal, recordsYesterday, recordsThisMonth, recordsPrevMonth;
+        recordsTotal = recordsYesterday = recordsThisMonth = recordsPrevMonth = 0;
+        // Load already calculated item from cache table
+        List<StatsItem> items = mongoTemplate.find(Query.query(Criteria.where("chipId").is(0)).limit(1), StatsItem.class, ConstantUtils.STATS_TABLE_NAME);
+        StatsItem newItem = new StatsItem();
         if(!items.isEmpty()) {
-            item = items.get(0);
-            // There is a cached stats item available
-            fromTime = items.get(0).getTimestamp();
-            recordsTotal = item.getDataRecordsTotal();
-            recordsThisMonth = item.getDataRecordsThisMonth();
-            recordsPrevMonth = item.getDataRecordsPrevMonth();
-            serverRequestsTotal = item.getServerRequestsTotal();
+            newItem = items.get(0);
+            fromTime = newItem.getTimestamp();
+            recordsTotal = newItem.getDataRecordsTotal();
+            recordsThisMonth = newItem.getDataRecordsThisMonth();
+            recordsPrevMonth = newItem.getDataRecordsPrevMonth();
         }
         log.info("Finished reading old stats");
 
         // Calculate new stats
-        Set<String> collectionNames = mongoTemplate.getCollectionNames();
-        CountOperation countOperation = Aggregation.count().as("count");
-        ProjectionOperation projectionOperation = Aggregation.project("count");
+        Set<String> collectionNames = getDataCollections();
         // Calculate total records
-        MatchOperation matchOperation = Aggregation.match(Criteria.where("timestamp").gt(fromTime).lte(currentTime));
-        Aggregation aggregation = Aggregation.newAggregation(matchOperation, countOperation, projectionOperation);
+        int collectionsSize = collectionNames.size();
+        int currentCollection = 0;
         for(String collectionName : collectionNames) {
-            AggregationResults<CountResult> aggregationResults = mongoTemplate.aggregate(aggregation, collectionName, CountResult.class);
-            recordsTotal += aggregationResults.getMappedResults().get(0).count;
-            log.info(String.valueOf(recordsTotal));
+            recordsTotal += getRecordCountFromTimestamp(collectionName, fromTime, currentTime);
+            recordsYesterday += getRecordCountFromTimestamp(collectionName, timestamps[2], timestamps[1]);
+            recordsThisMonth += getRecordCountFromTimestamp(collectionName, timestamps[3], currentTime);
+            recordsPrevMonth += getRecordCountFromTimestamp(collectionName, timestamps[4], timestamps[3]);
+            currentCollection++;
+            log.info("Calculating " + currentCollection + " / " + collectionsSize + " (" + (currentCollection * 100 / collectionsSize) + " %)");
         }
-        // Calculate records yesterday
-        matchOperation = Aggregation.match(Criteria.where("timestamp").gt(timestamps[2]).lte(timestamps[1]));
-        aggregation = Aggregation.newAggregation(matchOperation, countOperation, projectionOperation);
-        for(String collectionName : collectionNames) {
-            List<CountResult> aggregationResults = mongoTemplate.aggregate(aggregation, collectionName, CountResult.class).getMappedResults();
-            recordsYesterday += aggregationResults.get(0).count;
-            log.info(String.valueOf(recordsYesterday));
-        }
-        // Calculate records this month
-        matchOperation = Aggregation.match(Criteria.where("timestamp").gt(timestamps[3]).lte(currentTime));
-        aggregation = Aggregation.newAggregation(matchOperation, countOperation, projectionOperation);
-        for(String collectionName : collectionNames) {
-            AggregationResults<CountResult> aggregationResults = mongoTemplate.aggregate(aggregation, collectionName, CountResult.class);
-            recordsThisMonth += aggregationResults.getMappedResults().get(0).count;
-            log.info(String.valueOf(recordsThisMonth));
-        }
-        // Calculate records prev month
-        if(true) {
-            matchOperation = Aggregation.match(Criteria.where("timestamp").gt(timestamps[4]).lte(timestamps[3]));
-            aggregation = Aggregation.newAggregation(matchOperation, countOperation, projectionOperation);
-            for(String collectionName : collectionNames) {
-                AggregationResults<CountResult> aggregationResults = mongoTemplate.aggregate(aggregation, collectionName, CountResult.class);
-                recordsPrevMonth += aggregationResults.getMappedResults().get(0).count;
-                log.info(String.valueOf(recordsPrevMonth));
-            }
-        }
-        serverRequestsTotal += getServerRequestsCountFromTimestampTotal(fromTime);
-        serverRequestsYesterdayApp = getServerRequestsCountFromTimestamp(ConstantUtils.CLIENT_ID_PMAPP, timestamps[2], timestamps[1]);
-        serverRequestsYesterdayWebApp = getServerRequestsCountFromTimestamp(ConstantUtils.CLIENT_ID_PMAPP_WEB, timestamps[2], timestamps[1]);
-        serverRequestsYesterdayGoogleActions = getServerRequestsCountFromTimestamp(ConstantUtils.CLIENT_ID_PMAPP_GA, timestamps[2], timestamps[1]);
+        newItem.setDataRecordsTotal(recordsTotal);
+        newItem.setDataRecordsYesterday(recordsYesterday);
+        newItem.setDataRecordsThisMonth(recordsThisMonth);
+        newItem.setDataRecordsPrevMonth(recordsPrevMonth);
+        newItem.setServerRequestsTotal(newItem.getServerRequestsTotal() + getServerRequestsCountFromTimestampTotal(fromTime));
+        newItem.setServerRequestsYesterdayApp(getServerRequestsCountFromTimestamp(ConstantUtils.CLIENT_ID_PMAPP, timestamps[2], timestamps[1]));
+        newItem.setServerRequestsYesterdayWebApp(getServerRequestsCountFromTimestamp(ConstantUtils.CLIENT_ID_PMAPP_WEB, timestamps[2], timestamps[1]));
+        newItem.setServerRequestsYesterdayGoogleActions(getServerRequestsCountFromTimestamp(ConstantUtils.CLIENT_ID_PMAPP_GA, timestamps[2], timestamps[1]));
 
         // Save calculated values to caching table
         log.info("Saving them to the cache table ...");
-        StatsItem newItem;
-        if(item != null) {
-            newItem = new StatsItem(currentTime, item.getSensorsTotal(), item.getSensorsMapTotal(),
-                    item.getSensorsMapActive(), serverRequestsTotal, 0,
-                    0, 0, serverRequestsYesterdayApp,
-                    serverRequestsYesterdayWebApp, serverRequestsYesterdayGoogleActions, recordsTotal, recordsThisMonth,
-                    recordsPrevMonth, 0, recordsYesterday);
-        } else {
-            newItem = new StatsItem(currentTime, 0, 0, 0,
-                    serverRequestsTotal, 0, 0, 0,
-                    serverRequestsYesterdayApp, serverRequestsYesterdayWebApp, serverRequestsYesterdayGoogleActions,
-                    recordsTotal, recordsThisMonth, recordsPrevMonth, 0, recordsYesterday);
-        }
-        mongoTemplate.remove(Query.query(Criteria.where("sensorTotal").ne(0)).limit(1), StatsItem.class, ConstantUtils.STATS_TABLE_NAME);
+        mongoTemplate.remove(Query.query(Criteria.where("chipId").is(0)).limit(1), StatsItem.class, ConstantUtils.STATS_TABLE_NAME);
         mongoTemplate.save(newItem, ConstantUtils.STATS_TABLE_NAME);
 
         log.info("Finished.");
     }
 
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    class CountResult {
-        private long count;
+    private Set<String> getDataCollections() {
+        Set<String> collectionNames = mongoTemplate.getCollectionNames();
+        collectionNames.remove(ConstantUtils.LOG_TABLE_NAME);
+        collectionNames.remove(ConstantUtils.STATS_TABLE_NAME);
+        return collectionNames;
     }
 }
