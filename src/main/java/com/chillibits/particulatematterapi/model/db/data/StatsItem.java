@@ -2,7 +2,7 @@
  * Copyright © Marc Auberer 2019 - 2020. All rights reserved
  */
 
-package com.chillibits.particulatematterapi.model.io;
+package com.chillibits.particulatematterapi.model.db.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Stats {
+public class StatsItem {
+    private long timestamp;
     private long sensorsTotal;
-    private long sensorsActive;
     private long sensorsMapTotal;
     private long sensorsMapActive;
     private long serverRequestsTotal;
