@@ -82,7 +82,7 @@ public class DataController {
     @RequestMapping(method = RequestMethod.GET, path = "/data/{chipId}/all", produces = MediaType.APPLICATION_JSON_VALUE, params = "compressed")
     @ApiOperation(value = "Returns all data records for a specific sensor", hidden = true)
     public List<DataRecordDto> getAllDataRecordsCompressed(@PathVariable long chipId) {
-        return template.find(Query.query(new Criteria()), DataRecord.class, String.valueOf(chipId))
+        return template.find(Query.query(new Criteria()).cursorBatchSize(500), DataRecord.class, String.valueOf(chipId))
                 .stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -203,25 +203,25 @@ public class DataController {
             @RequestParam(defaultValue = "0") long from,
             @RequestParam(defaultValue = "0") long to,
             @RequestParam(defaultValue = "0") int fieldIndex,
-            @RequestParam(defaultValue = "60") int period  // in minutes
+            @RequestParam(defaultValue = "60") int granularity  // in minutes
     ) throws DataAccessException {
         // Check input parameters
-        validateAccessProperties(from, to, fieldIndex, period);
+        validateAccessProperties(from, to, fieldIndex, granularity);
 
         long startTimestamp = System.currentTimeMillis();
         // Get replace default values, with better ones
-        long toTimestamp = to == 0 ? System.currentTimeMillis() : to;
+        long toTimestamp = to == 0 ? startTimestamp : to;
         long fromTimestamp = from == 0 ? toTimestamp - ConstantUtils.DEFAULT_DATA_TIME_SPAN : from;
         // Loop periodically through the time span
-        long periodInMillis = period * 60 * 1000;
+        long granularityInMillis = granularity * 60 * 1000;
         long currFrom = fromTimestamp;
-        long currTo = fromTimestamp + periodInMillis;
+        long currTo = fromTimestamp + granularityInMillis;
         List<DataRecord> records = new ArrayList<>();
         while(currTo <= toTimestamp) {
             records.add(getAverageDataRecord(getDataCountry(country, currFrom, currTo)));
             //records.addAll(getDataCountry(country, currFrom, currTo));
-            currFrom += periodInMillis;
-            currTo += periodInMillis;
+            currFrom += granularityInMillis;
+            currTo += granularityInMillis;
         }
         // Bring them into json format
         return chartDataToJson(from, to, fieldIndex, startTimestamp, records).toString();
@@ -235,25 +235,25 @@ public class DataController {
             @RequestParam(defaultValue = "0") long from,
             @RequestParam(defaultValue = "0") long to,
             @RequestParam(defaultValue = "0") int fieldIndex,
-            @RequestParam(defaultValue = "60") int period  // in minutes
+            @RequestParam(defaultValue = "60") int granularity  // in minutes
     ) throws DataAccessException {
         // Check input parameters
-        validateAccessProperties(from, to, fieldIndex, period);
+        validateAccessProperties(from, to, fieldIndex, granularity);
 
         long startTimestamp = System.currentTimeMillis();
         // Get replace default values, with better ones
-        long toTimestamp = to == 0 ? System.currentTimeMillis() : to;
+        long toTimestamp = to == 0 ? startTimestamp : to;
         long fromTimestamp = from == 0 ? toTimestamp - ConstantUtils.DEFAULT_DATA_TIME_SPAN : from;
         // Loop periodically through the time span
-        long periodInMillis = period * 60 * 1000;
+        long granularityInMillis = granularity * 60 * 1000;
         long currFrom = fromTimestamp;
-        long currTo = fromTimestamp + periodInMillis;
+        long currTo = fromTimestamp + granularityInMillis;
         List<DataRecord> records = new ArrayList<>();
         while(currTo <= toTimestamp) {
             records.add(getAverageDataRecord(getDataCity(country, city, currFrom, currTo)));
             //records.addAll(getDataCountry(country, currFrom, currTo));
-            currFrom += periodInMillis;
-            currTo += periodInMillis;
+            currFrom += granularityInMillis;
+            currTo += granularityInMillis;
         }
         // Bring them into json format
         return chartDataToJson(from, to, fieldIndex, startTimestamp, records).toString();
@@ -298,7 +298,7 @@ public class DataController {
         if(from < 0 || to < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_TIME_RANGE_DATA);
         long toTimestamp = to == 0 ? System.currentTimeMillis() : to;
         long fromTimestamp = from == 0 ? toTimestamp - ConstantUtils.DEFAULT_DATA_TIME_SPAN : from;
-        return template.find(Query.query(Criteria.where("timestamp").gte(fromTimestamp).lte(toTimestamp)), DataRecord.class, String.valueOf(chipId));
+        return template.find(Query.query(Criteria.where("timestamp").gte(fromTimestamp).lte(toTimestamp)).cursorBatchSize(500), DataRecord.class, String.valueOf(chipId));
     }
 
     private JSONObject chartDataToJson(@RequestParam(defaultValue = "0") long from, @RequestParam(defaultValue = "0") long to, @RequestParam(defaultValue = "0") int fieldIndex, long startTimestamp, List<DataRecord> records) {
@@ -320,10 +320,10 @@ public class DataController {
         return json;
     }
 
-    private void validateAccessProperties(@RequestParam(defaultValue = "0") long from, @RequestParam(defaultValue = "0") long to, @RequestParam(defaultValue = "0") int fieldIndex, @RequestParam(defaultValue = "60") int period) throws DataAccessException {
+    private void validateAccessProperties(@RequestParam(defaultValue = "0") long from, @RequestParam(defaultValue = "0") long to, @RequestParam(defaultValue = "0") int fieldIndex, @RequestParam(defaultValue = "60") int granularity) throws DataAccessException {
         if (from < 0 || to < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_TIME_RANGE_DATA);
         if (fieldIndex < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_FIELD_INDEX);
-        if (period < 1) throw new DataAccessException(ErrorCodeUtils.INVALID_PERIOD);
+        if (granularity < 1) throw new DataAccessException(ErrorCodeUtils.INVALID_PERIOD);
     }
 
     private DataRecordDto convertToDto(DataRecord record) {

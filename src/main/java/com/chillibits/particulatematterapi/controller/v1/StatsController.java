@@ -112,22 +112,22 @@ public class StatsController {
     // ---------------------------------------------- Utility functions ------------------------------------------------
 
     private long getRecordCountFromTimestamp(String collectionName, long from, long to) {
-        return mongoTemplate.count(Query.query(Criteria.where("timestamp").gte(from).lte(to)), collectionName);
+        return mongoTemplate.count(Query.query(Criteria.where("timestamp").gte(from).lte(to)).cursorBatchSize(500), collectionName);
     }
 
     private long getServerRequestsCountFromTimestamp(int clientId, long from, long to) {
-        return mongoTemplate.count(Query.query(Criteria.where("timestamp").gte(from).lte(to).and("clientId").is(clientId)), ConstantUtils.LOG_TABLE_NAME);
+        return mongoTemplate.count(Query.query(Criteria.where("timestamp").gte(from).lte(to).and("clientId").is(clientId)).cursorBatchSize(500), ConstantUtils.LOG_TABLE_NAME);
     }
 
     private long getServerRequestsCountFromTimestampTotal() {
-        return mongoTemplate.count(new Query(), ConstantUtils.LOG_TABLE_NAME);
+        return mongoTemplate.count(new Query().cursorBatchSize(500), ConstantUtils.LOG_TABLE_NAME);
     }
 
     private long getServerRequestsCountFromTimestampSingle(int clientId, long chipId, long from, long to) {
-        return mongoTemplate.count(Query.query(Criteria.where("timestamp").gte(from).lte(to).and("target").is(chipId).and("clientId").is(clientId)), ConstantUtils.LOG_TABLE_NAME);
+        return mongoTemplate.count(Query.query(Criteria.where("timestamp").gte(from).lte(to).and("target").is(chipId).and("clientId").is(clientId)).cursorBatchSize(500), ConstantUtils.LOG_TABLE_NAME);
     }
     private long getServerRequestsCountFromTimestampSingleTotal(long chipId, long from, long to) {
-        return mongoTemplate.count(Query.query(Criteria.where("timestamp").gte(from).lte(to).and("target").is(chipId).and("clientId")), ConstantUtils.LOG_TABLE_NAME);
+        return mongoTemplate.count(Query.query(Criteria.where("timestamp").gte(from).lte(to).and("target").is(chipId).and("clientId")).cursorBatchSize(500), ConstantUtils.LOG_TABLE_NAME);
     }
 
 
@@ -152,7 +152,7 @@ public class StatsController {
     private long countActiveSensors(Set<String> collectionNames) {
         long count = 0;
         for(String collectionName : collectionNames) {
-            List<DataRecord> latestRecordList =  mongoTemplate.find(Query.query(Criteria.where("timestamp").gte(System.currentTimeMillis() - ConstantUtils.MINUTES_UNTIL_INACTIVITY * 60 * 1000)).limit(1), DataRecord.class, collectionName);
+            List<DataRecord> latestRecordList =  mongoTemplate.find(Query.query(Criteria.where("timestamp").gte(System.currentTimeMillis() - ConstantUtils.MINUTES_UNTIL_INACTIVITY * 60 * 1000)).limit(1).cursorBatchSize(500), DataRecord.class, collectionName);
             if(!latestRecordList.isEmpty()) count++;
         }
         return count;

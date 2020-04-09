@@ -45,7 +45,7 @@ public class RoutingConfig {
             @RequestParam(defaultValue = "0") long from,
             @RequestParam(defaultValue = "0") long to,
             @RequestParam(defaultValue = "0") int fieldIndex,
-            @RequestParam(defaultValue = "60") int period, // in minutes
+            @RequestParam(defaultValue = "60") int granularity, // in minutes
             @RequestParam(defaultValue = "800") int width,
             @RequestParam(defaultValue = "500") int height
     ) {
@@ -60,7 +60,7 @@ public class RoutingConfig {
             @RequestParam(defaultValue = "0") long from,
             @RequestParam(defaultValue = "0") long to,
             @RequestParam(defaultValue = "0") int fieldIndex,
-            @RequestParam(defaultValue = "60") int period, // in minutes
+            @RequestParam(defaultValue = "60") int granularity, // in minutes
             @RequestParam(defaultValue = "800") int width,
             @RequestParam(defaultValue = "500") int height
     ) {
