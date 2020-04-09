@@ -4,6 +4,8 @@
 
 package com.chillibits.particulatematterapi.controller.v1;
 
+import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
+import com.chillibits.particulatematterapi.exception.StatsDataException;
 import com.chillibits.particulatematterapi.model.db.data.StatsItem;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
 import com.chillibits.particulatematterapi.shared.ConstantUtils;
@@ -71,7 +73,10 @@ public class StatsController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/stats/{chipId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns stats about a specific sensor")
-    public StatsItem getStatsOfSensor(@PathVariable Long chipId) {
+    public StatsItem getStatsOfSensor(@PathVariable Long chipId) throws StatsDataException {
+        // Check if sensor is existing
+        Set<String> collectionNames = getDataCollections();
+        if(!collectionNames.contains(String.valueOf(chipId))) throw new StatsDataException(ErrorCodeUtils.STATS_ITEM_DOES_NOT_EXIST);
         // Initialization
         long fromTime = 0;
         String collectionName = String.valueOf(chipId);
@@ -161,7 +166,10 @@ public class StatsController {
         long fromTime = 0;
         long currentTime = System.currentTimeMillis();
         long[] timestamps = calculateTimestamps(currentTime);
-        long recordsTotal, recordsYesterday, recordsThisMonth, recordsPrevMonth;
+        long recordsTotal,
+                recordsYesterday,
+                recordsThisMonth,
+                recordsPrevMonth;
         recordsTotal = recordsYesterday = recordsThisMonth = recordsPrevMonth = 0;
         // Load already calculated item from cache table
         List<StatsItem> items = mongoTemplate.find(Query.query(Criteria.where("chipId").is(0)).limit(1), StatsItem.class, ConstantUtils.STATS_TABLE_NAME);

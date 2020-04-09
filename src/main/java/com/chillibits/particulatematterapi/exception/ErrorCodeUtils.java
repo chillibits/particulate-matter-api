@@ -28,6 +28,7 @@ public class ErrorCodeUtils {
     public static final int INVALID_RADIUS = 505;
 
     // Stats errors (6xx)
+    public static final int STATS_ITEM_DOES_NOT_EXIST = 600;
 
     // User errors (7xx)
     public static final int INVALID_USER_DATA = 700;
