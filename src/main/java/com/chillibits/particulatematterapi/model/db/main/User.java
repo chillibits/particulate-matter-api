@@ -4,21 +4,26 @@
 
 package com.chillibits.particulatematterapi.model.db.main;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.Set;
 
 @Entity
-@Data
+@Table(name = "user")
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class User {
     // Constants
     public static final int ACTIVE = 1;
@@ -33,6 +38,7 @@ public class User {
     // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonManagedReference
     private int id;
     private String firstName;
     private String lastName;
@@ -44,4 +50,84 @@ public class User {
     private int status;
     private long creationTimestamp;
     private long lastEditTimestamp;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Set<Link> getSensorLinks() {
+        return sensorLinks;
+    }
+
+    public void setSensorLinks(Set<Link> sensorLinks) {
+        this.sensorLinks = sensorLinks;
+    }
+
+    public int getRole() {
+        return role;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public long getCreationTimestamp() {
+        return creationTimestamp;
+    }
+
+    public void setCreationTimestamp(long creationTimestamp) {
+        this.creationTimestamp = creationTimestamp;
+    }
+
+    public long getLastEditTimestamp() {
+        return lastEditTimestamp;
+    }
+
+    public void setLastEditTimestamp(long lastEditTimestamp) {
+        this.lastEditTimestamp = lastEditTimestamp;
+    }
 }

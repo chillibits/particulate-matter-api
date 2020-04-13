@@ -36,12 +36,16 @@ public interface SensorRepository extends JpaRepository<Sensor, Long> {
     List<RankingItemCountry> getRankingByCountry(int items);
 
     @Meta(cursorBatchSize = 10)
-    @Query("SELECT s.chipId FROM Sensor s WHERE country = ?1")
+    @Query("SELECT s.chipId FROM Sensor s WHERE s.country = ?1")
     List<Long> getChipIdsOfSensorFromCountry(String country);
 
     @Meta(cursorBatchSize = 100)
-    @Query("SELECT s.chipId FROM Sensor s WHERE country = ?1 AND city = ?2")
+    @Query("SELECT s.chipId FROM Sensor s WHERE s.country = ?1 AND s.city = ?2")
     List<Long> getChipIdsOfSensorFromCity(String country, String city);
+
+    @Meta(cursorBatchSize = 100)
+    @Query("SELECT s FROM Sensor s WHERE s.chipId IN ?1")
+    List<Sensor> getSensorsFromIdRange(List<Integer> chipIds);
 
     @Meta(cursorBatchSize = 100)
     @Query("SELECT COUNT(s.chipId) FROM Sensor s")

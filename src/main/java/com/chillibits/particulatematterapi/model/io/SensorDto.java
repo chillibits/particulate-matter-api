@@ -4,7 +4,6 @@
 
 package com.chillibits.particulatematterapi.model.io;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SensorDto {
-    @JsonProperty("i") private String chipId;
-    @JsonProperty("la") private double gpsLatitude;
-    @JsonProperty("lo") private double gpsLongitude;
+    private long chipId;
+    private String firmwareVersion;
+    private long creationTimestamp;
+    private String notes;
+    private long lastMeasurementTimestamp;
+    private long lastEditTimestamp;
+    private double gpsLatitude;
+    private double gpsLongitude;
+    private double gpsAltitude;
+    private String country;
+    private String city;
+    private boolean indoor;
+    private boolean published;
 }

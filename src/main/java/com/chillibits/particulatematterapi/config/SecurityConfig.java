@@ -31,8 +31,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                // Root
-                .antMatchers(HttpMethod.GET, "/**").permitAll()
                 // Sensors endpoint
                 .antMatchers(HttpMethod.GET, "/sensor").permitAll()
                 .antMatchers(HttpMethod.POST, "/sensor").hasAnyAuthority(Client.ROLE_APPLICATION, Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
@@ -51,6 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/user").hasAuthority(Client.ROLE_APPLICATION_ADMIN)
                 .antMatchers(HttpMethod.POST, "/user").hasAnyAuthority(Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
                 .antMatchers(HttpMethod.PUT, "/user").hasAnyAuthority(Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
+                .antMatchers(HttpMethod.DELETE, "/user").hasAnyAuthority(Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
                 // Client endpoint
                 .antMatchers(HttpMethod.POST, "/client").hasAuthority(Client.ROLE_APPLICATION_ADMIN)
                 .antMatchers(HttpMethod.PUT, "/client").hasAuthority(Client.ROLE_APPLICATION_ADMIN)
@@ -65,7 +64,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/log/**").permitAll()
                 // Stats endpoint
                 .antMatchers("/stats").permitAll()
-                .anyRequest().denyAll()
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().httpBasic();

@@ -41,7 +41,7 @@ public class ClientController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/client/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns info about a specific client, identified by its name")
-    public ClientDto getClientInfo(@PathVariable("name") String name) {
+    public ClientDto getClientInfoByName(@PathVariable("name") String name) {
         Optional<Client> client = clientRepository.findByName(name);
         return client.map(this::convertToDto).orElse(null);
     }

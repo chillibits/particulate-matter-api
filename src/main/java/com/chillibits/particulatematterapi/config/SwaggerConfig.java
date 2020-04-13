@@ -36,6 +36,7 @@ public class SwaggerConfig implements ServletContextAware {
                         return "/";
                     }
                 })
+                .enableUrlTemplating(true)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.chillibits.particulatematterapi"))
                 .paths(PathSelectors.any())
@@ -44,6 +45,7 @@ public class SwaggerConfig implements ServletContextAware {
                 .tags(new Tag("chart", "Chart Endpoint"))
                 .tags(new Tag("client", "Client Endpoint"))
                 .tags(new Tag("data", "Data Endpoint"))
+                .tags(new Tag("link", "Link Endpoint"))
                 .tags(new Tag("push", "Push Endpoint"))
                 .tags(new Tag("ranking", "Ranking Endpoint"))
                 .tags(new Tag("sensor", "Sensor Endpoint"))

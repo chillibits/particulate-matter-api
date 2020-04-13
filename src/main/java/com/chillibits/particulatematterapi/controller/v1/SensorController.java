@@ -10,6 +10,7 @@ import com.chillibits.particulatematterapi.model.db.main.Link;
 import com.chillibits.particulatematterapi.model.db.main.Sensor;
 import com.chillibits.particulatematterapi.model.db.main.User;
 import com.chillibits.particulatematterapi.model.io.MapsPlaceResult;
+import com.chillibits.particulatematterapi.model.io.SensorCompressedDto;
 import com.chillibits.particulatematterapi.model.io.SensorDto;
 import com.chillibits.particulatematterapi.model.io.SyncPackage;
 import com.chillibits.particulatematterapi.repository.LinkRepository;
@@ -71,7 +72,7 @@ public class SensorController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE, params = "compressed")
     @ApiOperation(value = "Returns all sensors, registered in the database in a compressed form")
-    public List<SensorDto> getAllSensorsCompressed(
+    public List<SensorCompressedDto> getAllSensorsCompressed(
             @RequestParam(defaultValue = "0") double latitude,
             @RequestParam(defaultValue = "0") double longitude,
             @RequestParam(defaultValue = "0") int radius,
@@ -79,20 +80,18 @@ public class SensorController {
     ) throws SensorDataException {
         if(radius < 0) throw new SensorDataException(ErrorCodeUtils.INVALID_RADIUS);
         if(onlyPublished) {
-            if(radius == 0) return sensorRepository.findAllPublished().stream().map(this::convertToDto).collect(Collectors.toList());
-            return sensorRepository.findAllPublishedInRadius(latitude, longitude, radius).stream().map(this::convertToDto).collect(Collectors.toList());
+            if(radius == 0) return sensorRepository.findAllPublished().stream().map(this::convertToCompressedDto).collect(Collectors.toList());
+            return sensorRepository.findAllPublishedInRadius(latitude, longitude, radius).stream().map(this::convertToCompressedDto).collect(Collectors.toList());
         } else {
-            if(radius == 0) return sensorRepository.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
-            return sensorRepository.findAllInRadius(latitude, longitude, radius).stream().map(this::convertToDto).collect(Collectors.toList());
+            if(radius == 0) return sensorRepository.findAll().stream().map(this::convertToCompressedDto).collect(Collectors.toList());
+            return sensorRepository.findAllInRadius(latitude, longitude, radius).stream().map(this::convertToCompressedDto).collect(Collectors.toList());
         }
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/sensor/{chipId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns info for a specific sensor")
-    public Sensor getSingleSensor(
-            @RequestParam long chipId
-    ) {
-        return sensorRepository.findById(chipId).orElse(null);
+    public SensorDto getSingleSensor(@PathVariable long chipId) {
+        return convertToDto(sensorRepository.findById(chipId).orElse(null));
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/sensor/sync", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -179,6 +178,10 @@ public class SensorController {
 
     private SensorDto convertToDto(Sensor sensor) {
         return mapper.map(sensor, SensorDto.class);
+    }
+
+    private SensorCompressedDto convertToCompressedDto(Sensor sensor) {
+        return mapper.map(sensor, SensorCompressedDto.class);
     }
 
     private void validateSensorObject(Sensor sensor) throws SensorDataException {
