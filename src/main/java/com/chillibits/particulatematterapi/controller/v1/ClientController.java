@@ -7,7 +7,7 @@ package com.chillibits.particulatematterapi.controller.v1;
 import com.chillibits.particulatematterapi.exception.ClientDataException;
 import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
 import com.chillibits.particulatematterapi.model.db.main.Client;
-import com.chillibits.particulatematterapi.model.io.ClientDto;
+import com.chillibits.particulatematterapi.model.dto.ClientDto;
 import com.chillibits.particulatematterapi.repository.ClientRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

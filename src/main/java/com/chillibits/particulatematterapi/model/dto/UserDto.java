@@ -2,7 +2,7 @@
  * Copyright © Marc Auberer 2019 - 2020. All rights reserved
  */
 
-package com.chillibits.particulatematterapi.model.io;
+package com.chillibits.particulatematterapi.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +20,4 @@ public class UserDto {
     private Set<LinkDto> sensorLinks;
     private int role;
     private int status;
-    private long creationTimestamp;
-    private long lastEditTimestamp;
 }

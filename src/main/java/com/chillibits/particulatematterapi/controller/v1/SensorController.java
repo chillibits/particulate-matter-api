@@ -9,9 +9,9 @@ import com.chillibits.particulatematterapi.exception.SensorDataException;
 import com.chillibits.particulatematterapi.model.db.main.Link;
 import com.chillibits.particulatematterapi.model.db.main.Sensor;
 import com.chillibits.particulatematterapi.model.db.main.User;
+import com.chillibits.particulatematterapi.model.dto.SensorCompressedDto;
+import com.chillibits.particulatematterapi.model.dto.SensorDto;
 import com.chillibits.particulatematterapi.model.io.MapsPlaceResult;
-import com.chillibits.particulatematterapi.model.io.SensorCompressedDto;
-import com.chillibits.particulatematterapi.model.io.SensorDto;
 import com.chillibits.particulatematterapi.model.io.SyncPackage;
 import com.chillibits.particulatematterapi.repository.LinkRepository;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
@@ -54,20 +54,26 @@ public class SensorController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all sensors, registered in the database")
-    public List<Sensor> getAllSensors(
+    public List<SensorDto> getAllSensors(
             @RequestParam(defaultValue = "0") double latitude,
             @RequestParam(defaultValue = "0") double longitude,
             @RequestParam(defaultValue = "0") int radius,
             @RequestParam(defaultValue = "false") boolean onlyPublished
     ) throws SensorDataException {
         if(radius < 0) throw new SensorDataException(ErrorCodeUtils.INVALID_RADIUS);
+        List<Sensor> sensors;
         if(onlyPublished) {
-            if(radius == 0) return sensorRepository.findAllPublished();
-            return sensorRepository.findAllPublishedInRadius(latitude, longitude, radius);
+            if(radius == 0)
+                sensors = sensorRepository.findAllPublished();
+            else
+                sensors = sensorRepository.findAllPublishedInRadius(latitude, longitude, radius);
         } else {
-            if(radius == 0) return sensorRepository.findAll();
-            return sensorRepository.findAllInRadius(latitude, longitude, radius);
+            if(radius == 0)
+                sensors = sensorRepository.findAll();
+            else
+                sensors = sensorRepository.findAllInRadius(latitude, longitude, radius);
         }
+        return sensors.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE, params = "compressed")

@@ -6,10 +6,10 @@ package com.chillibits.particulatematterapi.controller.v1;
 
 import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
 import com.chillibits.particulatematterapi.exception.RankingDataException;
+import com.chillibits.particulatematterapi.model.dto.RankingItemCityDto;
+import com.chillibits.particulatematterapi.model.dto.RankingItemCountryDto;
 import com.chillibits.particulatematterapi.model.io.RankingItemCity;
-import com.chillibits.particulatematterapi.model.io.RankingItemCityDto;
 import com.chillibits.particulatematterapi.model.io.RankingItemCountry;
-import com.chillibits.particulatematterapi.model.io.RankingItemCountryDto;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

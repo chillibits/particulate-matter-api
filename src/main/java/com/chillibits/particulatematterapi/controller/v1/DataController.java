@@ -7,7 +7,7 @@ package com.chillibits.particulatematterapi.controller.v1;
 import com.chillibits.particulatematterapi.exception.DataAccessException;
 import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
 import com.chillibits.particulatematterapi.model.db.data.DataRecord;
-import com.chillibits.particulatematterapi.model.io.DataRecordDto;
+import com.chillibits.particulatematterapi.model.dto.DataRecordDto;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
 import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import com.chillibits.particulatematterapi.shared.SharedUtils;

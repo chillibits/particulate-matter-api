@@ -2,7 +2,7 @@
  * Copyright © Marc Auberer 2019 - 2020. All rights reserved
  */
 
-package com.chillibits.particulatematterapi.model.io;
+package com.chillibits.particulatematterapi.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,8 +16,6 @@ public class SensorDto {
     private String firmwareVersion;
     private long creationTimestamp;
     private String notes;
-    private long lastMeasurementTimestamp;
-    private long lastEditTimestamp;
     private double gpsLatitude;
     private double gpsLongitude;
     private double gpsAltitude;
