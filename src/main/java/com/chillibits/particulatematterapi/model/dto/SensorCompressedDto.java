@@ -16,4 +16,5 @@ public class SensorCompressedDto {
     @JsonProperty("i") private String chipId;
     @JsonProperty("la") private double gpsLatitude;
     @JsonProperty("lo") private double gpsLongitude;
+    @JsonProperty("a") private boolean active;
 }

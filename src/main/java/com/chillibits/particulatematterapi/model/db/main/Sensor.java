@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Set;
 
 @Entity
@@ -33,9 +34,11 @@ public class Sensor {
     private long lastEditTimestamp;
     private double gpsLatitude;
     private double gpsLongitude;
-    private double gpsAltitude;
+    private int gpsAltitude;
     private String country;
     private String city;
     private boolean indoor;
     private boolean published;
+    @Transient
+    private boolean active;
 }

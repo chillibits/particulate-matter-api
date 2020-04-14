@@ -49,7 +49,7 @@ public class PushController {
             if(pairLat.isPresent() && pairLng.isPresent() && pairAlt.isPresent()) {
                 sensor.setGpsLatitude(pairLat.get().getValue());
                 sensor.setGpsLongitude(pairLng.get().getValue());
-                sensor.setGpsAltitude(pairAlt.get().getValue());
+                sensor.setGpsAltitude((int) Math.round(pairAlt.get().getValue()));
             }
             // Save to db
             sensorRepository.save(sensor);

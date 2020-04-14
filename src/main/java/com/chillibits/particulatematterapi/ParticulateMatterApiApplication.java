@@ -13,6 +13,7 @@ import com.chillibits.particulatematterapi.repository.OldSensorRepository;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
 import com.chillibits.particulatematterapi.repository.UserRepository;
 import com.chillibits.particulatematterapi.shared.ConstantUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Slf4j
 @SpringBootApplication
 @EnableMongoRepositories(basePackages = "com.chillibits.particulatematterapi.repository.data")
 public class ParticulateMatterApiApplication implements CommandLineRunner {
@@ -54,13 +56,17 @@ public class ParticulateMatterApiApplication implements CommandLineRunner {
 	}
 
 	private void importFromOldSensors() {
+		log.info("Importing old sensors ...");
 		// Delete all contents
 		sensorRepository.deleteAllInBatch();
 		// Add all from the old table
+		log.info("Reading old sensors ...");
 		List<OldSensor> oldSensors = oldSensorRepository.findAll();
 		List<Sensor> newSensors = new ArrayList<>();
 		oldSensors.forEach(oldSensor -> newSensors.add(convertOldToNewSensor(oldSensor)));
+		log.info("Writing new sensors ...");
 		sensorRepository.saveAll(newSensors);
+		log.info("Import finished.");
 	}
 
 	private Sensor convertOldToNewSensor(OldSensor oldSensor) {
@@ -74,11 +80,12 @@ public class ParticulateMatterApiApplication implements CommandLineRunner {
 				oldSensor.getLastEdit(),
 				Double.parseDouble(oldSensor.getLat()),
 				Double.parseDouble(oldSensor.getLng()),
-				Double.parseDouble(oldSensor.getAlt()) * 100,
+				(int) (Double.parseDouble(oldSensor.getAlt()) * 100),
 				oldSensor.getCountry(),
 				oldSensor.getCity(),
 				false,
-				true
+				true,
+				oldSensor.getLastUpdate() < System.currentTimeMillis() - ConstantUtils.MINUTES_UNTIL_INACTIVITY * 60 * 1000
 		);
 	}
 }

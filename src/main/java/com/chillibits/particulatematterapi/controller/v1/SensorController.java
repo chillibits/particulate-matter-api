@@ -73,6 +73,9 @@ public class SensorController {
             else
                 sensors = sensorRepository.findAllInRadius(latitude, longitude, radius);
         }
+        sensors.forEach(sensor -> {
+            sensor.setActive(sensor.getLastMeasurementTimestamp() > System.currentTimeMillis() - ConstantUtils.MINUTES_UNTIL_INACTIVITY * 60 * 1000);
+        });
         return sensors.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
@@ -85,13 +88,22 @@ public class SensorController {
             @RequestParam(defaultValue = "false") boolean onlyPublished
     ) throws SensorDataException {
         if(radius < 0) throw new SensorDataException(ErrorCodeUtils.INVALID_RADIUS);
+        List<Sensor> sensors;
         if(onlyPublished) {
-            if(radius == 0) return sensorRepository.findAllPublished().stream().map(this::convertToCompressedDto).collect(Collectors.toList());
-            return sensorRepository.findAllPublishedInRadius(latitude, longitude, radius).stream().map(this::convertToCompressedDto).collect(Collectors.toList());
+            if(radius == 0)
+                sensors = sensorRepository.findAllPublished();
+            else
+                sensors = sensorRepository.findAllPublishedInRadius(latitude, longitude, radius);
         } else {
-            if(radius == 0) return sensorRepository.findAll().stream().map(this::convertToCompressedDto).collect(Collectors.toList());
-            return sensorRepository.findAllInRadius(latitude, longitude, radius).stream().map(this::convertToCompressedDto).collect(Collectors.toList());
+            if(radius == 0)
+                sensors = sensorRepository.findAll();
+            else
+                sensors = sensorRepository.findAllInRadius(latitude, longitude, radius);
         }
+        sensors.forEach(sensor -> {
+            sensor.setActive(sensor.getLastMeasurementTimestamp() > System.currentTimeMillis() - ConstantUtils.MINUTES_UNTIL_INACTIVITY * 60 * 1000);
+        });
+        return sensors.stream().map(this::convertToCompressedDto).collect(Collectors.toList());
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/sensor/{chipId}", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -17,5 +17,4 @@ public class LinkDto {
     private boolean owner;
     private String name;
     private int color;
-    private long creationTimestamp;
 }
