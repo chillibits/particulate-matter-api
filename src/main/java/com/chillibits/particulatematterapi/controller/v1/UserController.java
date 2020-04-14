@@ -8,8 +8,6 @@ import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
 import com.chillibits.particulatematterapi.exception.UserDataException;
 import com.chillibits.particulatematterapi.model.db.main.User;
 import com.chillibits.particulatematterapi.model.dto.UserDto;
-import com.chillibits.particulatematterapi.repository.LinkRepository;
-import com.chillibits.particulatematterapi.repository.SensorRepository;
 import com.chillibits.particulatematterapi.repository.UserRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,10 +29,6 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private LinkRepository linkRepository;
-    @Autowired
-    private SensorRepository sensorRepository;
     @Autowired
     private ModelMapper mapper;
 
