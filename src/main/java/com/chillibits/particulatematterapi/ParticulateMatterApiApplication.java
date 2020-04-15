@@ -18,11 +18,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @SpringBootApplication
@@ -37,6 +41,8 @@ public class ParticulateMatterApiApplication implements CommandLineRunner {
 	private ClientRepository clientRepository;
 	@Autowired
 	private OldSensorRepository oldSensorRepository;
+	@Autowired
+	private MongoTemplate template;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ParticulateMatterApiApplication.class, args);
@@ -46,6 +52,9 @@ public class ParticulateMatterApiApplication implements CommandLineRunner {
 	public void run(String... args) {
 		// Imports from the old api
 		if(ConstantUtils.IMPORT_SENSORS_IF_TABLE_IS_EMPTY && sensorRepository.count() == 0) importFromOldSensors();
+
+		// Rollback to timestamp
+		if(ConstantUtils.ROLLBACK_TIMESTAMP > 0) rollbackToTimestamp(ConstantUtils.ROLLBACK_TIMESTAMP);
 
 		// Create mandatory data records
 		if(userRepository.count() == 0) userRepository.save(new User(ConstantUtils.UNKNOWN_USER_ID, "Unknown", "User", "info@chillibits.com", "not set", Collections.emptySet(), User.USER, User.LOCKED, System.currentTimeMillis(), System.currentTimeMillis()));
@@ -69,6 +78,19 @@ public class ParticulateMatterApiApplication implements CommandLineRunner {
 		log.info("Import finished.");
 	}
 
+	private void rollbackToTimestamp(long rollbackTimestamp) {
+		log.info("Rolling back to " + rollbackTimestamp + " ...");
+		Set<String> collectionNames = getDataCollections();
+		int i = 0;
+		for(String collection : collectionNames) {
+			Query query = Query.query(Criteria.where("timestamp").gte(rollbackTimestamp));
+			template.remove(query, collection);
+			i++;
+			log.info(i + "/" + collectionNames.size() + " done");
+		}
+		log.info("Rollback finished.");
+	}
+
 	private Sensor convertOldToNewSensor(OldSensor oldSensor) {
 		return new Sensor(
 				oldSensor.getChipId(),
@@ -85,7 +107,14 @@ public class ParticulateMatterApiApplication implements CommandLineRunner {
 				oldSensor.getCity(),
 				false,
 				true,
-				oldSensor.getLastUpdate() < System.currentTimeMillis() - ConstantUtils.MINUTES_UNTIL_INACTIVITY * 60 * 1000
+				false
 		);
+	}
+
+	private Set<String> getDataCollections() {
+		Set<String> collectionNames = template.getCollectionNames();
+		collectionNames.remove(ConstantUtils.LOG_TABLE_NAME);
+		collectionNames.remove(ConstantUtils.STATS_TABLE_NAME);
+		return collectionNames;
 	}
 }

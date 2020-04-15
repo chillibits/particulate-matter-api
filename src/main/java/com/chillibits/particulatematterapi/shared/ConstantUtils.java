@@ -14,6 +14,7 @@ public class ConstantUtils {
     public static final String LOG_TABLE_NAME = "0_AccessLog";
     public static final String STATS_TABLE_NAME = "0_StatsStore";
     public static final boolean IMPORT_SENSORS_IF_TABLE_IS_EMPTY = true;
+    public static final long ROLLBACK_TIMESTAMP = 0; // Set to 0 to disable rollback
     public static final int CLIENT_ID_PMAPP = 1; // Official PMApp
     public static final int CLIENT_ID_PMAPP_WEB = 2; // Official PMApp Web
     public static final int CLIENT_ID_PMAPP_GA = 3; // Official Google Actions client
