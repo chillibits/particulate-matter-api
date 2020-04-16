@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -157,6 +158,11 @@ public class StatsController {
     }
 
     // ---------------------------------------------------- Cron jobs --------------------------------------------------
+
+    @PostConstruct
+    public void onStartup() {
+        if(ConstantUtils.CALC_STATS_ON_STARTUP) calculateStats();
+    }
 
     @Scheduled(cron = "0 0 0 * * ?") // Every day at midnight
     //@Scheduled(cron = "30 * * * * ?")

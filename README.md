@@ -19,7 +19,7 @@ This is the official ChilliBits Particulate Matter REST API.
 -   Data endpoint
     -   Get data records from single sensor in a specific time span
     -   Get data records from single sensor in a specific time span in a compressed form to reduce transmission capacity
-    -   Get latest data record from single sensor
+    -   Get the latest data record from single sensor
     -   Get average of the latest records of specific sensors
     -   Get data records from country in a specific time span
     -   Get average out of the latest data records of sensors within a specific country
@@ -27,7 +27,7 @@ This is the official ChilliBits Particulate Matter REST API.
     -   Get average out of the latest data records of sensors within a specific city
 
 -   Push endpoint
-    -   Endpoint for data transmissions (more details in section 'push endpoint')
+    -   Endpoint for data transmissions (more details in the section 'push endpoint')
 
 -   Ranking endpoint
     -   Get ranking by country
@@ -36,7 +36,7 @@ This is the official ChilliBits Particulate Matter REST API.
     -   Get ranking by city in a compressed form
 
 -   Sensor endpoint
-    -   Add sensor to the database
+    -   Add a sensor to the database
     -   Update a sensor that already exists in the database
     -   Get all sensors
     -   Delete a sensor from the database
@@ -55,7 +55,7 @@ This is the official ChilliBits Particulate Matter REST API.
 You can find the API documentation at [api.pm.chillibits.com](https://api.pm.chillibits.com/swagger-ui.html)
 
 ## Push endpoint
-If you have a sensor from luftdaten.info / sensor.community, you simply have to enable the option 'Feinstaub-App' in the APIs section. The data is transmitted to our server automatically.
+If you have a sensor from luftdaten.info / sensor.community, you simply have to enable the option 'Feinstaub-App' in the APIs section. The data gets transmitted to our server automatically.
 
 If you have built your own IoT device, you can also send data to our system. Setup the connection as follows:
 
@@ -67,10 +67,10 @@ If you have built your own IoT device, you can also send data to our system. Set
 The required data format can be found in our API documentation at [api.pm.chillibits.com](https://api.pm.chillibits.com/swagger-ui.html#/push/pushDataUsingPOST)
 
 ## Register an application
-If your the developer of a application and you want to consume data from our api, you have to contact us via [email](mailto:contact@chillibits.com?subject=Register%20application%20pmapi).
+If your the developer of an application and you want to consume data from our api, you have to contact us via [email](mailto:contact@chillibits.com?subject=Register%20application%20pmapi).
 The registration process is as follows:
 
--   We'll check the code of your application to ensure, that your not using our data in a malicious way. Therefore, only open source applications are accepted.
+-   We'll check the code of your application to ensure, that your not using our data incorrectly or with a malicious intention. Therefore, we only accept open source applications.
 -   After this verification, we send you a mail with all required information and ask you for required information about you / your company or your application.
 -   You answer the mail with all the required information
 -   We'll create a client record, which will have the appropriate access rights for our endpoints

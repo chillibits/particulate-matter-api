@@ -4,6 +4,7 @@
 
 package com.chillibits.particulatematterapi.config;
 
+import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import javax.annotation.PostConstruct;
 import java.util.Set;
 
 @Configuration
@@ -23,6 +25,11 @@ public class CronJobs {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    @PostConstruct
+    public void onStartup() {
+        if(ConstantUtils.INDEX_DB_ON_STARTUP) initIndexes();
+    }
+
     // ------------------------------------------------- Indexing service ----------------------------------------------
 
     @Scheduled(cron = "0 0 5 * * ?") // Every day at 5:00
@@ -32,7 +39,8 @@ public class CronJobs {
         int i = 1;
         for(String collectionName : collectionNames) {
             mongoTemplate.indexOps(collectionName).ensureIndex(new Index().on("timestamp", Sort.Direction.ASC));
-            log.info(String.valueOf(i++));
+            i++;
+            log.info(i + " / " + collectionNames.size());
         }
         log.info("Finished indexing.");
     }
