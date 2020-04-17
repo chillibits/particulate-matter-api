@@ -3,7 +3,8 @@ function drawLineChart(label, categories, series, responseTime, chipId, width, h
         chart: {
             type: "line",
             width,
-            height
+            height,
+            zoomType: "x"
         },
         title: {
             text: "Particulate matter data"
@@ -15,11 +16,12 @@ function drawLineChart(label, categories, series, responseTime, chipId, width, h
             categories,
             title: {
                 text: "Time"
-            }
+            },
+            type: "datetime"
         },
         yAxis: {
             title: {
-                text: "PM values"
+                text: "Values"
             }
         },
         tooltip: {

@@ -3,7 +3,8 @@ function drawLineChart(label, categories, series, responseTime, country, city, w
         chart: {
             type: "line",
             width,
-            height
+            height,
+            zoomType: "x"
         },
         title: {
             text: "Particulate matter data of city"
@@ -19,7 +20,7 @@ function drawLineChart(label, categories, series, responseTime, country, city, w
         },
         yAxis: {
             title: {
-                text: "PM values"
+                text: "Values"
             }
         },
         tooltip: {
