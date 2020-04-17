@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -173,26 +172,9 @@ public class DataController {
         if(mergeCount < 1) throw new DataAccessException(ErrorCodeUtils.INVALID_MERGE_COUNT);
 
         long startTimestamp = System.currentTimeMillis();
-        JSONObject json = new JSONObject();
         // Get data records of this sensor
         List<DataRecord> records = getDataRecords(chipId, from, to);
-        // Handle possible errors
-        if(!records.isEmpty()) {
-            if(fieldIndex >= records.get(0).getSensorDataValues().length) throw new DataAccessException(ErrorCodeUtils.INVALID_FIELD_INDEX);
-            // Bring the records into json format
-            JSONArray jsonValues = new JSONArray();
-            records.forEach(record -> {
-                JSONArray recordObject = new JSONArray();
-                recordObject.put(record.getTimestamp());
-                recordObject.put(record.getSensorDataValues()[fieldIndex].getValue());
-                jsonValues.put(recordObject);
-            });
-            json.put("values", jsonValues);
-            json.put("field", records.get(0).getSensorDataValues()[fieldIndex].getValueType());
-        }
-        long responseTime = System.currentTimeMillis() - startTimestamp;
-        json.put("responseTime", responseTime);
-        return json.toString();
+        return chartDataToJsonNew(fieldIndex, startTimestamp, records);
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/data/chart", params = "country")
@@ -223,7 +205,7 @@ public class DataController {
             currTo += granularityInMillis;
         }
         // Bring them into json format
-        return chartDataToJson(from, to, fieldIndex, startTimestamp, records).toString();
+        return chartDataToJsonNew(fieldIndex, startTimestamp, records);
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/data/chart", params = {"country", "city"})
@@ -255,7 +237,7 @@ public class DataController {
             currTo += granularityInMillis;
         }
         // Bring them into json format
-        return chartDataToJson(from, to, fieldIndex, startTimestamp, records).toString();
+        return chartDataToJsonNew(fieldIndex, startTimestamp, records);
     }
 
     // ---------------------------------------------- Utility functions ------------------------------------------------
@@ -300,26 +282,28 @@ public class DataController {
         return template.find(Query.query(Criteria.where("timestamp").gte(fromTimestamp).lte(toTimestamp)).cursorBatchSize(500), DataRecord.class, String.valueOf(chipId));
     }
 
-    private JSONObject chartDataToJson(@RequestParam(defaultValue = "0") long from, @RequestParam(defaultValue = "0") long to, @RequestParam(defaultValue = "0") int fieldIndex, long startTimestamp, List<DataRecord> records) {
+    private String chartDataToJsonNew(int fieldIndex, long startTimestamp, List<DataRecord> records) throws DataAccessException {
         JSONObject json = new JSONObject();
-        if(!records.isEmpty() && records.get(0).getSensorDataValues().length > 0) {
-            JSONArray jsonTime = new JSONArray();
+        // Handle possible errors
+        if(!records.isEmpty()) {
+            if(fieldIndex >= records.get(0).getSensorDataValues().length) throw new DataAccessException(ErrorCodeUtils.INVALID_FIELD_INDEX);
+            // Bring the records into json format
             JSONArray jsonValues = new JSONArray();
-            SimpleDateFormat sdf = new SimpleDateFormat(from == 0 && to == 0 ? "HH:mm:ss" : "yyyy-MM-dd HH:mm:ss");
             records.forEach(record -> {
-                jsonTime.put(sdf.format(record.getTimestamp()));
-                jsonValues.put(record.getSensorDataValues()[fieldIndex].getValue());
+                JSONArray recordObject = new JSONArray();
+                recordObject.put(record.getTimestamp());
+                recordObject.put(record.getSensorDataValues()[fieldIndex].getValue());
+                jsonValues.put(recordObject);
             });
-            json.put("time", jsonTime);
             json.put("values", jsonValues);
             json.put("field", records.get(0).getSensorDataValues()[fieldIndex].getValueType());
         }
         long responseTime = System.currentTimeMillis() - startTimestamp;
         json.put("responseTime", responseTime);
-        return json;
+        return json.toString();
     }
 
-    private void validateAccessProperties(@RequestParam(defaultValue = "0") long from, @RequestParam(defaultValue = "0") long to, @RequestParam(defaultValue = "0") int fieldIndex, @RequestParam(defaultValue = "60") int granularity) throws DataAccessException {
+    private void validateAccessProperties(long from, long to, int fieldIndex, int granularity) throws DataAccessException {
         if (from < 0 || to < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_TIME_RANGE_DATA);
         if (fieldIndex < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_FIELD_INDEX);
         if (granularity < 1) throw new DataAccessException(ErrorCodeUtils.INVALID_PERIOD);
