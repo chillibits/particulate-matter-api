@@ -180,14 +180,13 @@ public class DataController {
         if(!records.isEmpty()) {
             if(fieldIndex >= records.get(0).getSensorDataValues().length) throw new DataAccessException(ErrorCodeUtils.INVALID_FIELD_INDEX);
             // Bring the records into json format
-            JSONArray jsonTime = new JSONArray();
             JSONArray jsonValues = new JSONArray();
-            SimpleDateFormat sdf = new SimpleDateFormat(from == 0 && to == 0 ? "HH:mm:ss" : "yyyy-MM-dd HH:mm:ss");
             records.forEach(record -> {
-                jsonTime.put(sdf.format(record.getTimestamp()));
-                jsonValues.put(record.getSensorDataValues()[fieldIndex].getValue());
+                JSONArray recordObject = new JSONArray();
+                recordObject.put(record.getTimestamp());
+                recordObject.put(record.getSensorDataValues()[fieldIndex].getValue());
+                jsonValues.put(recordObject);
             });
-            json.put("time", jsonTime);
             json.put("values", jsonValues);
             json.put("field", records.get(0).getSensorDataValues()[fieldIndex].getValueType());
         }

@@ -1,4 +1,4 @@
-function drawLineChart(label, categories, series, responseTime, country, city, width, height) {
+function drawLineChart(label, series, responseTime, country, city, width, height) {
     Highcharts.chart("container", {
         chart: {
             type: "line",
@@ -13,19 +13,14 @@ function drawLineChart(label, categories, series, responseTime, country, city, w
             text: "City: " + city + ", " + country + " - (Response time: " + responseTime + " ms)"
         },
         xAxis: {
-            categories,
             title: {
                 text: "Time"
-            }
+            },
+            type: "datetime"
         },
         yAxis: {
             title: {
                 text: "Values"
-            }
-        },
-        tooltip: {
-            formatter: function() {
-                return "<strong>"+this.x+": </strong>"+ this.y;
             }
         },
         series: [{
@@ -50,9 +45,8 @@ $.ajax({
     url: "data/chart?" + urlSuffix,
     success: (result) => {
         var field = JSON.parse(result).field;
-        var time = JSON.parse(result).time;
         var values = JSON.parse(result).values;
         var responseTime = JSON.parse(result).responseTime;
-        drawLineChart(field, time, values, responseTime, country, city, width, height);
+        drawLineChart(field, values, responseTime, country, city, width, height);
     }
 });
