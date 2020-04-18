@@ -6,6 +6,7 @@ package com.chillibits.particulatematterapi.config;
 
 import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import lombok.extern.slf4j.Slf4j;
+import me.tongfei.progressbar.ProgressBar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -36,14 +37,8 @@ public class CronJobs {
     public void initIndexes() {
         log.info("Start indexing ...");
         Set<String> collectionNames = mongoTemplate.getCollectionNames();
-        int i = 1;
-        for(String collectionName : collectionNames) {
+        for(String collectionName : ProgressBar.wrap(collectionNames, "Indexing"))
             mongoTemplate.indexOps(collectionName).ensureIndex(new Index().on("timestamp", Sort.Direction.ASC));
-            i++;
-            log.info(i + " / " + collectionNames.size());
-        }
         log.info("Finished indexing.");
     }
-
-
 }

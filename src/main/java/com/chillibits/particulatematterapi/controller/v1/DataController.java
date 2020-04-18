@@ -231,8 +231,8 @@ public class DataController {
         long currTo = fromTimestamp + granularityInMillis;
         List<DataRecord> records = new ArrayList<>();
         while(currTo <= toTimestamp) {
-            records.add(getAverageDataRecord(getDataCity(country, city, currFrom, currTo)));
-            //records.addAll(getDataCountry(country, currFrom, currTo));
+            //records.add(getAverageDataRecord(getDataCity(country, city, currFrom, currTo)));
+            records.addAll(getDataCountry(country, currFrom, currTo));
             currFrom += granularityInMillis;
             currTo += granularityInMillis;
         }

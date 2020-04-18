@@ -14,6 +14,7 @@ import com.chillibits.particulatematterapi.repository.SensorRepository;
 import com.chillibits.particulatematterapi.repository.UserRepository;
 import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import lombok.extern.slf4j.Slf4j;
+import me.tongfei.progressbar.ProgressBar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -81,12 +82,9 @@ public class ParticulateMatterApiApplication implements CommandLineRunner {
 	private void rollbackToTimestamp(long rollbackTimestamp) {
 		log.info("Rolling back to " + rollbackTimestamp + " ...");
 		Set<String> collectionNames = getDataCollections();
-		int i = 0;
-		for(String collection : collectionNames) {
+		for(String collection : ProgressBar.wrap(collectionNames, "Rolling back")) {
 			Query query = Query.query(Criteria.where("timestamp").gte(rollbackTimestamp));
 			template.remove(query, collection);
-			i++;
-			log.info(i + "/" + collectionNames.size() + " done");
 		}
 		log.info("Rollback finished.");
 	}

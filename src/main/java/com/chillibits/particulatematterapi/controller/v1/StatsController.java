@@ -12,6 +12,7 @@ import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import me.tongfei.progressbar.ProgressBar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -192,15 +193,11 @@ public class StatsController {
         // Calculate new stats
         Set<String> collectionNames = getDataCollections();
         // Calculate total records
-        int collectionsSize = collectionNames.size();
-        int currentCollection = 0;
-        for(String collectionName : collectionNames) {
+        for(String collectionName : ProgressBar.wrap(collectionNames, "Calculating Stats")) {
             recordsTotal += getRecordCountFromTimestamp(collectionName, fromTime, currentTime);
             recordsYesterday += getRecordCountFromTimestamp(collectionName, timestamps[2], timestamps[1]);
             recordsThisMonth += getRecordCountFromTimestamp(collectionName, timestamps[3], currentTime);
             recordsPrevMonth += getRecordCountFromTimestamp(collectionName, timestamps[4], timestamps[3]);
-            currentCollection++;
-            log.info("Calculating " + currentCollection + " / " + collectionsSize + " (" + (currentCollection * 100 / collectionsSize) + " %)");
         }
         newItem.setDataRecordsTotal(recordsTotal);
         newItem.setDataRecordsYesterday(recordsYesterday);
