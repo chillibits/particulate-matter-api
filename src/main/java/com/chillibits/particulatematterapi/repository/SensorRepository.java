@@ -16,7 +16,7 @@ import java.util.List;
 
 public interface SensorRepository extends JpaRepository<Sensor, Long> {
     @Meta(cursorBatchSize = 100)
-    @Query("SELECT s, (6371000 * acos(cos(radians(?1)) * cos(radians(s.gpsLatitude)) * cos(radians(s.gpsLongitude) - radians(?2)) + sin(radians(?1)) * sin(radians(s.gpsLatitude)))) AS distance FROM Sensor s GROUP BY distance HAVING distance <= ?3 ORDER BY distance ASC")
+    @Query(value = "SELECT *, (6371000 * acos(cos(radians(?1)) * cos(radians(s.gps_latitude)) * cos(radians(s.gps_longitude) - radians(?2)) + sin(radians(?1)) * sin(radians(s.gps_latitude)))) AS distance FROM sensor s GROUP BY distance HAVING distance <= ?3 ORDER BY distance ASC", nativeQuery = true)
     List<Sensor> findAllInRadius(double lat, double lng, int radius);
 
     @Meta(cursorBatchSize = 100)
@@ -24,7 +24,7 @@ public interface SensorRepository extends JpaRepository<Sensor, Long> {
     List<Sensor> findAllPublished();
 
     @Meta(cursorBatchSize = 100)
-    @Query("SELECT s, (6371000 * acos(cos(radians(?1)) * cos(radians(s.gpsLatitude)) * cos(radians(s.gpsLongitude) - radians(?2)) + sin(radians(?1)) * sin(radians(s.gpsLatitude)))) AS distance FROM Sensor s WHERE published = 1 GROUP BY distance HAVING distance <= ?3 ORDER BY distance ASC")
+    @Query(value = "SELECT *, (6371000 * acos(cos(radians(?1)) * cos(radians(s.gps_latitude)) * cos(radians(s.gps_longitude) - radians(?2)) + sin(radians(?1)) * sin(radians(s.gps_latitude)))) AS distance FROM sensor s WHERE published = 1 GROUP BY distance HAVING distance <= ?3 ORDER BY distance ASC", nativeQuery = true)
     List<Sensor> findAllPublishedInRadius(double lat, double lng, int radius);
 
     @Meta(cursorBatchSize = 100)

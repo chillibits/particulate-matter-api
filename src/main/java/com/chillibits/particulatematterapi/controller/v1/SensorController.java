@@ -58,7 +58,7 @@ public class SensorController {
             @RequestParam(defaultValue = "0") double latitude,
             @RequestParam(defaultValue = "0") double longitude,
             @RequestParam(defaultValue = "0") int radius,
-            @RequestParam(defaultValue = "false") boolean onlyPublished
+            @RequestParam(defaultValue = "true") boolean onlyPublished
     ) throws SensorDataException {
         if(radius < 0) throw new SensorDataException(ErrorCodeUtils.INVALID_RADIUS);
         List<Sensor> sensors;
@@ -85,7 +85,7 @@ public class SensorController {
             @RequestParam(defaultValue = "0") double latitude,
             @RequestParam(defaultValue = "0") double longitude,
             @RequestParam(defaultValue = "0") int radius,
-            @RequestParam(defaultValue = "false") boolean onlyPublished
+            @RequestParam(defaultValue = "true") boolean onlyPublished
     ) throws SensorDataException {
         if(radius < 0) throw new SensorDataException(ErrorCodeUtils.INVALID_RADIUS);
         List<Sensor> sensors;
