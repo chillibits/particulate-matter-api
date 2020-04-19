@@ -13,6 +13,7 @@ import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import com.chillibits.particulatematterapi.shared.SharedUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
@@ -30,12 +31,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
+@Slf4j
 @Api(value = "Data REST Endpoint", tags = "data")
 public class DataController {
 
@@ -200,7 +202,6 @@ public class DataController {
         List<DataRecord> records = new ArrayList<>();
         while(currTo <= toTimestamp) {
             records.add(getAverageDataRecord(getDataCountry(country, currFrom, currTo)));
-            //records.addAll(getDataCountry(country, currFrom, currTo));
             currFrom += granularityInMillis;
             currTo += granularityInMillis;
         }
@@ -231,8 +232,7 @@ public class DataController {
         long currTo = fromTimestamp + granularityInMillis;
         List<DataRecord> records = new ArrayList<>();
         while(currTo <= toTimestamp) {
-            //records.add(getAverageDataRecord(getDataCity(country, city, currFrom, currTo)));
-            records.addAll(getDataCountry(country, currFrom, currTo));
+            records.add(getAverageDataRecord(getDataCity(country, city, currFrom, currTo)));
             currFrom += granularityInMillis;
             currTo += granularityInMillis;
         }
@@ -243,7 +243,7 @@ public class DataController {
     // ---------------------------------------------- Utility functions ------------------------------------------------
 
     private DataRecord getAverageDataRecord(List<DataRecord> records) {
-        Map<String, Map.Entry<Double, Integer>> dataValues = new HashMap<>();
+        Map<String, Map.Entry<Double, Integer>> dataValues = new LinkedHashMap<>();
         for(DataRecord record : records) {
             for(DataRecord.SensorDataValue currValue : record.getSensorDataValues()) {
                 String valueType = currValue.getValueType();

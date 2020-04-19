@@ -1,8 +1,9 @@
 # Particulate Matter API
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a14af7aaa8414e62a4a62a7c9bf0e4db)](https://app.codacy.com/manual/marcauberer/particulate-matter-api?utm_source=github.com&utm_medium=referral&utm_content=marcauberer/particulate-matter-api&utm_campaign=Badge_Grade_Dashboard)
+![Maven Build](https://github.com/marcauberer/particulate-matter-api/workflows/Maven%20Build/badge.svg)
 [![Build Status](https://travis-ci.com/marcauberer/particulate-matter-api.svg?branch=master)](https://travis-ci.com/marcauberer/particulate-matter-api)
 
-This is the official ChilliBits Particulate Matter REST API.
+**This is the ChilliBits Particulate Matter REST API.**
 
 *Attention: This repository is still in development. Up to now, there's no stable API version.*
 
@@ -52,7 +53,9 @@ This is the official ChilliBits Particulate Matter REST API.
     -   Delete user from the database
 
 ## Usage
-You can find the API documentation at [api.pm.chillibits.com](https://api.pm.chillibits.com/swagger-ui.html)
+The API documentation can be found at [api.pm.chillibits.com](https://api.pm.chillibits.com/swagger-ui.html).
+
+If any questions occur, please feel free to reach out to us via [email](mailto:contact@chillibits.com?subject=Register%20application%20pmapi).
 
 ## Push endpoint
 If you have a sensor from luftdaten.info / sensor.community, you simply have to enable the option 'Feinstaub-App' in the APIs section. The data gets transmitted to our server automatically.
