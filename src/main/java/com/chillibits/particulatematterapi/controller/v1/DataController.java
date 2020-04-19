@@ -141,9 +141,11 @@ public class DataController {
         // Get chipIds of the sensors from the requested location
         List<Long> chipIds = sensorRepository.getChipIdsOfSensorFromCity(country, city);
 
+        long startTime = System.currentTimeMillis();
         // Get data from all selected sensors
         List<DataRecord> data = new ArrayList<>();
         for(Long chipId : chipIds) data.addAll(getDataRecords(chipId, from, to));
+        log.info("LoadData: " + (System.currentTimeMillis() - startTime));
         return data;
     }
 
@@ -176,7 +178,7 @@ public class DataController {
         long startTimestamp = System.currentTimeMillis();
         // Get data records of this sensor
         List<DataRecord> records = getDataRecords(chipId, from, to);
-        return chartDataToJsonNew(fieldIndex, startTimestamp, records);
+        return chartDataToJson(fieldIndex, startTimestamp, records, 1);
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/data/chart", params = "country")
@@ -195,18 +197,29 @@ public class DataController {
         // Get replace default values, with better ones
         long toTimestamp = to == 0 ? startTimestamp : to;
         long fromTimestamp = from == 0 ? toTimestamp - ConstantUtils.DEFAULT_DATA_TIME_SPAN : from;
+
+        // Get chipIds of the sensors from the requested location
+        List<Long> chipIds = sensorRepository.getChipIdsOfSensorFromCountry(country);
+        List<DataRecord> records = loopWithGranularity(granularity, toTimestamp, fromTimestamp, chipIds);
+
+        // Bring them into json format
+        return chartDataToJson(fieldIndex, startTimestamp, records, chipIds.size());
+    }
+
+    private List<DataRecord> loopWithGranularity(@RequestParam(defaultValue = "60") int granularity, long toTimestamp, long fromTimestamp, List<Long> chipIds) throws DataAccessException {
         // Loop periodically through the time span
         long granularityInMillis = granularity * 60 * 1000;
         long currFrom = fromTimestamp;
         long currTo = fromTimestamp + granularityInMillis;
         List<DataRecord> records = new ArrayList<>();
-        while(currTo <= toTimestamp) {
-            records.add(getAverageDataRecord(getDataCountry(country, currFrom, currTo)));
+        while (currTo <= toTimestamp) {
+            List<DataRecord> recordsInTimeSpan = new ArrayList<>();
+            for (Long chipId : chipIds) recordsInTimeSpan.addAll(getDataRecords(chipId, currFrom, currTo));
+            records.add(getAverageDataRecord(recordsInTimeSpan));
             currFrom += granularityInMillis;
             currTo += granularityInMillis;
         }
-        // Bring them into json format
-        return chartDataToJsonNew(fieldIndex, startTimestamp, records);
+        return records;
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/data/chart", params = {"country", "city"})
@@ -226,23 +239,21 @@ public class DataController {
         // Get replace default values, with better ones
         long toTimestamp = to == 0 ? startTimestamp : to;
         long fromTimestamp = from == 0 ? toTimestamp - ConstantUtils.DEFAULT_DATA_TIME_SPAN : from;
+
+        // Get chipIds of the sensors from the requested location
+        List<Long> chipIds = sensorRepository.getChipIdsOfSensorFromCity(country, city);
+
         // Loop periodically through the time span
-        long granularityInMillis = granularity * 60 * 1000;
-        long currFrom = fromTimestamp;
-        long currTo = fromTimestamp + granularityInMillis;
-        List<DataRecord> records = new ArrayList<>();
-        while(currTo <= toTimestamp) {
-            records.add(getAverageDataRecord(getDataCity(country, city, currFrom, currTo)));
-            currFrom += granularityInMillis;
-            currTo += granularityInMillis;
-        }
+        List<DataRecord> records = loopWithGranularity(granularity, toTimestamp, fromTimestamp, chipIds);
         // Bring them into json format
-        return chartDataToJsonNew(fieldIndex, startTimestamp, records);
+        return chartDataToJson(fieldIndex, startTimestamp, records, chipIds.size());
     }
 
     // ---------------------------------------------- Utility functions ------------------------------------------------
 
     private DataRecord getAverageDataRecord(List<DataRecord> records) {
+        if(records.size() == 0) return new DataRecord();
+        long startTime = System.currentTimeMillis();
         Map<String, Map.Entry<Double, Integer>> dataValues = new LinkedHashMap<>();
         for(DataRecord record : records) {
             for(DataRecord.SensorDataValue currValue : record.getSensorDataValues()) {
@@ -270,8 +281,9 @@ public class DataController {
         }
         // Create averageRecord out of dataValues
         DataRecord avgRecord = new DataRecord();
-        avgRecord.setTimestamp(System.currentTimeMillis());
+        avgRecord.setTimestamp(records.get(0).getTimestamp());
         avgRecord.setSensorDataValues(avgDataValues.toArray(DataRecord.SensorDataValue[]::new));
+        log.info("Average: " + (System.currentTimeMillis() - startTime));
         return avgRecord;
     }
 
@@ -282,7 +294,7 @@ public class DataController {
         return template.find(Query.query(Criteria.where("timestamp").gte(fromTimestamp).lte(toTimestamp)).cursorBatchSize(500), DataRecord.class, String.valueOf(chipId));
     }
 
-    private String chartDataToJsonNew(int fieldIndex, long startTimestamp, List<DataRecord> records) throws DataAccessException {
+    private String chartDataToJson(int fieldIndex, long startTimestamp, List<DataRecord> records, int sensorCount) throws DataAccessException {
         JSONObject json = new JSONObject();
         // Handle possible errors
         if(!records.isEmpty()) {
@@ -290,16 +302,19 @@ public class DataController {
             // Bring the records into json format
             JSONArray jsonValues = new JSONArray();
             records.forEach(record -> {
-                JSONArray recordObject = new JSONArray();
-                recordObject.put(record.getTimestamp());
-                recordObject.put(record.getSensorDataValues()[fieldIndex].getValue());
-                jsonValues.put(recordObject);
+                try {
+                    JSONArray recordObject = new JSONArray();
+                    recordObject.put(record.getTimestamp());
+                    recordObject.put(record.getSensorDataValues()[fieldIndex].getValue());
+                    jsonValues.put(recordObject);
+                } catch (Exception ignored) {}
             });
             json.put("values", jsonValues);
             json.put("field", records.get(0).getSensorDataValues()[fieldIndex].getValueType());
         }
         long responseTime = System.currentTimeMillis() - startTimestamp;
         json.put("responseTime", responseTime);
+        json.put("sensorCount", sensorCount);
         return json.toString();
     }
 

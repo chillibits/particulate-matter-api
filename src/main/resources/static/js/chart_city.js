@@ -1,4 +1,4 @@
-function drawLineChart(label, series, responseTime, country, city, width, height) {
+function drawLineChart(label, series, responseTime, country, city, sensorCount, width, height) {
     Highcharts.chart("container", {
         chart: {
             type: "line",
@@ -10,7 +10,7 @@ function drawLineChart(label, series, responseTime, country, city, width, height
             text: "Particulate matter data of city"
         },
         subtitle: {
-            text: "City: " + city + ", " + country + " - (Response time: " + responseTime + " ms)"
+            text: "City: " + city + ", " + country + " - (Response time: " + responseTime + " ms) - " + sensorCount + " sensors"
         },
         xAxis: {
             title: {
@@ -47,6 +47,7 @@ $.ajax({
         var field = JSON.parse(result).field;
         var values = JSON.parse(result).values;
         var responseTime = JSON.parse(result).responseTime;
-        drawLineChart(field, values, responseTime, country, city, width, height);
+        var sensorCount = JSON.parse(result).sensorCount;
+        drawLineChart(field, values, responseTime, country, city, sensorCount, width, height);
     }
 });
