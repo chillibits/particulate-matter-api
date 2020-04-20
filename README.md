@@ -1,5 +1,7 @@
 # Particulate Matter API
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d9a58b28e5294920b2aa6a24910f3187)](https://app.codacy.com/gh/ChilliBits/particulate-matter-api?utm_source=github.com&utm_medium=referral&utm_content=ChilliBits/particulate-matter-api&utm_campaign=Badge_Grade_Dashboard)
+
 
 **This is the ChilliBits Particulate Matter REST API.**
 
