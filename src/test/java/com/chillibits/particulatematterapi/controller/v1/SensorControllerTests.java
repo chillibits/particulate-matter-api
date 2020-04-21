@@ -4,6 +4,7 @@
 
 package com.chillibits.particulatematterapi.controller.v1;
 
+import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
 import com.chillibits.particulatematterapi.exception.SensorDataException;
 import com.chillibits.particulatematterapi.model.db.main.Link;
 import com.chillibits.particulatematterapi.model.db.main.Sensor;
@@ -24,22 +25,24 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @RunWith(SpringRunner.class)
 public class SensorControllerTests {
 
     @Autowired
     private SensorController sensorController;
-
     @MockBean
     private SensorRepository sensorRepository;
+
+    private final List<SensorDto> assertData = getAssertData();
 
     @TestConfiguration
     static class EmployeeServiceImplTestContextConfiguration {
@@ -79,21 +82,43 @@ public class SensorControllerTests {
 
     @Test
     public void testGetAllSensors() throws SensorDataException {
-        List<SensorDto> ad = getAssertData();
-
-        List<SensorDto> result;
         // Get all sensors
-        result = sensorController.getAllSensors(0, 0, 0, false);
-        assertThat(result).containsExactlyInAnyOrder(ad.get(0), ad.get(1), ad.get(2), ad.get(3), ad.get(4));
+        List<SensorDto> result = sensorController.getAllSensors(0, 0, 0, false);
+        assertThat(result).containsExactlyInAnyOrder(assertData.get(0), assertData.get(1), assertData.get(2), assertData.get(3), assertData.get(4));
+    }
+
+    @Test
+    public void testGetOnlyPublishedSensors() throws SensorDataException {
         // Get only published sensors
-        result = sensorController.getAllSensors(0, 0, 0, true);
-        assertThat(result).containsExactlyInAnyOrder(ad.get(0), ad.get(2), ad.get(4));
+        List<SensorDto> result = sensorController.getAllSensors(0, 0, 0, true);
+        assertThat(result).containsExactlyInAnyOrder(assertData.get(0), assertData.get(2), assertData.get(4));
+    }
+
+    @Test
+    public void testGetAllSensorsInRadius() throws SensorDataException {
         // Get sensors within radius
-        result = sensorController.getAllSensors(0, 0, 100, false);
-        assertThat(result).containsExactlyInAnyOrder(ad.get(1), ad.get(3), ad.get(4));
+        List<SensorDto> result = sensorController.getAllSensors(0, 0, 100, false);
+        assertThat(result).containsExactlyInAnyOrder(assertData.get(1), assertData.get(3), assertData.get(4));
+    }
+
+    @Test
+    public void testGetOnlyPublishedSensorsInRadius() throws SensorDataException {
         // Get only published sensors within radius
-        result = sensorController.getAllSensors(0, 0, 100, true);
-        assertThat(result).containsExactly(ad.get(4));
+        List<SensorDto> result = sensorController.getAllSensors(0, 0, 100, true);
+        assertThat(result).containsExactly(assertData.get(4));
+    }
+
+    @Test
+    public void testGetAllSensorsInvalidRadius() {
+        // Try with invalid radius input
+        Exception exception = assertThrows(SensorDataException.class, () ->
+                sensorController.getAllSensors(0, 0, -100, false)
+        );
+
+        String expectedMessage = new SensorDataException(ErrorCodeUtils.INVALID_RADIUS).getMessage();
+        String actualMessage = exception.getMessage();
+
+        assertEquals(actualMessage, expectedMessage);
     }
 
     private List<Sensor> getTestData() {
@@ -121,9 +146,7 @@ public class SensorControllerTests {
         s4.setUserLinks(new HashSet<>(Collections.singletonList(l4)));
         s5.setUserLinks(new HashSet<>(Collections.singletonList(l5)));
         // Add them to test data
-        return new ArrayList<>() {{
-            addAll(Arrays.asList(s1, s2, s3, s4, s5));
-        }};
+        return Arrays.asList(s1, s2, s3, s4, s5);
     }
 
     private List<SensorDto> getAssertData() {
@@ -134,8 +157,6 @@ public class SensorControllerTests {
         SensorDto sd4 = new SensorDto(1234568, "2020-04", "This is a test", 30.0, 70.0, 10, "Russia", "Moskva", false, false);
         SensorDto sd5 = new SensorDto(1234563, "2020-05", "", 40.0, 80.0, 80, "Ireland", "Dublin", true, true);
         // Add them to test data
-        return new ArrayList<>() {{
-            addAll(Arrays.asList(sd1, sd2, sd3, sd4, sd5));
-        }};
+        return Arrays.asList(sd1, sd2, sd3, sd4, sd5);
     }
 }

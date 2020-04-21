@@ -11,14 +11,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.Transient;
+
 @Data
 @Document
 @AllArgsConstructor
 @NoArgsConstructor
 public class DataRecord {
-    @JsonProperty("esp8266id") private long chipId;
+    @JsonProperty("esp8266id") @Transient private long chipId;
     private long timestamp = 0;
-    @JsonProperty("software_version") private String firmwareVersion;
+    @JsonProperty("software_version") @Transient private String firmwareVersion;
     @JsonProperty("sensordatavalues") private SensorDataValue[] sensorDataValues;
     private String note = ConstantUtils.BLANK_COLUMN;
 
