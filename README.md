@@ -2,6 +2,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d9a58b28e5294920b2aa6a24910f3187)](https://app.codacy.com/gh/ChilliBits/particulate-matter-api?utm_source=github.com&utm_medium=referral&utm_content=ChilliBits/particulate-matter-api&utm_campaign=Badge_Grade_Dashboard)
 ![Maven Build](https://github.com/ChilliBits/particulate-matter-api/workflows/Maven%20Build/badge.svg)
 [![Build Status](https://travis-ci.com/ChilliBits/particulate-matter-api.svg?branch=master)](https://travis-ci.com/ChilliBits/particulate-matter-api)
+[![codecov](https://codecov.io/gh/ChilliBits/particulate-matter-api/branch/master/graph/badge.svg)](https://codecov.io/gh/ChilliBits/particulate-matter-api)
 
 **This is the ChilliBits Particulate Matter REST API.**
 

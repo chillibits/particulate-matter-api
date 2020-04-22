@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class SensorDto {
     private long chipId;
     private String firmwareVersion;
+    private long creationTimestamp;
     private String notes;
     private double gpsLatitude;
     private double gpsLongitude;

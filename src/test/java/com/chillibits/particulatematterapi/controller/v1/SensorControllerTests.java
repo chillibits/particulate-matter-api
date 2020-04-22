@@ -128,11 +128,11 @@ public class SensorControllerTests {
         User u2 = new User(2, "Admin", "User", "info@chillibits.com", "87654321", null, User.ADMINISTRATOR, User.ACTIVE, time, time);
         User u3 = new User(3, "Test", "User", "test@chillibits.com", "12344321", null, User.USER, User.LOCKED, time, time);
         // Create sensor objects
-        Sensor s1 = new Sensor(1234567, null, "2020-01", time, "No notes", time, time, 0.0, 0.0, 0, "Germany", "Berlin", false, true, true);
-        Sensor s2 = new Sensor(12345678, null, "2020-02", time, "", time, time, 10.0, 30.0, 50, "Germany", "Stuttgart", true, false, true);
-        Sensor s3 = new Sensor(123456, null, "2020-03", time, "Test", time, time, 20.0, 90.0, 30, "India", "Agra", true, true, true);
-        Sensor s4 = new Sensor(1234568, null, "2020-04", time, "This is a test", time, time, 30.0, 70.0, 10, "Russia", "Moskva", false, false, false);
-        Sensor s5 = new Sensor(1234563, null, "2020-05", time, "", time, time, 40.0, 80.0, 80, "Ireland", "Dublin", true, true, false);
+        Sensor s1 = new Sensor(1234567, null, "2020-01", 0, "No notes", time, time, 0.0, 0.0, 0, "Germany", "Berlin", false, true, true);
+        Sensor s2 = new Sensor(12345678, null, "2020-02", 0, "", time, time, 10.0, 30.0, 50, "Germany", "Stuttgart", true, false, true);
+        Sensor s3 = new Sensor(123456, null, "2020-03", 0, "Test", time, time, 20.0, 90.0, 30, "India", "Agra", true, true, true);
+        Sensor s4 = new Sensor(1234568, null, "2020-04", 0, "This is a test", time, time, 30.0, 70.0, 10, "Russia", "Moskva", false, false, false);
+        Sensor s5 = new Sensor(1234563, null, "2020-05", 0, "", time, time, 40.0, 80.0, 80, "Ireland", "Dublin", true, true, false);
         // Create link objects
         Link l1 = new Link(1, u1, s1, true, "Test sensor", 0, time);
         Link l2 = new Link(2, u2, s2, false, "Test", 50, time);
@@ -151,11 +151,11 @@ public class SensorControllerTests {
 
     private List<SensorDto> getAssertData() {
         // Create sensor objects
-        SensorDto sd1 = new SensorDto(1234567, "2020-01", "No notes", 0.0, 0.0, 0, "Germany", "Berlin", false, true);
-        SensorDto sd2 = new SensorDto(12345678, "2020-02", "", 10.0, 30.0, 50, "Germany", "Stuttgart", true, false);
-        SensorDto sd3 = new SensorDto(123456, "2020-03", "Test", 20.0, 90.0, 30, "India", "Agra", true, true);
-        SensorDto sd4 = new SensorDto(1234568, "2020-04", "This is a test", 30.0, 70.0, 10, "Russia", "Moskva", false, false);
-        SensorDto sd5 = new SensorDto(1234563, "2020-05", "", 40.0, 80.0, 80, "Ireland", "Dublin", true, true);
+        SensorDto sd1 = new SensorDto(1234567, "2020-01", 0, "No notes", 0.0, 0.0, 0, "Germany", "Berlin", false, true);
+        SensorDto sd2 = new SensorDto(12345678, "2020-02", 0, "", 10.0, 30.0, 50, "Germany", "Stuttgart", true, false);
+        SensorDto sd3 = new SensorDto(123456, "2020-03", 0, "Test", 20.0, 90.0, 30, "India", "Agra", true, true);
+        SensorDto sd4 = new SensorDto(1234568, "2020-04", 0, "This is a test", 30.0, 70.0, 10, "Russia", "Moskva", false, false);
+        SensorDto sd5 = new SensorDto(1234563, "2020-05", 0, "", 40.0, 80.0, 80, "Ireland", "Dublin", true, true);
         // Add them to test data
         return Arrays.asList(sd1, sd2, sd3, sd4, sd5);
     }
