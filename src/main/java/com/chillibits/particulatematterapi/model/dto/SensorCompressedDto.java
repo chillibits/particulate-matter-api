@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SensorCompressedDto {
-    @JsonProperty("i") private String chipId;
+    @JsonProperty("i") private long chipId;
     @JsonProperty("la") private double gpsLatitude;
     @JsonProperty("lo") private double gpsLongitude;
     @JsonProperty("a") private boolean active;

@@ -9,10 +9,12 @@ import com.chillibits.particulatematterapi.exception.SensorDataException;
 import com.chillibits.particulatematterapi.model.db.main.Link;
 import com.chillibits.particulatematterapi.model.db.main.Sensor;
 import com.chillibits.particulatematterapi.model.db.main.User;
+import com.chillibits.particulatematterapi.model.dto.SensorCompressedDto;
 import com.chillibits.particulatematterapi.model.dto.SensorDto;
 import com.chillibits.particulatematterapi.repository.LinkRepository;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
 import com.chillibits.particulatematterapi.repository.UserRepository;
+import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +25,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
@@ -35,6 +38,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @RunWith(SpringRunner.class)
+@ActiveProfiles("logging")
 public class SensorControllerTests {
 
     @Autowired
@@ -42,7 +46,8 @@ public class SensorControllerTests {
     @MockBean
     private SensorRepository sensorRepository;
 
-    private final List<SensorDto> assertData = getAssertData();
+    private final List<SensorDto> assData = getAssertData();
+    private final List<SensorCompressedDto> compAssData = getAssertDataCompressed();
 
     @TestConfiguration
     static class EmployeeServiceImplTestContextConfiguration {
@@ -80,32 +85,34 @@ public class SensorControllerTests {
                 .thenReturn(Collections.singletonList(testData.get(4)));
     }
 
+    // --------------------------------------- Get sensor uncompressed -------------------------------------------------
+
     @Test
     public void testGetAllSensors() throws SensorDataException {
         // Get all sensors
         List<SensorDto> result = sensorController.getAllSensors(0, 0, 0, false);
-        assertThat(result).containsExactlyInAnyOrder(assertData.get(0), assertData.get(1), assertData.get(2), assertData.get(3), assertData.get(4));
+        assertThat(result).containsExactlyInAnyOrder(assData.get(0), assData.get(1), assData.get(2), assData.get(3), assData.get(4));
     }
 
     @Test
     public void testGetOnlyPublishedSensors() throws SensorDataException {
         // Get only published sensors
         List<SensorDto> result = sensorController.getAllSensors(0, 0, 0, true);
-        assertThat(result).containsExactlyInAnyOrder(assertData.get(0), assertData.get(2), assertData.get(4));
+        assertThat(result).containsExactlyInAnyOrder(assData.get(0), assData.get(2), assData.get(4));
     }
 
     @Test
     public void testGetAllSensorsInRadius() throws SensorDataException {
         // Get sensors within radius
         List<SensorDto> result = sensorController.getAllSensors(0, 0, 100, false);
-        assertThat(result).containsExactlyInAnyOrder(assertData.get(1), assertData.get(3), assertData.get(4));
+        assertThat(result).containsExactlyInAnyOrder(assData.get(1), assData.get(3), assData.get(4));
     }
 
     @Test
     public void testGetOnlyPublishedSensorsInRadius() throws SensorDataException {
         // Get only published sensors within radius
         List<SensorDto> result = sensorController.getAllSensors(0, 0, 100, true);
-        assertThat(result).containsExactly(assertData.get(4));
+        assertThat(result).containsExactly(assData.get(4));
     }
 
     @Test
@@ -121,7 +128,53 @@ public class SensorControllerTests {
         assertEquals(actualMessage, expectedMessage);
     }
 
+    // ---------------------------------------- Get sensor compressed --------------------------------------------------
+
+    @Test
+    public void testGetAllSensorsCompressed() throws SensorDataException {
+        // Get all sensors
+        List<SensorCompressedDto> result = sensorController.getAllSensorsCompressed(0, 0, 0, false);
+        assertThat(result).containsExactlyInAnyOrder(compAssData.get(0), compAssData.get(1), compAssData.get(2), compAssData.get(3), compAssData.get(4));
+    }
+
+    @Test
+    public void testGetOnlyPublishedSensorsCompressed() throws SensorDataException {
+        // Get only published sensors
+        List<SensorCompressedDto> result = sensorController.getAllSensorsCompressed(0, 0, 0, true);
+        assertThat(result).containsExactlyInAnyOrder(compAssData.get(0), compAssData.get(2), compAssData.get(4));
+    }
+
+    @Test
+    public void testGetAllSensorsInRadiusCompressed() throws SensorDataException {
+        // Get sensors within radius
+        List<SensorCompressedDto> result = sensorController.getAllSensorsCompressed(0, 0, 100, false);
+        assertThat(result).containsExactlyInAnyOrder(compAssData.get(1), compAssData.get(3), compAssData.get(4));
+    }
+
+    @Test
+    public void testGetOnlyPublishedSensorsInRadiusCompressed() throws SensorDataException {
+        // Get only published sensors within radius
+        List<SensorCompressedDto> result = sensorController.getAllSensorsCompressed(0, 0, 100, true);
+        assertThat(result).containsExactly(compAssData.get(4));
+    }
+
+    @Test
+    public void testGetAllSensorsInvalidRadiusCompressed() {
+        // Try with invalid radius input
+        Exception exception = assertThrows(SensorDataException.class, () ->
+                sensorController.getAllSensorsCompressed(0, 0, -100, false)
+        );
+
+        String expectedMessage = new SensorDataException(ErrorCodeUtils.INVALID_RADIUS).getMessage();
+        String actualMessage = exception.getMessage();
+
+        assertEquals(actualMessage, expectedMessage);
+    }
+
+    // -------------------------------------------------- Test data ----------------------------------------------------
+
     private List<Sensor> getTestData() {
+        long millisecondsTillInactivity = ConstantUtils.MINUTES_UNTIL_INACTIVITY * 60 * 1000;
         // Create user objects
         long time = System.currentTimeMillis();
         User u1 = new User(1, "Marc", "Auberer", "marc.auberer@chillibits.com", "12345678", null, User.OPERATOR, User.EMAIL_CONFIRMATION_PENDING, time, time);
@@ -131,8 +184,8 @@ public class SensorControllerTests {
         Sensor s1 = new Sensor(1234567, null, "2020-01", 0, "No notes", time, time, 0.0, 0.0, 0, "Germany", "Berlin", false, true, true);
         Sensor s2 = new Sensor(12345678, null, "2020-02", 0, "", time, time, 10.0, 30.0, 50, "Germany", "Stuttgart", true, false, true);
         Sensor s3 = new Sensor(123456, null, "2020-03", 0, "Test", time, time, 20.0, 90.0, 30, "India", "Agra", true, true, true);
-        Sensor s4 = new Sensor(1234568, null, "2020-04", 0, "This is a test", time, time, 30.0, 70.0, 10, "Russia", "Moskva", false, false, false);
-        Sensor s5 = new Sensor(1234563, null, "2020-05", 0, "", time, time, 40.0, 80.0, 80, "Ireland", "Dublin", true, true, false);
+        Sensor s4 = new Sensor(1234568, null, "2020-04", 0, "This is a test", time - 2 * millisecondsTillInactivity, time, 30.0, 70.0, 10, "Russia", "Moskva", false, false, false);
+        Sensor s5 = new Sensor(1234563, null, "2020-05", 0, "", time - 2 * millisecondsTillInactivity, time, 40.0, 80.0, 80, "Ireland", "Dublin", true, true, false);
         // Create link objects
         Link l1 = new Link(1, u1, s1, true, "Test sensor", 0, time);
         Link l2 = new Link(2, u2, s2, false, "Test", 50, time);
@@ -158,5 +211,16 @@ public class SensorControllerTests {
         SensorDto sd5 = new SensorDto(1234563, "2020-05", 0, "", 40.0, 80.0, 80, "Ireland", "Dublin", true, true);
         // Add them to test data
         return Arrays.asList(sd1, sd2, sd3, sd4, sd5);
+    }
+
+    private List<SensorCompressedDto> getAssertDataCompressed() {
+        // Create sensor objects
+        SensorCompressedDto scd1 = new SensorCompressedDto(1234567, 0.0, 0.0, true);
+        SensorCompressedDto scd2 = new SensorCompressedDto(12345678, 10.0, 30.0, true);
+        SensorCompressedDto scd3 = new SensorCompressedDto(123456, 20.0, 90.0, true);
+        SensorCompressedDto scd4 = new SensorCompressedDto(1234568, 30.0, 70.0, false);
+        SensorCompressedDto scd5 = new SensorCompressedDto(1234563, 40.0, 80.0, false);
+        // Add them to test data
+        return Arrays.asList(scd1, scd2, scd3, scd4, scd5);
     }
 }

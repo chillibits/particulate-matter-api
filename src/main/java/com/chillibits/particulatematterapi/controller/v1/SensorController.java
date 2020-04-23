@@ -60,22 +60,7 @@ public class SensorController {
             @RequestParam(defaultValue = "0") int radius,
             @RequestParam(defaultValue = "true") boolean onlyPublished
     ) throws SensorDataException {
-        if(radius < 0) throw new SensorDataException(ErrorCodeUtils.INVALID_RADIUS);
-        List<Sensor> sensors;
-        if(onlyPublished) {
-            if(radius == 0)
-                sensors = sensorRepository.findAllPublished();
-            else
-                sensors = sensorRepository.findAllPublishedInRadius(latitude, longitude, radius);
-        } else {
-            if(radius == 0)
-                sensors = sensorRepository.findAll();
-            else
-                sensors = sensorRepository.findAllInRadius(latitude, longitude, radius);
-        }
-        sensors.forEach(sensor -> {
-            sensor.setActive(sensor.getLastMeasurementTimestamp() > System.currentTimeMillis() - ConstantUtils.MINUTES_UNTIL_INACTIVITY * 60 * 1000);
-        });
+        List<Sensor> sensors = getSensors(latitude, longitude, radius, onlyPublished);
         return sensors.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
@@ -87,22 +72,8 @@ public class SensorController {
             @RequestParam(defaultValue = "0") int radius,
             @RequestParam(defaultValue = "true") boolean onlyPublished
     ) throws SensorDataException {
-        if(radius < 0) throw new SensorDataException(ErrorCodeUtils.INVALID_RADIUS);
-        List<Sensor> sensors;
-        if(onlyPublished) {
-            if(radius == 0)
-                sensors = sensorRepository.findAllPublished();
-            else
-                sensors = sensorRepository.findAllPublishedInRadius(latitude, longitude, radius);
-        } else {
-            if(radius == 0)
-                sensors = sensorRepository.findAll();
-            else
-                sensors = sensorRepository.findAllInRadius(latitude, longitude, radius);
-        }
-        sensors.forEach(sensor -> {
-            sensor.setActive(sensor.getLastMeasurementTimestamp() > System.currentTimeMillis() - ConstantUtils.MINUTES_UNTIL_INACTIVITY * 60 * 1000);
-        });
+        List<Sensor> sensors = getSensors(latitude, longitude, radius, onlyPublished);
+        System.out.println(sensors.toString());
         return sensors.stream().map(this::convertToCompressedDto).collect(Collectors.toList());
     }
 
@@ -180,7 +151,28 @@ public class SensorController {
 
     // ---------------------------------------------- Utility functions ------------------------------------------------
 
-    private void retrieveCountryCityFromCoordinates(@RequestBody Sensor sensor) {
+    private List<Sensor> getSensors(double latitude, double longitude, int radius, boolean onlyPublished) throws SensorDataException {
+        if (radius < 0) throw new SensorDataException(ErrorCodeUtils.INVALID_RADIUS);
+        List<Sensor> sensors;
+        if (onlyPublished) {
+            if (radius == 0)
+                sensors = sensorRepository.findAllPublished();
+            else
+                sensors = sensorRepository.findAllPublishedInRadius(latitude, longitude, radius);
+        } else {
+            if (radius == 0)
+                sensors = sensorRepository.findAll();
+            else
+                sensors = sensorRepository.findAllInRadius(latitude, longitude, radius);
+        }
+        sensors.forEach(sensor ->
+                sensor.setActive(sensor.getLastMeasurementTimestamp() > System.currentTimeMillis() -
+                        ConstantUtils.MINUTES_UNTIL_INACTIVITY * 60 * 1000)
+        );
+        return sensors;
+    }
+
+    private void retrieveCountryCityFromCoordinates(Sensor sensor) {
         // Retrieve country and city from latitude and longitude
         try {
             String url = "https://maps.googleapis.com/maps/api/geocode/json?key=" + Credentials.GOOGLE_API_KEY + "&latlng="
