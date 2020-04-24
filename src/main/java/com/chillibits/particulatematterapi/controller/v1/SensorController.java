@@ -12,7 +12,6 @@ import com.chillibits.particulatematterapi.model.db.main.User;
 import com.chillibits.particulatematterapi.model.dto.SensorCompressedDto;
 import com.chillibits.particulatematterapi.model.dto.SensorDto;
 import com.chillibits.particulatematterapi.model.io.MapsPlaceResult;
-import com.chillibits.particulatematterapi.model.io.SyncPackage;
 import com.chillibits.particulatematterapi.repository.LinkRepository;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
 import com.chillibits.particulatematterapi.repository.UserRepository;
@@ -34,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -80,20 +80,20 @@ public class SensorController {
     @RequestMapping(method = RequestMethod.GET, path = "/sensor/{chipId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns info for a specific sensor")
     public SensorDto getSingleSensor(@PathVariable long chipId) {
-        return convertToDto(sensorRepository.findById(chipId).orElse(null));
+        return sensorRepository.findById(chipId).map(this::convertToDto).orElse(null);
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/sensor/sync", produces = MediaType.APPLICATION_JSON_VALUE)
+    /*@RequestMapping(method = RequestMethod.GET, path = "/sensor/sync", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all sensors, registered in the database")
     public List<Sensor> getAllSensorsSync(@RequestBody SyncPackage syncPackage) {
         return null;
-    }
+    }*/
 
     @RequestMapping(method = RequestMethod.POST, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Adds a sensor to the database")
     public Sensor addSensor(@RequestBody Sensor sensor) throws SensorDataException {
         // Extract requesting user
-        User user = (User) sensor.getUserLinks().toArray()[0];
+        User user = Arrays.asList(sensor.getUserLinks().toArray(new Link[0])).get(0).user;
         // Check for possible faulty data parameters
         if(sensorRepository.existsById(sensor.getChipId())) throw new SensorDataException(ErrorCodeUtils.SENSOR_ALREADY_EXISTS);
         if(!mongoTemplate.getCollectionNames().contains(String.valueOf(sensor.getChipId()))) throw new SensorDataException(ErrorCodeUtils.NO_DATA_RECORDS);

@@ -42,7 +42,6 @@
     -   Update a sensor that already exists in the database
     -   Get all sensors
     -   Delete a sensor from the database
-    -   Get sensor sync package (Used to reduce transmission capacity)
 
 -   Stats endpoint
     -   Get stats about the api

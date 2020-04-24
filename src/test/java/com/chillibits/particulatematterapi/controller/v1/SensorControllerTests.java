@@ -32,10 +32,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.Matchers.anyLong;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("logging")
@@ -45,7 +48,12 @@ public class SensorControllerTests {
     private SensorController sensorController;
     @MockBean
     private SensorRepository sensorRepository;
+    @MockBean
+    private UserRepository userRepository;
+    @MockBean
+    private MongoTemplate template;
 
+    private final List<Sensor> testData = getTestData();
     private final List<SensorDto> assData = getAssertData();
     private final List<SensorCompressedDto> compAssData = getAssertDataCompressed();
 
@@ -53,11 +61,7 @@ public class SensorControllerTests {
     static class EmployeeServiceImplTestContextConfiguration {
 
         @MockBean
-        private UserRepository userRepository;
-        @MockBean
         private LinkRepository linkRepository;
-        @MockBean
-        private MongoTemplate template;
 
         @Bean
         public SensorController sensorController() {
@@ -72,8 +76,6 @@ public class SensorControllerTests {
 
     @Before
     public void init() {
-        List<Sensor> testData = getTestData();
-
         // Setup fake method calls
         Mockito.when(sensorRepository.findAll())
                 .thenReturn(testData);
@@ -83,6 +85,19 @@ public class SensorControllerTests {
                 .thenReturn(Arrays.asList(testData.get(0), testData.get(2), testData.get(4)));
         Mockito.when(sensorRepository.findAllPublishedInRadius(0, 0, 100))
                 .thenReturn(Collections.singletonList(testData.get(4)));
+        Mockito.when(sensorRepository.findById(testData.get(0).getChipId()))
+                .thenReturn(Optional.ofNullable(testData.get(0)));
+        Mockito.when(sensorRepository.save(Mockito.any(Sensor.class)))
+                .then(returnsFirstArg());
+        Mockito.when(sensorRepository.existsById(anyLong()))
+                .thenReturn(false);
+        Mockito.when(sensorRepository.existsById(testData.get(2).getChipId()))
+                .thenReturn(true);
+        Mockito.when(template.getCollectionNames())
+                .thenReturn(new HashSet<>(Collections.singletonList(String.valueOf(testData.get(1).getChipId()))));
+        Mockito.when(userRepository.existsById(
+                Arrays.asList(testData.get(1).getUserLinks().toArray(new Link[0])).get(0).user.getId()))
+                .thenReturn(true);
     }
 
     // --------------------------------------- Get sensor uncompressed -------------------------------------------------
@@ -123,9 +138,7 @@ public class SensorControllerTests {
         );
 
         String expectedMessage = new SensorDataException(ErrorCodeUtils.INVALID_RADIUS).getMessage();
-        String actualMessage = exception.getMessage();
-
-        assertEquals(actualMessage, expectedMessage);
+        assertEquals(exception.getMessage(), expectedMessage);
     }
 
     // ---------------------------------------- Get sensor compressed --------------------------------------------------
@@ -166,9 +179,40 @@ public class SensorControllerTests {
         );
 
         String expectedMessage = new SensorDataException(ErrorCodeUtils.INVALID_RADIUS).getMessage();
-        String actualMessage = exception.getMessage();
+        assertEquals(exception.getMessage(), expectedMessage);
+    }
 
-        assertEquals(actualMessage, expectedMessage);
+    // -------------------------------------------- Single sensor ------------------------------------------------------
+
+    @Test
+    public void testGetSingleSensor() {
+        SensorDto result = sensorController.getSingleSensor(testData.get(0).getChipId());
+        assertThat(result).isEqualTo(assData.get(0));
+    }
+
+    @Test
+    public void testGetSingleSensorNull() {
+        SensorDto result = sensorController.getSingleSensor(-1);
+        assertThat(result).isNull();
+    }
+
+    // --------------------------------------------- Add sensor --------------------------------------------------------
+
+    @Test
+    public void testAddSensor() throws SensorDataException {
+        Sensor result = sensorController.addSensor(testData.get(1));
+        assertThat(result).isEqualTo(testData.get(1));
+    }
+
+    @Test
+    public void testAddSensorExceptionAlreadyExists() {
+        // Try with invalid radius input
+        Exception exception = assertThrows(SensorDataException.class, () ->
+                sensorController.addSensor(testData.get(2))
+        );
+
+        String expectedMessage = new SensorDataException(ErrorCodeUtils.SENSOR_ALREADY_EXISTS).getMessage();
+        assertEquals(exception.getMessage(), expectedMessage);
     }
 
     // -------------------------------------------------- Test data ----------------------------------------------------

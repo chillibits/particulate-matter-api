@@ -30,7 +30,7 @@ public class Link {
     @ManyToOne
     @JoinColumn(name = "user_id")
     @MapsId("user_id")
-    private User user;
+    public User user;
 
     @ManyToOne
     @JoinColumn(name = "sensor_id")
