@@ -96,6 +96,7 @@ public class SensorController {
         User user = Arrays.asList(sensor.getUserLinks().toArray(new Link[0])).get(0).user;
         // Check for possible faulty data parameters
         if(sensorRepository.existsById(sensor.getChipId())) throw new SensorDataException(ErrorCodeUtils.SENSOR_ALREADY_EXISTS);
+        System.out.println("Array: " + mongoTemplate.getCollectionNames());
         if(!mongoTemplate.getCollectionNames().contains(String.valueOf(sensor.getChipId()))) throw new SensorDataException(ErrorCodeUtils.NO_DATA_RECORDS);
         if(!userRepository.existsById(user.getId())) throw new SensorDataException(ErrorCodeUtils.CANNOT_ASSIGN_TO_USER);
         validateSensorObject(sensor);

@@ -52,7 +52,7 @@ public class UserController {
     @ApiOperation(value = "Adds an user to the database")
     public User addUser(@RequestBody User user) throws UserDataException {
         // Validity checks
-        if(userRepository.existsById(user.getId())) return null;
+        if(userRepository.findByEmail(user.getEmail()).isPresent()) return null; // User already exists
         validateUserObject(user);
         // Add additional information to user object
         long currentTimestamp = System.currentTimeMillis();

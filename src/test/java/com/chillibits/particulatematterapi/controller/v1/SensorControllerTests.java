@@ -51,7 +51,7 @@ public class SensorControllerTests {
     @MockBean
     private UserRepository userRepository;
     @MockBean
-    private MongoTemplate template;
+    private MongoTemplate mongoTemplate;
 
     private final List<Sensor> testData = getTestData();
     private final List<SensorDto> assData = getAssertData();
@@ -93,7 +93,12 @@ public class SensorControllerTests {
                 .thenReturn(false);
         Mockito.when(sensorRepository.existsById(testData.get(2).getChipId()))
                 .thenReturn(true);
-        Mockito.when(template.getCollectionNames())
+        Mockito.when(mongoTemplate.getCollectionNames())
+                .thenReturn(new HashSet<>(Arrays.asList(
+                        String.valueOf(testData.get(0).getChipId()),
+                        String.valueOf(testData.get(4).getChipId())
+                )));
+        Mockito.when(mongoTemplate.getCollectionNames())
                 .thenReturn(new HashSet<>(Collections.singletonList(String.valueOf(testData.get(1).getChipId()))));
         Mockito.when(userRepository.existsById(
                 Arrays.asList(testData.get(1).getUserLinks().toArray(new Link[0])).get(0).user.getId()))
@@ -132,13 +137,13 @@ public class SensorControllerTests {
 
     @Test
     public void testGetAllSensorsInvalidRadius() {
-        // Try with invalid radius input
+        // Try with invalid input
         Exception exception = assertThrows(SensorDataException.class, () ->
                 sensorController.getAllSensors(0, 0, -100, false)
         );
 
         String expectedMessage = new SensorDataException(ErrorCodeUtils.INVALID_RADIUS).getMessage();
-        assertEquals(exception.getMessage(), expectedMessage);
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     // ---------------------------------------- Get sensor compressed --------------------------------------------------
@@ -173,13 +178,13 @@ public class SensorControllerTests {
 
     @Test
     public void testGetAllSensorsInvalidRadiusCompressed() {
-        // Try with invalid radius input
+        // Try with invalid input
         Exception exception = assertThrows(SensorDataException.class, () ->
                 sensorController.getAllSensorsCompressed(0, 0, -100, false)
         );
 
         String expectedMessage = new SensorDataException(ErrorCodeUtils.INVALID_RADIUS).getMessage();
-        assertEquals(exception.getMessage(), expectedMessage);
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     // -------------------------------------------- Single sensor ------------------------------------------------------
@@ -187,7 +192,7 @@ public class SensorControllerTests {
     @Test
     public void testGetSingleSensor() {
         SensorDto result = sensorController.getSingleSensor(testData.get(0).getChipId());
-        assertThat(result).isEqualTo(assData.get(0));
+        assertEquals(assData.get(0), result);
     }
 
     @Test
@@ -202,18 +207,41 @@ public class SensorControllerTests {
     public void testAddSensor() throws SensorDataException {
         Sensor result = sensorController.addSensor(testData.get(1));
         assertThat(result).isEqualTo(testData.get(1));
+        assertEquals(testData.get(1), result);
     }
 
     @Test
     public void testAddSensorExceptionAlreadyExists() {
-        // Try with invalid radius input
+        // Try with invalid input
         Exception exception = assertThrows(SensorDataException.class, () ->
                 sensorController.addSensor(testData.get(2))
         );
 
         String expectedMessage = new SensorDataException(ErrorCodeUtils.SENSOR_ALREADY_EXISTS).getMessage();
-        assertEquals(exception.getMessage(), expectedMessage);
+        assertEquals(expectedMessage, exception.getMessage());
     }
+
+    @Test
+    public void testAddSensorExceptionNoDataRecords() {
+        // Try with invalid input
+        Exception exception = assertThrows(SensorDataException.class, () ->
+                sensorController.addSensor(testData.get(3))
+        );
+
+        String expectedMessage = new SensorDataException(ErrorCodeUtils.NO_DATA_RECORDS).getMessage();
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    /*@Test
+    public void testAddSensorExceptionCannotAssignToUser() {
+        // Try with invalid input
+        Exception exception = assertThrows(SensorDataException.class, () ->
+                sensorController.addSensor(testData.get(4))
+        );
+
+        String expectedMessage = new SensorDataException(ErrorCodeUtils.CANNOT_ASSIGN_TO_USER).getMessage();
+        assertEquals(expectedMessage, exception.getMessage());
+    }*/
 
     // -------------------------------------------------- Test data ----------------------------------------------------
 
