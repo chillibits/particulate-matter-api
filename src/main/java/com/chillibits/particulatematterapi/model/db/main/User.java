@@ -4,7 +4,8 @@
 
 package com.chillibits.particulatematterapi.model.db.main;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
+@JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class User {
     // Constants
     public static final int ACTIVE = 1;
@@ -38,7 +40,6 @@ public class User {
     // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonManagedReference
     private int id;
     private String firstName;
     private String lastName;

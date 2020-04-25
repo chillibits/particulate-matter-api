@@ -9,16 +9,16 @@
 *Attention: This repository is still in development. Up to now, there's no stable API version.*
 
 ## Features
--   Chart endpoint
+-   **Chart endpoint**
     -   Get chart from single sensor in a specific time span
     -   Get chart from country average in a specific time span with a certain period
     -   Get chart from city average in a specific time span with a certain period
 
--   Client endpoint
+-   **Client endpoint**
     -   Get all clients, which are registered in the system
     -   Get information about a single client by its name
 
--   Data endpoint
+-   **Data endpoint**
     -   Get data records from single sensor in a specific time span
     -   Get data records from single sensor in a specific time span in a compressed form to reduce transmission capacity
     -   Get the latest data record from single sensor
@@ -28,25 +28,25 @@
     -   Get data records from city in a specific time span
     -   Get average out of the latest data records of sensors within a specific city
 
--   Push endpoint
+-   **Push endpoint**
     -   Endpoint for data transmissions (more details in the section 'push endpoint')
 
--   Ranking endpoint
+-   **Ranking endpoint**
     -   Get ranking by country
     -   Get ranking by country in a compressed form
     -   Get ranking by city
     -   Get ranking by city in a compressed form
 
--   Sensor endpoint
+-   **Sensor endpoint**
     -   Add a sensor to the database
     -   Update a sensor that already exists in the database
     -   Get all sensors
     -   Delete a sensor from the database
 
--   Stats endpoint
+-   **Stats endpoint**
     -   Get stats about the api
 
--   User endpoint
+-   **User endpoint**
     -   Add user to the database
     -   Update an existing user
     -   Get user by its email

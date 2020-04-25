@@ -44,15 +44,14 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET, path = "/user/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns details for one specific user")
     public UserDto getUserByEmail(@PathVariable("email") String email) {
-        User user = userRepository.findByEmail(email).orElse(null);
-        return convertToDto(user);
+        return convertToDto(userRepository.getUserByEmail(email));
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, path = "/user", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Adds an user to the database")
     public User addUser(@RequestBody User user) throws UserDataException {
         // Validity checks
-        if(userRepository.findByEmail(user.getEmail()).isPresent()) return null; // User already exists
+        if(userRepository.getUserByEmail(user.getEmail()) != null) return null; // User already exists
         validateUserObject(user);
         // Add additional information to user object
         long currentTimestamp = System.currentTimeMillis();

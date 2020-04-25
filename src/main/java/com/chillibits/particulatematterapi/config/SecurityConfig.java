@@ -61,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/link").hasAuthority(Client.ROLE_APPLICATION)
                 .antMatchers(HttpMethod.DELETE, "/link").hasAuthority(Client.ROLE_APPLICATION)
                 // Log endpoint
-                .antMatchers(HttpMethod.GET, "/log/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/log/**").hasAuthority(Client.ROLE_APPLICATION_ADMIN)
                 // Stats endpoint
                 .antMatchers("/stats").permitAll()
                 .and().csrf().disable()
