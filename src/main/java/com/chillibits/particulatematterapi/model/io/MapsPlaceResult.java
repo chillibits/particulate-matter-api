@@ -11,8 +11,8 @@ import java.util.Arrays;
 
 public class MapsPlaceResult {
     // Constants
-    private final String UNKNOWN_COUNTRY = "Unknown country";
-    private final String UNKNOWN_CITY = "Unknown city";
+    public static  final String UNKNOWN_COUNTRY = "Unknown country";
+    public static final String UNKNOWN_CITY = "Unknown city";
 
     // Variables as objects
     public PlusCode plus_code;

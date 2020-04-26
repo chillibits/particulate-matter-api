@@ -92,14 +92,10 @@ public class SensorController {
     @RequestMapping(method = RequestMethod.POST, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Adds a sensor to the database")
     public Sensor addSensor(@RequestBody Sensor sensor) throws SensorDataException {
-        // Extract requesting user
-        User user = Arrays.asList(sensor.getUserLinks().toArray(new Link[0])).get(0).user;
         // Check for possible faulty data parameters
         if(sensorRepository.existsById(sensor.getChipId())) throw new SensorDataException(ErrorCodeUtils.SENSOR_ALREADY_EXISTS);
-        System.out.println("Array: " + mongoTemplate.getCollectionNames());
         if(!mongoTemplate.getCollectionNames().contains(String.valueOf(sensor.getChipId()))) throw new SensorDataException(ErrorCodeUtils.NO_DATA_RECORDS);
-        if(!userRepository.existsById(user.getId())) throw new SensorDataException(ErrorCodeUtils.CANNOT_ASSIGN_TO_USER);
-        validateSensorObject(sensor);
+        User user = validateSensorObject(sensor);
 
         long currentTimestamp = System.currentTimeMillis();
 
@@ -128,6 +124,10 @@ public class SensorController {
     @RequestMapping(method = RequestMethod.PUT, path = "/sensor", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates a sensor")
     public Integer updateSensor(@RequestBody Sensor sensor) throws SensorDataException {
+        // Check for possible faulty data parameters
+        if(sensorRepository.existsById(sensor.getChipId())) throw new SensorDataException(ErrorCodeUtils.SENSOR_ALREADY_EXISTS);
+        System.out.println("Array: " + mongoTemplate.getCollectionNames());
+        if(!mongoTemplate.getCollectionNames().contains(String.valueOf(sensor.getChipId()))) throw new SensorDataException(ErrorCodeUtils.NO_DATA_RECORDS);
         validateSensorObject(sensor);
 
         retrieveCountryCityFromCoordinates(sensor);
@@ -195,8 +195,12 @@ public class SensorController {
         return mapper.map(sensor, SensorCompressedDto.class);
     }
 
-    private void validateSensorObject(Sensor sensor) throws SensorDataException {
+    private User validateSensorObject(Sensor sensor) throws SensorDataException {
+        // Extract requesting user
+        User user = Arrays.asList(sensor.getUserLinks().toArray(new Link[0])).get(0).user;
+        if(!userRepository.existsById(user.getId())) throw new SensorDataException(ErrorCodeUtils.CANNOT_ASSIGN_TO_USER);
         if(sensor.getGpsLatitude() == 0 && sensor.getGpsLongitude() == 0) throw new SensorDataException(ErrorCodeUtils.INVALID_GPS_COORDINATES);
         if(sensor.getGpsLatitude() == 200 && sensor.getGpsLongitude() == 200) throw new SensorDataException(ErrorCodeUtils.INVALID_GPS_COORDINATES);
+        return user;
     }
 }
