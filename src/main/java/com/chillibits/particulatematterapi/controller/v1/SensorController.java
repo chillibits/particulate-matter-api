@@ -126,7 +126,6 @@ public class SensorController {
     public Integer updateSensor(@RequestBody Sensor sensor) throws SensorDataException {
         // Check for possible faulty data parameters
         if(sensorRepository.existsById(sensor.getChipId())) throw new SensorDataException(ErrorCodeUtils.SENSOR_ALREADY_EXISTS);
-        System.out.println("Array: " + mongoTemplate.getCollectionNames());
         if(!mongoTemplate.getCollectionNames().contains(String.valueOf(sensor.getChipId()))) throw new SensorDataException(ErrorCodeUtils.NO_DATA_RECORDS);
         validateSensorObject(sensor);
 
