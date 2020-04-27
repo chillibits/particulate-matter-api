@@ -10,6 +10,7 @@ public class UserDataException extends Exception {
     // Error description list
     private static final HashMap<Integer, String> descriptions = new HashMap<>() {{
         put(ErrorCodeUtils.INVALID_USER_DATA, "Please provide an user object with all fields filled");
+        put(ErrorCodeUtils.USER_ALREADY_EXISTS, "This user already exists");
     }};
 
     public UserDataException(int errorCode) {

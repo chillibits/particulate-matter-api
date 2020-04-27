@@ -107,8 +107,6 @@ public class SensorControllerTests {
     public void testGetAllSensors() throws SensorDataException {
         // Get all sensors
         List<SensorDto> result = sensorController.getAllSensors(0, 0, 0, false);
-        //assertThat(result).containsExactlyInAnyOrder(assData.get(0), assData.get(1), assData.get(2), assData.get(3),
-                //assData.get(4), assData.get(5), assData.get(6), assData.get(7));
         assertThat(result).containsExactlyInAnyOrder(assData.toArray(SensorDto[]::new));
     }
 
@@ -269,8 +267,8 @@ public class SensorControllerTests {
     @Test
     @DisplayName("Test for updating a sensor successfully")
     public void testUpdateSensor() throws SensorDataException {
-        Integer result = sensorController.updateSensor(testData.get(6));
-        assertThat(result).isEqualTo(1);
+        int result = sensorController.updateSensor(testData.get(6));
+        assertEquals(1, result);
     }
 
     @Test

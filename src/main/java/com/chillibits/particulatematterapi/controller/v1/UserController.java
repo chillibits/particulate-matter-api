@@ -14,11 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,14 +40,15 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET, path = "/user/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns details for one specific user")
     public UserDto getUserByEmail(@PathVariable("email") String email) {
-        return convertToDto(userRepository.getUserByEmail(email));
+        if(email == null) return null;
+        return convertToDto(userRepository.findByEmail(email));
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/user", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Adds an user to the database")
     public User addUser(@RequestBody User user) throws UserDataException {
         // Validity checks
-        if(userRepository.getUserByEmail(user.getEmail()) != null) return null; // User already exists
+        if(userRepository.findByEmail(user.getEmail()) != null) throw new UserDataException(ErrorCodeUtils.USER_ALREADY_EXISTS);
         validateUserObject(user);
         // Add additional information to user object
         long currentTimestamp = System.currentTimeMillis();

@@ -35,6 +35,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("logging")
+@DisplayName("Client Controller")
 public class ClientControllerTests {
 
     @Autowired
@@ -123,8 +124,8 @@ public class ClientControllerTests {
     @Test
     @DisplayName("Test for updating a client successfully")
     public void testUpdateClient() throws ClientDataException {
-        Integer result = clientController.updateClient(testData.get(1));
-        assertThat(result).isEqualTo(1);
+        int result = clientController.updateClient(testData.get(1));
+        assertEquals(1, result);
     }
 
     @Test
