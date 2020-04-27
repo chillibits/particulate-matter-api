@@ -18,6 +18,7 @@ import com.chillibits.particulatematterapi.repository.UserRepository;
 import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
@@ -40,6 +41,7 @@ import static org.mockito.ArgumentMatchers.*;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("logging")
+@DisplayName("Sensor Controller")
 public class SensorControllerTests {
 
     @Autowired
@@ -56,7 +58,7 @@ public class SensorControllerTests {
     private final List<SensorCompressedDto> compAssData = getAssertDataCompressed();
 
     @TestConfiguration
-    static class EmployeeServiceImplTestContextConfiguration {
+    static class SensorControllerImplTestContextConfiguration {
 
         @MockBean
         private LinkRepository linkRepository;
@@ -101,14 +103,17 @@ public class SensorControllerTests {
     // --------------------------------------- Get sensor uncompressed -------------------------------------------------
 
     @Test
+    @DisplayName("Test for getting all sensors successfully")
     public void testGetAllSensors() throws SensorDataException {
         // Get all sensors
         List<SensorDto> result = sensorController.getAllSensors(0, 0, 0, false);
-        assertThat(result).containsExactlyInAnyOrder(assData.get(0), assData.get(1), assData.get(2), assData.get(3),
-                assData.get(4), assData.get(5), assData.get(6), assData.get(7));
+        //assertThat(result).containsExactlyInAnyOrder(assData.get(0), assData.get(1), assData.get(2), assData.get(3),
+                //assData.get(4), assData.get(5), assData.get(6), assData.get(7));
+        assertThat(result).containsExactlyInAnyOrder(assData.toArray(SensorDto[]::new));
     }
 
     @Test
+    @DisplayName("Test for getting all published sensors successfully")
     public void testGetOnlyPublishedSensors() throws SensorDataException {
         // Get only published sensors
         List<SensorDto> result = sensorController.getAllSensors(0, 0, 0, true);
@@ -116,6 +121,7 @@ public class SensorControllerTests {
     }
 
     @Test
+    @DisplayName("Test for getting all sensors in a specific radius successfully")
     public void testGetAllSensorsInRadius() throws SensorDataException {
         // Get sensors within radius
         List<SensorDto> result = sensorController.getAllSensors(0, 0, 100, false);
@@ -123,6 +129,7 @@ public class SensorControllerTests {
     }
 
     @Test
+    @DisplayName("Test for getting all published sensors in a specific radius successfully")
     public void testGetOnlyPublishedSensorsInRadius() throws SensorDataException {
         // Get only published sensors within radius
         List<SensorDto> result = sensorController.getAllSensors(0, 0, 100, true);
@@ -130,6 +137,7 @@ public class SensorControllerTests {
     }
 
     @Test
+    @DisplayName("Test for getting all sensors with invalid radius, triggering a InvalidRadius exception")
     public void testGetAllSensorsInvalidRadius() {
         // Try with invalid input
         Exception exception = assertThrows(SensorDataException.class, () ->
@@ -143,6 +151,7 @@ public class SensorControllerTests {
     // ---------------------------------------- Get sensor compressed --------------------------------------------------
 
     @Test
+    @DisplayName("Test for getting all sensors successfully in a compressed form")
     public void testGetAllSensorsCompressed() throws SensorDataException {
         // Get all sensors
         List<SensorCompressedDto> result = sensorController.getAllSensorsCompressed(0, 0, 0, false);
@@ -151,6 +160,7 @@ public class SensorControllerTests {
     }
 
     @Test
+    @DisplayName("Test for getting all published sensors successfully in a compressed form")
     public void testGetOnlyPublishedSensorsCompressed() throws SensorDataException {
         // Get only published sensors
         List<SensorCompressedDto> result = sensorController.getAllSensorsCompressed(0, 0, 0, true);
@@ -158,6 +168,7 @@ public class SensorControllerTests {
     }
 
     @Test
+    @DisplayName("Test for getting all sensors in a specific radius successfully in a compressed form")
     public void testGetAllSensorsInRadiusCompressed() throws SensorDataException {
         // Get sensors within radius
         List<SensorCompressedDto> result = sensorController.getAllSensorsCompressed(0, 0, 100, false);
@@ -165,6 +176,7 @@ public class SensorControllerTests {
     }
 
     @Test
+    @DisplayName("Test for getting all published sensors in a specific radius successfully in a compressed form")
     public void testGetOnlyPublishedSensorsInRadiusCompressed() throws SensorDataException {
         // Get only published sensors within radius
         List<SensorCompressedDto> result = sensorController.getAllSensorsCompressed(0, 0, 100, true);
@@ -172,6 +184,7 @@ public class SensorControllerTests {
     }
 
     @Test
+    @DisplayName("Test for getting all compressed sensors with invalid radius, triggering a InvalidRadius exception")
     public void testGetAllSensorsInvalidRadiusCompressed() {
         // Try with invalid input
         Exception exception = assertThrows(SensorDataException.class, () ->
@@ -185,12 +198,14 @@ public class SensorControllerTests {
     // -------------------------------------------- Single sensor ------------------------------------------------------
 
     @Test
+    @DisplayName("Test for getting a single sensor successfully")
     public void testGetSingleSensor() {
         SensorDto result = sensorController.getSingleSensor(testData.get(0).getChipId());
         assertEquals(assData.get(0), result);
     }
 
     @Test
+    @DisplayName("Test for getting a single sensor with an invalid chip id")
     public void testGetSingleSensorNull() {
         SensorDto result = sensorController.getSingleSensor(-1);
         assertThat(result).isNull();
@@ -199,13 +214,15 @@ public class SensorControllerTests {
     // --------------------------------------------- Add sensor --------------------------------------------------------
 
     @Test
+    @DisplayName("Test for adding a sensor successfully")
     public void testAddSensor() throws SensorDataException {
         Sensor result = sensorController.addSensor(testData.get(1));
         assertEquals(testData.get(1), result);
     }
 
     @Test
-    public void testAddSensorExceptionAlreadyExists() {
+    @DisplayName("Test for adding a sensor, triggering a SensorAlreadyExists exception")
+    public void testAddSensorExceptionSensorAlreadyExists() {
         // Try with invalid input
         Exception exception = assertThrows(SensorDataException.class, () ->
                 sensorController.addSensor(testData.get(2))
@@ -216,6 +233,7 @@ public class SensorControllerTests {
     }
 
     @Test
+    @DisplayName("Test for adding a sensor, triggering a NoDataRecords exception")
     public void testAddSensorExceptionNoDataRecords() {
         // Try with invalid input
         Exception exception = assertThrows(SensorDataException.class, () ->
@@ -227,6 +245,7 @@ public class SensorControllerTests {
     }
 
     @Test
+    @DisplayName("Test for adding a sensor, triggering a CannotAssignToUser exception")
     public void testAddSensorExceptionCannotAssignToUser() {
         // Try with invalid input
         Exception exception = assertThrows(SensorDataException.class, () ->
@@ -238,6 +257,7 @@ public class SensorControllerTests {
     }
 
     @Test
+    @DisplayName("Test for adding a sensor with blank country and city")
     public void testAddSensorBlankCountryCity() throws SensorDataException {
         Sensor result = sensorController.addSensor(testData.get(5));
         assertThat(result).hasFieldOrPropertyWithValue("country", MapsPlaceResult.UNKNOWN_COUNTRY);
@@ -247,12 +267,14 @@ public class SensorControllerTests {
     // ------------------------------------------- Update sensor -------------------------------------------------------
 
     @Test
+    @DisplayName("Test for updating a sensor successfully")
     public void testUpdateSensor() throws SensorDataException {
         Integer result = sensorController.updateSensor(testData.get(6));
         assertThat(result).isEqualTo(1);
     }
 
     @Test
+    @DisplayName("Test for updating a sensor, triggering a SensorNotExisting exception")
     public void testUpdateSensorExceptionSensorNotExisting() {
         // Try with invalid input
         Exception exception = assertThrows(SensorDataException.class, () ->
@@ -264,6 +286,7 @@ public class SensorControllerTests {
     }
 
     @Test
+    @DisplayName("Test for updating a sensor, triggering a CannotAssignToUser exception")
     public void testUpdateSensorExceptionCannotAssignToUser() {
         // Try with invalid input
         Exception exception = assertThrows(SensorDataException.class, () ->
@@ -277,6 +300,7 @@ public class SensorControllerTests {
     // ------------------------------------------- Delete sensor -------------------------------------------------------
 
     @Test
+    @DisplayName("Test for deleting a sensor successfully")
     public void testDeleteSensor() throws SensorDataException {
         assertDoesNotThrow(() -> sensorController.deleteSensor(testData.get(7).getChipId()));
     }
@@ -322,7 +346,7 @@ public class SensorControllerTests {
     }
 
     private List<SensorDto> getAssertData() {
-        // Create sensor objects
+        // Create sensor dto objects
         SensorDto sd1 = new SensorDto(1234567, "2020-01", 0, "No notes", 0.0, 0.0, 0, "Germany", "Berlin", false, true);
         SensorDto sd2 = new SensorDto(12345678, "2020-02", 0, "", 10.0, 30.0, 50, "Germany", "Stuttgart", true, false);
         SensorDto sd3 = new SensorDto(123456, "2020-03", 0, "Test", 20.0, 90.0, 30, "India", "Agra", true, true);

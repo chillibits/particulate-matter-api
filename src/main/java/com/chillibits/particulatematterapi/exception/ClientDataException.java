@@ -9,6 +9,7 @@ import java.util.HashMap;
 public class ClientDataException extends Exception {
     // Error description list
     private static final HashMap<Integer, String> descriptions = new HashMap<>() {{
+        put(ErrorCodeUtils.CLIENT_NOT_EXISTING, "This client does not exist");
         put(ErrorCodeUtils.INVALID_CLIENT_DATA, "Please provide a client object with all fields filled");
     }};
 

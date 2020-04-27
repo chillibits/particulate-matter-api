@@ -14,11 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,26 +31,28 @@ public class ClientController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/client", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all client objects, found in the database")
-    public List<ClientDto> getClientInfo() {
+    public List<ClientDto> getAllClients() {
         return clientRepository.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/client/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns info about a specific client, identified by its name")
-    public ClientDto getClientInfoByName(@PathVariable("name") String name) {
+    public ClientDto getClientInfoByName(@PathVariable("name") String name) throws ClientDataException {
         Optional<Client> client = clientRepository.findByName(name);
+        if(client.isEmpty()) throw new ClientDataException(ErrorCodeUtils.CLIENT_NOT_EXISTING);
         return client.map(this::convertToDto).orElse(null);
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/client", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Adds a client object", hidden = true)
-    public Client addClientInfo(@RequestBody Client client) {
+    public Client addClient(@RequestBody Client client) throws ClientDataException {
+        validateClientObject(client);
         return clientRepository.save(client);
     }
 
     @RequestMapping(method = RequestMethod.PUT, path = "/client", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates a specific client object", hidden = true)
-    public Integer updateClientInfoAndroid(@RequestBody Client client) throws ClientDataException {
+    public Integer updateClient(@RequestBody Client client) throws ClientDataException {
         validateClientObject(client);
         return clientRepository.updateClient(client);
     }

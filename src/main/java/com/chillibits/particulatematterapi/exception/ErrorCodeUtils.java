@@ -6,7 +6,8 @@ package com.chillibits.particulatematterapi.exception;
 
 public class ErrorCodeUtils {
     // Client errors (1xx)
-    public static final int INVALID_CLIENT_DATA = 100;
+    public static final int CLIENT_NOT_EXISTING = 100;
+    public static final int INVALID_CLIENT_DATA = 101;
 
     // Data errors (2xx)
     public static final int INVALID_TIME_RANGE_DATA = 200;
