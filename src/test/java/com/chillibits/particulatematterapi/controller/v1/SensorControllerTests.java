@@ -29,20 +29,14 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyDouble;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("logging")
@@ -81,22 +75,16 @@ public class SensorControllerTests {
     @Before
     public void init() {
         // Setup fake method calls
-        Mockito.when(sensorRepository.findAll())
-                .thenReturn(testData);
-        Mockito.when(sensorRepository.findAllInRadius(0, 0, 100))
-                .thenReturn(Arrays.asList(testData.get(1), testData.get(3), testData.get(4)));
-        Mockito.when(sensorRepository.findAllPublished())
-                .thenReturn(Arrays.asList(testData.get(0), testData.get(2), testData.get(4)));
-        Mockito.when(sensorRepository.findAllPublishedInRadius(0, 0, 100))
-                .thenReturn(Collections.singletonList(testData.get(4)));
-        Mockito.when(sensorRepository.findById(testData.get(0).getChipId()))
-                .thenReturn(Optional.ofNullable(testData.get(0)));
-        Mockito.when(sensorRepository.save(Mockito.any(Sensor.class)))
-                .then(returnsFirstArg());
-        Mockito.when(sensorRepository.existsById(anyLong()))
-                .thenReturn(false);
-        Mockito.when(sensorRepository.existsById(testData.get(2).getChipId()))
-                .thenReturn(true);
+        Mockito.when(sensorRepository.findAll()).thenReturn(testData);
+        Mockito.when(sensorRepository.findAllInRadius(0, 0, 100)).thenReturn(Arrays.asList(testData.get(1), testData.get(3), testData.get(4)));
+        Mockito.when(sensorRepository.findAllPublished()).thenReturn(Arrays.asList(testData.get(0), testData.get(2), testData.get(4)));
+        Mockito.when(sensorRepository.findAllPublishedInRadius(0, 0, 100)).thenReturn(Collections.singletonList(testData.get(4)));
+        Mockito.when(sensorRepository.findById(testData.get(0).getChipId())).thenReturn(Optional.ofNullable(testData.get(0)));
+        Mockito.when(sensorRepository.save(Mockito.any(Sensor.class))).then(returnsFirstArg());
+        Mockito.when(sensorRepository.existsById(anyLong())).thenReturn(false);
+        Mockito.when(sensorRepository.existsById(testData.get(2).getChipId())).thenReturn(true);
+        Mockito.when(sensorRepository.existsById(testData.get(6).getChipId())).thenReturn(true);
+        Mockito.when(sensorRepository.existsById(testData.get(7).getChipId())).thenReturn(true);
         Mockito.when(mongoTemplate.getCollectionNames())
                 .thenReturn(new HashSet<>(Arrays.asList(
                         String.valueOf(testData.get(0).getChipId()),
@@ -104,12 +92,10 @@ public class SensorControllerTests {
                         String.valueOf(testData.get(4).getChipId()),
                         String.valueOf(testData.get(5).getChipId())
                 )));
-        Mockito.when(userRepository.existsById(
-                Arrays.asList(testData.get(1).getUserLinks().toArray(new Link[0])).get(0).user.getId()))
-                .thenReturn(true);
-        Mockito.when(sensorRepository.updateSensor(anyLong(), anyDouble(), anyDouble(), anyString(), anyString(),
-                anyLong(), anyString(), anyBoolean(), anyBoolean()))
-                .thenReturn(1);
+        Mockito.when(userRepository.existsById(anyInt())).thenReturn(true);
+        Mockito.when(userRepository.existsById(Arrays.asList(testData.get(4).getUserLinks().toArray(new Link[0])).get(0).user.getId())).thenReturn(false);
+        Mockito.when(sensorRepository.updateSensor(anyLong(), anyDouble(), anyDouble(), anyString(), anyString(), anyLong(), anyString(), anyBoolean(), anyBoolean())).thenReturn(1);
+        Mockito.doNothing().when(sensorRepository).deleteById(anyLong());
     }
 
     // --------------------------------------- Get sensor uncompressed -------------------------------------------------
@@ -118,7 +104,8 @@ public class SensorControllerTests {
     public void testGetAllSensors() throws SensorDataException {
         // Get all sensors
         List<SensorDto> result = sensorController.getAllSensors(0, 0, 0, false);
-        assertThat(result).containsExactlyInAnyOrder(assData.get(0), assData.get(1), assData.get(2), assData.get(3), assData.get(4), assData.get(5));
+        assertThat(result).containsExactlyInAnyOrder(assData.get(0), assData.get(1), assData.get(2), assData.get(3),
+                assData.get(4), assData.get(5), assData.get(6), assData.get(7));
     }
 
     @Test
@@ -159,7 +146,8 @@ public class SensorControllerTests {
     public void testGetAllSensorsCompressed() throws SensorDataException {
         // Get all sensors
         List<SensorCompressedDto> result = sensorController.getAllSensorsCompressed(0, 0, 0, false);
-        assertThat(result).containsExactlyInAnyOrder(compAssData.get(0), compAssData.get(1), compAssData.get(2), compAssData.get(3), compAssData.get(4), compAssData.get(5));
+        assertThat(result).containsExactlyInAnyOrder(compAssData.get(0), compAssData.get(1), compAssData.get(2),
+                compAssData.get(3), compAssData.get(4), compAssData.get(5), compAssData.get(6), compAssData.get(7));
     }
 
     @Test
@@ -260,19 +248,37 @@ public class SensorControllerTests {
 
     @Test
     public void testUpdateSensor() throws SensorDataException {
-        Integer result = sensorController.updateSensor(testData.get(1));
+        Integer result = sensorController.updateSensor(testData.get(6));
         assertThat(result).isEqualTo(1);
+    }
+
+    @Test
+    public void testUpdateSensorExceptionSensorNotExisting() {
+        // Try with invalid input
+        Exception exception = assertThrows(SensorDataException.class, () ->
+                sensorController.updateSensor(testData.get(2))
+        );
+
+        String expectedMessage = new SensorDataException(ErrorCodeUtils.CANNOT_ASSIGN_TO_USER).getMessage();
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
     public void testUpdateSensorExceptionCannotAssignToUser() {
         // Try with invalid input
         Exception exception = assertThrows(SensorDataException.class, () ->
-                sensorController.updateSensor(testData.get(4))
+                sensorController.updateSensor(testData.get(7))
         );
 
         String expectedMessage = new SensorDataException(ErrorCodeUtils.CANNOT_ASSIGN_TO_USER).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    // ------------------------------------------- Delete sensor -------------------------------------------------------
+
+    @Test
+    public void testDeleteSensor() throws SensorDataException {
+        assertDoesNotThrow(() -> sensorController.deleteSensor(testData.get(7).getChipId()));
     }
 
     // -------------------------------------------------- Test data ----------------------------------------------------
@@ -291,6 +297,8 @@ public class SensorControllerTests {
         Sensor s4 = new Sensor(1234568, null, "2020-04", 0, "This is a test", time - 2 * millisecondsTillInactivity, time, 30.0, 70.0, 10, "Russia", "Moskva", false, false, false);
         Sensor s5 = new Sensor(1234563, null, "2020-05", 0, "", time - 2 * millisecondsTillInactivity, time, 40.0, 80.0, 80, "Ireland", "Dublin", true, true, false);
         Sensor s6 = new Sensor(2439573, null, "2020-06", 0, "", time, time, -1, 0, 1, "Bulgaria", "Sofia", false, true, true);
+        Sensor s7 = new Sensor(24395731, null, "2020-07", 0, "", time, time, -1, 0, 1, "Belgium", "Brussels", true, true, true);
+        Sensor s8 = new Sensor(24395732, null, "2020-08", 0, "", time, time, -1, 0, 1, "Netherlands", "Amsterdam", false, true, true);
         // Create link objects
         Link l1 = new Link(1, u1, s1, true, "Test sensor", 0, time);
         Link l2 = new Link(2, u2, s2, false, "Test", 50, time);
@@ -298,6 +306,8 @@ public class SensorControllerTests {
         Link l4 = new Link(4, u1, s4, true, "Yard", 150, time);
         Link l5 = new Link(5, u3, s5, false, "Garage", 200, time);
         Link l6 = new Link(6, u2, s6, false, "Street", 250, time);
+        Link l7 = new Link(6, u2, s6, false, "", 200, time);
+        Link l8 = new Link(6, u3, s6, false, "", 140, time);
         // Add link to sensor
         s1.setUserLinks(new HashSet<>(Collections.singletonList(l1)));
         s2.setUserLinks(new HashSet<>(Collections.singletonList(l2)));
@@ -305,8 +315,10 @@ public class SensorControllerTests {
         s4.setUserLinks(new HashSet<>(Collections.singletonList(l4)));
         s5.setUserLinks(new HashSet<>(Collections.singletonList(l5)));
         s6.setUserLinks(new HashSet<>(Collections.singletonList(l6)));
+        s7.setUserLinks(new HashSet<>(Collections.singletonList(l7)));
+        s8.setUserLinks(new HashSet<>(Collections.singletonList(l8)));
         // Add them to test data
-        return Arrays.asList(s1, s2, s3, s4, s5, s6);
+        return Arrays.asList(s1, s2, s3, s4, s5, s6, s7, s8);
     }
 
     private List<SensorDto> getAssertData() {
@@ -317,8 +329,11 @@ public class SensorControllerTests {
         SensorDto sd4 = new SensorDto(1234568, "2020-04", 0, "This is a test", 30.0, 70.0, 10, "Russia", "Moskva", false, false);
         SensorDto sd5 = new SensorDto(1234563, "2020-05", 0, "", 40.0, 80.0, 80, "Ireland", "Dublin", true, true);
         SensorDto sd6 = new SensorDto(2439573, "2020-06", 0, "", -1, 0, 1, "Bulgaria", "Sofia", false, true);
+        SensorDto sd7 = new SensorDto(24395731, "2020-07", 0, "", -1, 0, 1, "Belgium", "Brussels", true, true);
+        SensorDto sd8 = new SensorDto(24395732, "2020-08", 0, "", -1, 0, 1, "Netherlands", "Amsterdam", false, true);
+
         // Add them to test data
-        return Arrays.asList(sd1, sd2, sd3, sd4, sd5, sd6);
+        return Arrays.asList(sd1, sd2, sd3, sd4, sd5, sd6, sd7, sd8);
     }
 
     private List<SensorCompressedDto> getAssertDataCompressed() {
@@ -329,7 +344,9 @@ public class SensorControllerTests {
         SensorCompressedDto scd4 = new SensorCompressedDto(1234568, 30.0, 70.0, false);
         SensorCompressedDto scd5 = new SensorCompressedDto(1234563, 40.0, 80.0, false);
         SensorCompressedDto scd6 = new SensorCompressedDto(2439573, -1, 0, true);
+        SensorCompressedDto scd7 = new SensorCompressedDto(24395731, -1, 0, true);
+        SensorCompressedDto scd8 = new SensorCompressedDto(24395732, -1, 0, true);
         // Add them to test data
-        return Arrays.asList(scd1, scd2, scd3, scd4, scd5, scd6);
+        return Arrays.asList(scd1, scd2, scd3, scd4, scd5, scd6, scd7, scd8);
     }
 }
