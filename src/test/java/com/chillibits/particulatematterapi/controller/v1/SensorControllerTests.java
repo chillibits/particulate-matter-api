@@ -256,10 +256,10 @@ public class SensorControllerTests {
     public void testUpdateSensorExceptionSensorNotExisting() {
         // Try with invalid input
         Exception exception = assertThrows(SensorDataException.class, () ->
-                sensorController.updateSensor(testData.get(2))
+                sensorController.updateSensor(testData.get(0))
         );
 
-        String expectedMessage = new SensorDataException(ErrorCodeUtils.CANNOT_ASSIGN_TO_USER).getMessage();
+        String expectedMessage = new SensorDataException(ErrorCodeUtils.SENSOR_NOT_EXISTING).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
