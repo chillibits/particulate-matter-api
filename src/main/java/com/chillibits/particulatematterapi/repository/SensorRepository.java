@@ -16,15 +16,15 @@ import java.util.List;
 
 public interface SensorRepository extends JpaRepository<Sensor, Long> {
     @Meta(cursorBatchSize = 100)
-    @Query(value = "SELECT *, (6371000 * acos(cos(radians(?1)) * cos(radians(s.gps_latitude)) * cos(radians(s.gps_longitude) - radians(?2)) + sin(radians(?1)) * sin(radians(s.gps_latitude)))) AS distance FROM sensor s GROUP BY distance HAVING distance <= ?3 ORDER BY distance ASC", nativeQuery = true)
+    @Query(value = "SELECT *, (6371000 * acos(cos(radians(?1)) * cos(radians(s.gps_latitude)) * cos(radians(s.gps_longitude) - radians(?2)) + sin(radians(?1)) * sin(radians(s.gps_latitude)))) AS distance FROM sensor s WHERE distance <= ?3 GROUP BY distance ORDER BY distance", nativeQuery = true)
     List<Sensor> findAllInRadius(double lat, double lng, int radius);
 
     @Meta(cursorBatchSize = 100)
-    @Query("SELECT s FROM Sensor s WHERE published = 1")
+    @Query("SELECT s FROM Sensor s WHERE s.published = 1")
     List<Sensor> findAllPublished();
 
     @Meta(cursorBatchSize = 100)
-    @Query(value = "SELECT *, (6371000 * acos(cos(radians(?1)) * cos(radians(s.gps_latitude)) * cos(radians(s.gps_longitude) - radians(?2)) + sin(radians(?1)) * sin(radians(s.gps_latitude)))) AS distance FROM sensor s WHERE published = 1 GROUP BY distance HAVING distance <= ?3 ORDER BY distance ASC", nativeQuery = true)
+    @Query(value = "SELECT *, (6371000 * acos(cos(radians(?1)) * cos(radians(s.gps_latitude)) * cos(radians(s.gps_longitude) - radians(?2)) + sin(radians(?1)) * sin(radians(s.gps_latitude)))) AS distance FROM sensor s WHERE distance <= ?3 AND s.published = 1 GROUP BY distance ORDER BY distance", nativeQuery = true)
     List<Sensor> findAllPublishedInRadius(double lat, double lng, int radius);
 
     @Meta(cursorBatchSize = 100)
@@ -56,7 +56,7 @@ public interface SensorRepository extends JpaRepository<Sensor, Long> {
     Integer getSensorsMapActive(long minLastMeasurementTimestamp);
 
     @Modifying
-    @Query("UPDATE Sensor s SET s.gpsLatitude = ?2, s.gpsLongitude = ?3, s.country = ?4, s.city = ?5, s.lastEditTimestamp = ?6, s.notes = ?7, s.indoor = ?8, published = ?9 WHERE s.chipId = ?1")
+    @Query("UPDATE Sensor s SET s.gpsLatitude = ?2, s.gpsLongitude = ?3, s.country = ?4, s.city = ?5, s.lastEditTimestamp = ?6, s.notes = ?7, s.indoor = ?8, s.published = ?9 WHERE s.chipId = ?1")
     Integer updateSensor(
             long chipId,
             double latitude,

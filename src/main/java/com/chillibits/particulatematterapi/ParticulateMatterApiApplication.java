@@ -22,7 +22,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +30,6 @@ import java.util.Set;
 
 @Slf4j
 @SpringBootApplication
-@EnableMongoRepositories(basePackages = "com.chillibits.particulatematterapi.repository.data")
 public class ParticulateMatterApiApplication implements CommandLineRunner {
 
 	@Autowired
