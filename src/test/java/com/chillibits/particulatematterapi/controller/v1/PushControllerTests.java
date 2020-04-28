@@ -60,9 +60,16 @@ public class PushControllerTests {
     // -------------------------------------------------- Push data ----------------------------------------------------
 
     @Test
-    @DisplayName("Test pushing a data records successfully")
-    public void testPushData() {
-        String result = pushController.pushData(testData.get(0), String.valueOf(testData.get(0).getChipId()), "0");
+    @DisplayName("Test pushing a data records successfully (X-Header)")
+    public void testPushDataXHeader() {
+        String result = pushController.pushData(testData.get(0), "esp8266-" + testData.get(0).getChipId(), "0");
+        assertEquals("ok", result);
+    }
+
+    @Test
+    @DisplayName("Test pushing a data records successfully (Header)")
+    public void testPushDataHeader() {
+        String result = pushController.pushData(testData.get(0), "0", "esp8266-" + testData.get(0).getChipId());
         assertEquals("ok", result);
     }
 
@@ -76,9 +83,15 @@ public class PushControllerTests {
     // -------------------------------------------------- Test data ----------------------------------------------------
 
     private List<DataRecord> getTestData() {
+        // Create SensorDataValues object
+        DataRecord.SensorDataValue v1 = new DataRecord.SensorDataValue("SDS_P1", 10.1);
+        DataRecord.SensorDataValue v2 = new DataRecord.SensorDataValue("SDS_P2", 5.4);
+        DataRecord.SensorDataValue v3 = new DataRecord.SensorDataValue("GPS_lat", 37.4220251);
+        DataRecord.SensorDataValue v4 = new DataRecord.SensorDataValue("GPS_lng", -122.0846072);
+        DataRecord.SensorDataValue v5 = new DataRecord.SensorDataValue("GPS_height", 3.2);
         // Create data record objects
         long time = System.currentTimeMillis();
-        DataRecord d1 = new DataRecord(1234567, time, "2020-03", null, "No notes");
+        DataRecord d1 = new DataRecord(1234567, time, "2020-03", new DataRecord.SensorDataValue[]{ v1, v2, v3, v4, v5 }, "No notes");
         DataRecord d2 = new DataRecord(12345678, time, "2020-02", null, "");
         DataRecord d3 = new DataRecord(123456, time, "2018-03", null, "Nothing");
         // Add them to test data
