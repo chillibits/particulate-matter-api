@@ -11,11 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -43,13 +39,15 @@ public class PushController {
             sensor.setLastMeasurementTimestamp(timestamp);
             sensor.setFirmwareVersion(record.getFirmwareVersion());
             // Set gps coordinates, if they were passed
-            Optional<DataRecord.SensorDataValue> pairLat = Arrays.stream(record.getSensorDataValues()).filter(keyValuePair -> keyValuePair.getValueType().equals("GPS_lat")).findAny();
-            Optional<DataRecord.SensorDataValue> pairLng = Arrays.stream(record.getSensorDataValues()).filter(keyValuePair -> keyValuePair.getValueType().equals("GPS_lng")).findAny();
-            Optional<DataRecord.SensorDataValue> pairAlt = Arrays.stream(record.getSensorDataValues()).filter(keyValuePair -> keyValuePair.getValueType().equals("GPS_height")).findAny();
-            if(pairLat.isPresent() && pairLng.isPresent() && pairAlt.isPresent()) {
-                sensor.setGpsLatitude(pairLat.get().getValue());
-                sensor.setGpsLongitude(pairLng.get().getValue());
-                sensor.setGpsAltitude((int) Math.round(pairAlt.get().getValue()));
+            if(record.getSensorDataValues() != null && record.getSensorDataValues().length > 0) {
+                Optional<DataRecord.SensorDataValue> pairLat = Arrays.stream(record.getSensorDataValues()).filter(keyValuePair -> keyValuePair.getValueType().equals("GPS_lat")).findAny();
+                Optional<DataRecord.SensorDataValue> pairLng = Arrays.stream(record.getSensorDataValues()).filter(keyValuePair -> keyValuePair.getValueType().equals("GPS_lng")).findAny();
+                Optional<DataRecord.SensorDataValue> pairAlt = Arrays.stream(record.getSensorDataValues()).filter(keyValuePair -> keyValuePair.getValueType().equals("GPS_height")).findAny();
+                if(pairLat.isPresent() && pairLng.isPresent() && pairAlt.isPresent()) {
+                    sensor.setGpsLatitude(pairLat.get().getValue());
+                    sensor.setGpsLongitude(pairLng.get().getValue());
+                    sensor.setGpsAltitude((int) Math.round(pairAlt.get().getValue()));
+                }
             }
             // Save to db
             sensorRepository.save(sensor);

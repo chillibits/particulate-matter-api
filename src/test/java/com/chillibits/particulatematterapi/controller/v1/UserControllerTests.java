@@ -9,7 +9,6 @@ import com.chillibits.particulatematterapi.exception.UserDataException;
 import com.chillibits.particulatematterapi.model.db.main.User;
 import com.chillibits.particulatematterapi.model.dto.UserDto;
 import com.chillibits.particulatematterapi.repository.UserRepository;
-import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -160,7 +159,6 @@ public class UserControllerTests {
     // -------------------------------------------------- Test data ----------------------------------------------------
 
     private List<User> getTestData() {
-        long millisecondsTillInactivity = ConstantUtils.MINUTES_UNTIL_INACTIVITY * 60 * 1000;
         // Create user objects
         long time = System.currentTimeMillis();
         User u1 = new User(1, "Marc", "Auberer", "marc.auberer@chillibits.com", "12345678", null, User.OPERATOR, User.EMAIL_CONFIRMATION_PENDING, time, time);
