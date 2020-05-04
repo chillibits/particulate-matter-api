@@ -23,7 +23,7 @@ public class SharedUtilsTests {
     }
 
     @Test
-    public void testRoungNegativePlaces() {
+    public void testRoundNegativePlaces() {
         // Try with invalid input
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
                 SharedUtils.round(1.12345, -2)

@@ -32,7 +32,6 @@ public class LinkController {
     @Autowired
     private SensorRepository sensorRepository;
 
-
     @RequestMapping(method = RequestMethod.POST, path = "/link", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, params = "chipId")
     @ApiOperation(value = "Adds a link to the database")
     public Link addLink(@RequestBody Link link, @RequestParam Long chipId) throws LinkDataException {
