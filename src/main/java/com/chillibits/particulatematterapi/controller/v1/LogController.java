@@ -47,7 +47,7 @@ public class LogController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/log/target/{target}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns the logs for the specified time span, filtered by target", hidden = true)
-    public List<LogItem> getLogsTarget(
+    public List<LogItem> getLogsByTarget(
             @PathVariable String target,
             @RequestParam(defaultValue = "0") long from,
             @RequestParam(defaultValue = "0") long to
@@ -61,7 +61,7 @@ public class LogController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/log/user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns the logs for the specified time span, filtered by user", hidden = true)
-    public List<LogItem> getLogsUser(
+    public List<LogItem> getLogsByUser(
             @PathVariable int userId,
             @RequestParam(defaultValue = "0") long from,
             @RequestParam(defaultValue = "0") long to
@@ -75,7 +75,7 @@ public class LogController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/log/client/{clientId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns the logs for the specified time span, filtered by client", hidden = true)
-    public List<LogItem> getLogsClient(
+    public List<LogItem> getLogsByClient(
             @PathVariable int clientId,
             @RequestParam(defaultValue = "0") long from,
             @RequestParam(defaultValue = "0") long to
@@ -89,7 +89,7 @@ public class LogController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/log/action/{action}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns the logs for the specified time span, filtered by action", hidden = true)
-    public List<LogItem> getLogsAction(
+    public List<LogItem> getLogsByAction(
             @PathVariable String action,
             @RequestParam(defaultValue = "0") long from,
             @RequestParam(defaultValue = "0") long to
@@ -104,6 +104,6 @@ public class LogController {
     // ---------------------------------------------- Utility functions ------------------------------------------------
 
     private void validateRequest(@RequestParam(defaultValue = "0") long from, @RequestParam(defaultValue = "0") long to) throws LogAccessException {
-        if (from < 0 || to < 0) throw new LogAccessException(ErrorCodeUtils.INVALID_TIME_RANGE_LOG);
+        if (from < 0 || to < 0 || from > to) throw new LogAccessException(ErrorCodeUtils.INVALID_TIME_RANGE_LOG);
     }
 }

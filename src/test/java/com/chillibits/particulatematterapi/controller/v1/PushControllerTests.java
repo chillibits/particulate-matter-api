@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("logging")
@@ -54,7 +55,7 @@ public class PushControllerTests {
     public void init() {
         // Setup fake method calls
         Mockito.when(sensorRepository.findById(testSensors.get(0).getChipId())).thenReturn(Optional.of(testSensors.get(0)));
-        Mockito.when(sensorRepository.save(Mockito.any(Sensor.class))).thenReturn(null);
+        Mockito.when(sensorRepository.save(any(Sensor.class))).thenReturn(null);
     }
 
     // -------------------------------------------------- Push data ----------------------------------------------------

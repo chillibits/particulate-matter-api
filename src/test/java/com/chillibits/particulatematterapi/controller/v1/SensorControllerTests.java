@@ -41,6 +41,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -90,7 +91,7 @@ public class SensorControllerTests {
         Mockito.when(sensorRepository.findAllPublished()).thenReturn(Arrays.asList(testData.get(0), testData.get(2), testData.get(4)));
         Mockito.when(sensorRepository.findAllPublishedInRadius(0, 0, 100)).thenReturn(Collections.singletonList(testData.get(4)));
         Mockito.when(sensorRepository.findById(testData.get(0).getChipId())).thenReturn(Optional.ofNullable(testData.get(0)));
-        Mockito.when(sensorRepository.save(Mockito.any(Sensor.class))).then(returnsFirstArg());
+        Mockito.when(sensorRepository.save(any(Sensor.class))).then(returnsFirstArg());
         Mockito.when(sensorRepository.existsById(anyLong())).thenReturn(false);
         Mockito.when(sensorRepository.existsById(testData.get(2).getChipId())).thenReturn(true);
         Mockito.when(sensorRepository.existsById(testData.get(6).getChipId())).thenReturn(true);

@@ -33,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -73,7 +74,7 @@ public class LinkControllerTests {
         Mockito.when(sensorRepository.getOne(getTestData().get(2).getSensor().getChipId())).thenReturn(testData.get(2).getSensor());
         Mockito.when(userRepository.findById(testData.get(0).user.getId())).thenReturn(Optional.of(testData.get(0).user));
         Mockito.when(userRepository.findById(testData.get(1).user.getId())).thenReturn(Optional.of(testData.get(1).user));
-        Mockito.when(linkRepository.save(Mockito.any(Link.class))).then(returnsFirstArg());
+        Mockito.when(linkRepository.save(any(Link.class))).then(returnsFirstArg());
         Mockito.when(linkRepository.updateLink(anyInt(), anyBoolean(), anyString(), anyInt())).thenReturn(1);
         Mockito.doNothing().when(linkRepository).deleteById(anyInt());
     }

@@ -31,6 +31,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 
 @RunWith(SpringRunner.class)
@@ -65,8 +66,8 @@ public class ClientControllerTests {
         // Setup fake method calls
         Mockito.when(clientRepository.findAll()).thenReturn(testData);
         Mockito.when(clientRepository.findByName(testData.get(0).getName())).thenReturn(Optional.of(testData.get(0)));
-        Mockito.when(clientRepository.save(Mockito.any(Client.class))).then(returnsFirstArg());
-        Mockito.when(clientRepository.updateClient(Mockito.any(Client.class))).thenReturn(1);
+        Mockito.when(clientRepository.save(any(Client.class))).then(returnsFirstArg());
+        Mockito.when(clientRepository.updateClient(any(Client.class))).thenReturn(1);
         Mockito.doNothing().when(clientRepository).deleteById(anyInt());
     }
 

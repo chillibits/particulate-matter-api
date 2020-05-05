@@ -30,6 +30,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 
@@ -65,7 +66,7 @@ public class UserControllerTests {
         // Setup fake method calls
         Mockito.when(userRepository.findAll()).thenReturn(testData);
         Mockito.when(userRepository.findByEmail(testData.get(0).getEmail())).thenReturn(testData.get(0));
-        Mockito.when(userRepository.save(Mockito.any(User.class))).then(returnsFirstArg());
+        Mockito.when(userRepository.save(any(User.class))).then(returnsFirstArg());
         Mockito.when(userRepository.updateUser(anyInt(), anyString(), anyString(), anyString(), anyInt(), anyInt())).thenReturn(1);
         Mockito.doNothing().when(userRepository).deleteById(anyInt());
     }
