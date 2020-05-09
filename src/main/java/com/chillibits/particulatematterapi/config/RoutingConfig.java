@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
         @Tag(name = "chart", description = "Chart controller")
 })
 public class RoutingConfig {
+
+    private enum CHART_DATA_TYPES { line, spline, area, areaspline, bar, column }
+    private enum CHART_TYPES { chart, stock }
+
     @RequestMapping(method = RequestMethod.GET, value = "/")
     @ApiOperation(value = "Redirects the user to the swagger ui page", hidden = true)
     public String swagger() {
@@ -33,9 +37,11 @@ public class RoutingConfig {
             @RequestParam(defaultValue = "0") long to,
             @RequestParam(defaultValue = "0") int fieldIndex,
             @RequestParam(defaultValue = "800") int width,
-            @RequestParam(defaultValue = "500") int height
+            @RequestParam(defaultValue = "600") int height,
+            @RequestParam(defaultValue = "line") CHART_DATA_TYPES type,
+            @RequestParam(defaultValue = "chart") CHART_TYPES chartType
     ) {
-        return "chart.html";
+        return chartType == CHART_TYPES.chart ? "chart.html" : "chart_stock.html";
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/chart", params = "country")
@@ -47,9 +53,11 @@ public class RoutingConfig {
             @RequestParam(defaultValue = "0") int fieldIndex,
             @RequestParam(defaultValue = "60") int granularity, // in minutes
             @RequestParam(defaultValue = "800") int width,
-            @RequestParam(defaultValue = "500") int height
+            @RequestParam(defaultValue = "600") int height,
+            @RequestParam(defaultValue = "line") CHART_TYPES type,
+            @RequestParam(defaultValue = "chart") CHART_TYPES chartType
     ) {
-        return "chart_country.html";
+        return chartType == CHART_TYPES.chart ? "chart_country.html" : "chart_stock_country.html";
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/chart", params = {"country", "city"})
@@ -62,8 +70,10 @@ public class RoutingConfig {
             @RequestParam(defaultValue = "0") int fieldIndex,
             @RequestParam(defaultValue = "60") int granularity, // in minutes
             @RequestParam(defaultValue = "800") int width,
-            @RequestParam(defaultValue = "500") int height
+            @RequestParam(defaultValue = "600") int height,
+            @RequestParam(defaultValue = "line") CHART_TYPES type,
+            @RequestParam(defaultValue = "chart") CHART_TYPES chartType
     ) {
-        return "chart_city.html";
+        return chartType == CHART_TYPES.chart ? "chart_city.html" : "chart_stock_city.html";
     }
 }

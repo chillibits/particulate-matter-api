@@ -1,5 +1,9 @@
-function drawLineChart(label, series, responseTime, chipId, width, height) {
-    Highcharts.chart("container", {
+/*
+ * Copyright © Marc Auberer 2019 - 2020. All rights reserved
+ */
+
+function drawLineChart(label, series, responseTime, chipId, width, height, type, chartType) {
+    var config = {
         chart: {
             type: "line",
             width,
@@ -25,9 +29,21 @@ function drawLineChart(label, series, responseTime, chipId, width, height) {
         },
         series: [{
             name: label,
-            data: series
-        }]
-    });
+            type: type,
+            data: series,
+            tooltip: {
+                valueDecimals: 2
+            }
+        }],
+        rangeSelector: {
+            selected: 1
+        }
+    };
+    if(chartType === "stock") {
+        Highcharts.stockChart("container", config);
+    } else {
+        Highcharts.chart("container", config);
+    }
 }
 
 // -------------------------------------------------- Main code --------------------------------------------------------
@@ -37,7 +53,9 @@ var params = getAllUrlParams();
 var urlSuffix = encodeQueryData(params);
 var chipId = params.chipId;
 var width = params.width ? params.width : 800;
-var height = params.height ? params.height : 500;
+var height = params.height ? params.height : 600;
+var type = params.type ? params.type : "line";
+var chartType = params.chartType ? params.chartType : "chart";
 
 // Execute request for data
 $.ajax({
@@ -46,6 +64,6 @@ $.ajax({
         var field = JSON.parse(result).field;
         var values = JSON.parse(result).values;
         var responseTime = JSON.parse(result).responseTime;
-        drawLineChart(field, values, responseTime, chipId, width, height);
+        drawLineChart(field, values, responseTime, chipId, width, height, type, chartType);
     }
 });
