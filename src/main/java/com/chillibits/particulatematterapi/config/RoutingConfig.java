@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 })
 public class RoutingConfig {
 
-    private enum CHART_DATA_TYPES { line, spline, area, areaspline, bar, column }
-    private enum CHART_TYPES { chart, stock }
+    private enum TYPES { chart, stock }
+    private enum DATATYPES { line, spline, area, areaspline, bar, column }
 
     @RequestMapping(method = RequestMethod.GET, value = "/")
     @ApiOperation(value = "Redirects the user to the swagger ui page", hidden = true)
@@ -38,10 +38,10 @@ public class RoutingConfig {
             @RequestParam(defaultValue = "0") int fieldIndex,
             @RequestParam(defaultValue = "800") int width,
             @RequestParam(defaultValue = "600") int height,
-            @RequestParam(defaultValue = "line") CHART_DATA_TYPES type,
-            @RequestParam(defaultValue = "chart") CHART_TYPES chartType
+            @RequestParam(defaultValue = "chart") TYPES chartType,
+            @RequestParam(defaultValue = "line") DATATYPES type
     ) {
-        return chartType == CHART_TYPES.chart ? "chart.html" : "chart_stock.html";
+        return chartType == TYPES.chart ? "chart.html" : "chart_stock.html";
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/chart", params = "country")
@@ -54,10 +54,10 @@ public class RoutingConfig {
             @RequestParam(defaultValue = "60") int granularity, // in minutes
             @RequestParam(defaultValue = "800") int width,
             @RequestParam(defaultValue = "600") int height,
-            @RequestParam(defaultValue = "line") CHART_TYPES type,
-            @RequestParam(defaultValue = "chart") CHART_TYPES chartType
+            @RequestParam(defaultValue = "chart") TYPES chartType,
+            @RequestParam(defaultValue = "line") TYPES type
     ) {
-        return chartType == CHART_TYPES.chart ? "chart_country.html" : "chart_stock_country.html";
+        return chartType == TYPES.chart ? "chart_country.html" : "chart_stock_country.html";
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/chart", params = {"country", "city"})
@@ -71,9 +71,9 @@ public class RoutingConfig {
             @RequestParam(defaultValue = "60") int granularity, // in minutes
             @RequestParam(defaultValue = "800") int width,
             @RequestParam(defaultValue = "600") int height,
-            @RequestParam(defaultValue = "line") CHART_TYPES type,
-            @RequestParam(defaultValue = "chart") CHART_TYPES chartType
+            @RequestParam(defaultValue = "chart") TYPES chartType,
+            @RequestParam(defaultValue = "line") TYPES type
     ) {
-        return chartType == CHART_TYPES.chart ? "chart_city.html" : "chart_stock_city.html";
+        return chartType == TYPES.chart ? "chart_city.html" : "chart_stock_city.html";
     }
 }
