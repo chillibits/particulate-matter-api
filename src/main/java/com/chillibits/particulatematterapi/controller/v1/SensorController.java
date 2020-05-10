@@ -73,7 +73,6 @@ public class SensorController {
             @RequestParam(defaultValue = "true") boolean onlyPublished
     ) throws SensorDataException {
         List<Sensor> sensors = getSensors(latitude, longitude, radius, onlyPublished);
-        System.out.println(sensors.toString());
         return sensors.stream().map(this::convertToCompressedDto).collect(Collectors.toList());
     }
 

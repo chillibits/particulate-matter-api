@@ -55,7 +55,7 @@ public class RoutingConfig {
             @RequestParam(defaultValue = "800") int width,
             @RequestParam(defaultValue = "600") int height,
             @RequestParam(defaultValue = "chart") TYPES chartType,
-            @RequestParam(defaultValue = "line") TYPES type
+            @RequestParam(defaultValue = "line") DATATYPES type
     ) {
         return chartType == TYPES.chart ? "chart_country.html" : "chart_stock_country.html";
     }
@@ -72,7 +72,7 @@ public class RoutingConfig {
             @RequestParam(defaultValue = "800") int width,
             @RequestParam(defaultValue = "600") int height,
             @RequestParam(defaultValue = "chart") TYPES chartType,
-            @RequestParam(defaultValue = "line") TYPES type
+            @RequestParam(defaultValue = "line") DATATYPES type
     ) {
         return chartType == TYPES.chart ? "chart_city.html" : "chart_stock_city.html";
     }
