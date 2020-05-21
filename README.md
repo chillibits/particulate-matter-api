@@ -62,7 +62,7 @@ If you have a sensor from luftdaten.info / sensor.community, you simply have to 
 
 If you have built your own IoT device, you can also send data to our system. Setup the connection as follows:
 
--   Request type: **Post request**
+-   Request type: **POST request**
 -   Host: **api.pm.chillibits.com**
 -   Schema: **https**
 -   Port: **443**
@@ -70,10 +70,10 @@ If you have built your own IoT device, you can also send data to our system. Set
 The required data format can be found in our API documentation at [api.pm.chillibits.com](https://api.pm.chillibits.com/swagger-ui.html#/push/pushDataUsingPOST)
 
 ## Register an application
-If your the developer of an application and you want to consume data from our api, you have to contact us via [email](mailto:contact@chillibits.com?subject=Register%20application%20pmapi).
+If you're the developer of an application and you want to consume data from our API, you have to contact us via [email](mailto:contact@chillibits.com?subject=Register%20application%20pmapi).
 The registration process is as follows:
 
--   We'll check the code of your application to ensure, that your not using our data incorrectly or with a malicious intention. Therefore, we only accept open source applications.
+-   We'll check the code of your application to ensure, that you're not using our data incorrectly or with a malicious intention. Therefore, we only accept open source applications.
 -   After this verification, we send you a mail with all required information and ask you for required information about you / your company or your application.
 -   You answer the mail with all the required information
 -   We'll create a client record, which will have the appropriate access rights for our endpoints
