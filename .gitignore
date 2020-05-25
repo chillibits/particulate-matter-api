@@ -31,7 +31,6 @@ build/
 
 ### Files to keep secure ###
 secrets.tar
-src/main/resources/application.yml
 src/main/resources/pmapi.p12
 src/main/java/com/chillibits/particulatematterapi/shared/Credentials.java
 
