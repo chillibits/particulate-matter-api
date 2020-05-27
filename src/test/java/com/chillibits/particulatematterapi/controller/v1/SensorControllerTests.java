@@ -354,14 +354,14 @@ public class SensorControllerTests {
 
     private List<SensorDto> getAssertData() {
         // Create sensor dto objects
-        SensorDto sd1 = new SensorDto(1234567, "2020-01", 0, "No notes", 0.0, 0.0, 0, "Germany", "Berlin", false, true);
-        SensorDto sd2 = new SensorDto(12345678, "2020-02", 0, "", 10.0, 30.0, 50, "Germany", "Stuttgart", true, false);
-        SensorDto sd3 = new SensorDto(123456, "2020-03", 0, "Test", 20.0, 90.0, 30, "India", "Agra", true, true);
-        SensorDto sd4 = new SensorDto(1234568, "2020-04", 0, "This is a test", 30.0, 70.0, 10, "Russia", "Moskva", false, false);
-        SensorDto sd5 = new SensorDto(1234563, "2020-05", 0, "", 40.0, 80.0, 80, "Ireland", "Dublin", true, true);
-        SensorDto sd6 = new SensorDto(2439573, "2020-06", 0, "", -1, 0, 1, "Bulgaria", "Sofia", false, true);
-        SensorDto sd7 = new SensorDto(24395731, "2020-07", 0, "", -1, 0, 1, "Belgium", "Brussels", true, true);
-        SensorDto sd8 = new SensorDto(24395732, "2020-08", 0, "", -1, 0, 1, "Netherlands", "Amsterdam", false, true);
+        SensorDto sd1 = new SensorDto(1234567, "2020-01", 0, 0.0, 0.0, 0, "Germany", "Berlin", false, true);
+        SensorDto sd2 = new SensorDto(12345678, "2020-02", 0, 10.0, 30.0, 50, "Germany", "Stuttgart", true, false);
+        SensorDto sd3 = new SensorDto(123456, "2020-03", 0, 20.0, 90.0, 30, "India", "Agra", true, true);
+        SensorDto sd4 = new SensorDto(1234568, "2020-04", 0, 30.0, 70.0, 10, "Russia", "Moskva", false, false);
+        SensorDto sd5 = new SensorDto(1234563, "2020-05", 0, 40.0, 80.0, 80, "Ireland", "Dublin", true, true);
+        SensorDto sd6 = new SensorDto(2439573, "2020-06", 0, -1, 0, 1, "Bulgaria", "Sofia", false, true);
+        SensorDto sd7 = new SensorDto(24395731, "2020-07", 0, -1, 0, 1, "Belgium", "Brussels", true, true);
+        SensorDto sd8 = new SensorDto(24395732, "2020-08", 0, -1, 0, 1, "Netherlands", "Amsterdam", false, true);
 
         // Add them to test data
         return Arrays.asList(sd1, sd2, sd3, sd4, sd5, sd6, sd7, sd8);

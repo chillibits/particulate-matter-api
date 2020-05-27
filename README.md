@@ -74,7 +74,7 @@ If you're the developer of an application and you want to consume data from our 
 The registration process is as follows:
 
 -   We'll check the code of your application to ensure, that you're not using our data incorrectly or with a malicious intention. Therefore, we only accept open source applications.
--   After this verification, we send you a mail with all required information and ask you for required information about you / your company or your application.
+-   After this verification, we send you a mail with all required information and ask you for required information about you / your organization and your application.
 -   You answer the mail with all the required information
 -   We'll create a client record, which will have the appropriate access rights for our endpoints
 -   Let's go and start building your awesome application.
