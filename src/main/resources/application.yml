@@ -18,7 +18,7 @@ spring:
     max-age: 120
     must-revalidate: true
   datasource:
-    url: jdbc:mysql://85.214.250.60:3306/main?serverTimezone=UTC&autoReconnect=true&useUnicode=yes&characterEncoding=UTF-8&characterSetResults=UTF-8
+    url: jdbc:mysql://85.214.250.60:3307/main?serverTimezone=UTC&autoReconnect=true&useUnicode=yes&characterEncoding=UTF-8&characterSetResults=UTF-8
     username: ${PMAPI_MYSQL_USER}
     password: ${PMAPI_MYSQL_PW}
     continueOnError: true
@@ -29,7 +29,7 @@ spring:
     properties.hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
   data.mongodb:
     host: 85.214.250.60
-    port: 27017
+    port: 27020
     authenticationDatabase: particulate-matter-data
     database: particulate-matter-datat
     username: ${PMAPI_MONGODB_USER}
