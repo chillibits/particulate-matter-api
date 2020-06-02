@@ -28,7 +28,7 @@ jobs:
     - name: Maven build
       run: mvn -B package --file pom.xml
       env:
-        - PMAPI_GOOGLE_API_KEY: ${{ secrets.PMAPI_GOOGLE_API_KEY }}
+        PMAPI_GOOGLE_API_KEY: ${{ secrets.PMAPI_GOOGLE_API_KEY }}
     - name: CodeCov report deploy
       run: bash <(curl -s https://codecov.io/bash)
     - name: Prepare environment
