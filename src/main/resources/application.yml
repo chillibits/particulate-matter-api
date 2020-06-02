@@ -31,7 +31,7 @@ spring:
     host: 85.214.250.60
     port: 27020
     authenticationDatabase: particulate-matter-data
-    database: particulate-matter-datat
+    database: particulate-matter-data
     username: ${PMAPI_MONGODB_USER}
     password: ${PMAPI_MONGODB_PW}
 logging.level:

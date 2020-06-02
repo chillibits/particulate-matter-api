@@ -32,7 +32,6 @@ build/
 ### Files to keep secure ###
 secrets.tar
 src/main/resources/pmapi.p12
-src/main/java/com/chillibits/particulatematterapi/shared/Credentials.java
 
 ### Downloaded libs ###
 src/main/resources/static/js/highcharts
