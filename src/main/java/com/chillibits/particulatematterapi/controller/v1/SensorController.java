@@ -16,7 +16,7 @@ import com.chillibits.particulatematterapi.repository.LinkRepository;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
 import com.chillibits.particulatematterapi.repository.UserRepository;
 import com.chillibits.particulatematterapi.shared.ConstantUtils;
-import com.chillibits.particulatematterapi.shared.Credentials;
+import com.chillibits.particulatematterapi.shared.CredentialConstants;
 import com.chillibits.particulatematterapi.shared.SharedUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
@@ -173,12 +173,13 @@ public class SensorController {
     private void retrieveCountryCityFromCoordinates(Sensor sensor) {
         // Retrieve country and city from latitude and longitude
         try {
-            String url = "https://maps.googleapis.com/maps/api/geocode/json?key=" + Credentials.GOOGLE_API_KEY + "&latlng="
-                    + sensor.getGpsLatitude() + "," + sensor.getGpsLongitude() + "&sensor=false&language=en";
+            String url = "https://maps.googleapis.com/maps/api/geocode/json?key=" + CredentialConstants.GOOGLE_API_KEY
+                    + "&latlng=" + sensor.getGpsLatitude() + "," + sensor.getGpsLongitude() + "&sensor=false&language=en";
             MapsPlaceResult place = new ObjectMapper().readValue(new URL(url), MapsPlaceResult.class);
             sensor.setCountry(place.getCountry());
             sensor.setCity(place.getCity());
         } catch (Exception e) {
+            e.printStackTrace();
             sensor.setCountry(ConstantUtils.BLANK_COLUMN);
             sensor.setCity(ConstantUtils.BLANK_COLUMN);
         }

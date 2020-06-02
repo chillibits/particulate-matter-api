@@ -27,6 +27,8 @@ jobs:
 #        LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
     - name: Maven build
       run: mvn -B package --file pom.xml
+      env:
+        - PMAPI_GOOGLE_API_KEY: ${{ secrets.PMAPI_GOOGLE_API_KEY }}
     - name: CodeCov report deploy
       run: bash <(curl -s https://codecov.io/bash)
     - name: Prepare environment
@@ -42,13 +44,14 @@ jobs:
       with:
         name: target
         path: target
-    - name: docker build and push
+    - name: Docker build and push
       run: |
         echo ${GITHUB_TOKEN} | docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY_OWNER} --password-stdin
         docker build --tag docker.pkg.github.com/chillibits/particulate-matter-api/${ARTIFACT_ID}:${VERSION} .
         docker push docker.pkg.github.com/chillibits/particulate-matter-api/${ARTIFACT_ID}:${VERSION}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PMAPI_GOOGLE_API_KEY: ${{ secrets.PMAPI_GOOGLE_API_KEY }}
 #  deploy:
 #    name: Docker deploy
 #    runs-on: ubuntu-latest

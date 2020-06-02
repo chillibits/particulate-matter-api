@@ -4,6 +4,6 @@
 
 package com.chillibits.particulatematterapi.shared;
 
-public class Credentials {
+public class CredentialConstants {
     public static final String GOOGLE_API_KEY = System.getenv("PMAPI_GOOGLE_API_KEY");
 }
