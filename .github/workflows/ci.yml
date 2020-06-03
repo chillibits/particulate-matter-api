@@ -41,8 +41,9 @@ jobs:
     - name: Docker build and push
       run: |
         echo ${GITHUB_TOKEN} | docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY_OWNER} --password-stdin
-        docker build --tag docker.pkg.github.com/chillibits/particulate-matter-api/${ARTIFACT_ID}:${VERSION} .
+        docker build -t docker.pkg.github.com/chillibits/particulate-matter-api/${ARTIFACT_ID}:${VERSION} -t docker.pkg.github.com/chillibits/particulate-matter-api/${ARTIFACT_ID}:latest .
         docker push docker.pkg.github.com/chillibits/particulate-matter-api/${ARTIFACT_ID}:${VERSION}
+        docker push docker.pkg.github.com/chillibits/particulate-matter-api/${ARTIFACT_ID}:latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         PMAPI_GOOGLE_API_KEY: ${{ secrets.PMAPI_GOOGLE_API_KEY }}
