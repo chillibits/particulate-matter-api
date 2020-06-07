@@ -6,7 +6,7 @@ package com.chillibits.particulatematterapi.exception;
 
 import java.util.HashMap;
 
-public class DataAccessException extends Exception {
+public class DataAccessException extends RuntimeException {
     // Error description list
     private static final HashMap<Integer, String> descriptions = new HashMap<>() {{
         put(ErrorCodeUtils.INVALID_MERGE_COUNT, "Invalid merge count. Must be >= 1");

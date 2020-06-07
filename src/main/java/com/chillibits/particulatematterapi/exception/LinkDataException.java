@@ -6,7 +6,7 @@ package com.chillibits.particulatematterapi.exception;
 
 import java.util.HashMap;
 
-public class LinkDataException extends Exception {
+public class LinkDataException extends RuntimeException {
     // Error description list
     private static final HashMap<Integer, String> descriptions = new HashMap<>() {{
         put(ErrorCodeUtils.USER_NOT_EXISTING, "Cannot assign link to a non-existent user.");

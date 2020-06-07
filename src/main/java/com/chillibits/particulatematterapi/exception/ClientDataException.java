@@ -6,7 +6,7 @@ package com.chillibits.particulatematterapi.exception;
 
 import java.util.HashMap;
 
-public class ClientDataException extends Exception {
+public class ClientDataException extends RuntimeException {
     // Error description list
     private static final HashMap<Integer, String> descriptions = new HashMap<>() {{
         put(ErrorCodeUtils.CLIENT_NOT_EXISTING, "This client does not exist");

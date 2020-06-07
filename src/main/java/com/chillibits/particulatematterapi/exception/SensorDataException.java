@@ -6,7 +6,7 @@ package com.chillibits.particulatematterapi.exception;
 
 import java.util.HashMap;
 
-public class SensorDataException extends Exception {
+public class SensorDataException extends RuntimeException {
     // Error description list
     public static final HashMap<Integer, String> descriptions = new HashMap<>() {{
         put(ErrorCodeUtils.SENSOR_ALREADY_EXISTS, "The sensor with this chip id already exists in the database.");

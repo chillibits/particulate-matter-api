@@ -6,7 +6,7 @@ package com.chillibits.particulatematterapi.exception;
 
 import java.util.HashMap;
 
-public class StatsDataException extends Exception {
+public class StatsDataException extends RuntimeException {
     // Error description list
     private static final HashMap<Integer, String> descriptions = new HashMap<>() {{
         put(ErrorCodeUtils.STATS_ITEM_DOES_NOT_EXIST, "The sensor you're requesting does not exist.");

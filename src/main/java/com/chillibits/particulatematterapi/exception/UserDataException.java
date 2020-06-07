@@ -6,7 +6,7 @@ package com.chillibits.particulatematterapi.exception;
 
 import java.util.HashMap;
 
-public class UserDataException extends Exception {
+public class UserDataException extends RuntimeException {
     // Error description list
     private static final HashMap<Integer, String> descriptions = new HashMap<>() {{
         put(ErrorCodeUtils.INVALID_USER_DATA, "Please provide an user object with all fields filled");

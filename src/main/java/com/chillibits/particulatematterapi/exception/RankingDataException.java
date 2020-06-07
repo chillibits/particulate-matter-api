@@ -6,7 +6,7 @@ package com.chillibits.particulatematterapi.exception;
 
 import java.util.HashMap;
 
-public class RankingDataException extends Exception {
+public class RankingDataException extends RuntimeException {
     // Error description list
     private static final HashMap<Integer, String> descriptions = new HashMap<>() {{
         put(ErrorCodeUtils.INVALID_ITEMS_NUMBER, "Invalid items number. Please provide a number >= 1");
