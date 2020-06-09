@@ -22,8 +22,8 @@ spring:
     hibernate.ddl-auto: update
     properties.hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
   data.mongodb:
-    host: 85.214.250.60
-    port: 27017
+    host: ${PMAPI_MONGODB_HOST}
+    port: ${PMAPI_MONGODB_PORT}
     authenticationDatabase: particulate-matter-data
     database: particulate-matter-data
     username: ${PMAPI_MONGODB_USER}
