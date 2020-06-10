@@ -50,7 +50,7 @@ public class ParticulateMatterApiApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) {
 		// Imports from the old api
-		if(ConstantUtils.IMPORT_SENSORS_IF_TABLE_IS_EMPTY && sensorRepository.count() == 0) importFromOldSensors();
+		if(ConstantUtils.IMPORT_SENSORS_IF_TABLE_IS_EMPTY && sensorRepository.count() == 0 && oldSensorRepository.count() > 0) importFromOldSensors();
 
 		// Rollback to timestamp
 		if(ConstantUtils.ROLLBACK_TIMESTAMP > 0) rollbackToTimestamp(ConstantUtils.ROLLBACK_TIMESTAMP);
