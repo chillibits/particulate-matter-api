@@ -96,6 +96,9 @@ public class SensorControllerTests {
         Mockito.when(sensorRepository.existsById(testData.get(2).getChipId())).thenReturn(true);
         Mockito.when(sensorRepository.existsById(testData.get(6).getChipId())).thenReturn(true);
         Mockito.when(sensorRepository.existsById(testData.get(7).getChipId())).thenReturn(true);
+        Mockito.when(sensorRepository.updateSensor(anyLong(), anyDouble(), anyDouble(), anyString(), anyString(), anyLong(), anyString(), anyBoolean(), anyBoolean())).thenReturn(1);
+        Mockito.doNothing().when(sensorRepository).deleteById(anyLong());
+        // MongoTemplate
         Mockito.when(mongoTemplate.getCollectionNames())
                 .thenReturn(new HashSet<>(Arrays.asList(
                         String.valueOf(testData.get(0).getChipId()),
@@ -103,10 +106,9 @@ public class SensorControllerTests {
                         String.valueOf(testData.get(4).getChipId()),
                         String.valueOf(testData.get(5).getChipId())
                 )));
+        // UserRepository
         Mockito.when(userRepository.existsById(anyInt())).thenReturn(true);
         Mockito.when(userRepository.existsById(Arrays.asList(testData.get(4).getUserLinks().toArray(new Link[0])).get(0).user.getId())).thenReturn(false);
-        Mockito.when(sensorRepository.updateSensor(anyLong(), anyDouble(), anyDouble(), anyString(), anyString(), anyLong(), anyString(), anyBoolean(), anyBoolean())).thenReturn(1);
-        Mockito.doNothing().when(sensorRepository).deleteById(anyLong());
     }
 
     // --------------------------------------- Get sensor uncompressed -------------------------------------------------
