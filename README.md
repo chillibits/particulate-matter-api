@@ -53,7 +53,7 @@
     -   Delete user from the database
 
 ## Usage
-The API documentation can be found at [api.pm.chillibits.com](https://api.pm.chillibits.com/swagger-ui.html).
+The API documentation can be found at [api.pm.chillibits.com](https://api.pm.chillibits.com/swagger-ui/index.html).
 
 If any questions occur, please feel free to reach out to us via [email](mailto:contact@chillibits.com?subject=Register%20application%20pmapi).
 
@@ -67,7 +67,7 @@ If you have built your own IoT device, you can also send data to our system. Set
 -   Schema: **https**
 -   Port: **443**
 
-The required data format can be found in our API documentation at [api.pm.chillibits.com](https://api.pm.chillibits.com/swagger-ui.html#/push/pushDataUsingPOST)
+The required data format can be found in our API documentation at [api.pm.chillibits.com](https://api.pm.chillibits.com/swagger-ui/index.html#/push/pushDataUsingPOST)
 
 ## Register an application
 If you're the developer of an application and you want to consume data from our API, you have to contact us via [email](mailto:contact@chillibits.com?subject=Register%20application%20pmapi).
