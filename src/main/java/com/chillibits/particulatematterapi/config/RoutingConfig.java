@@ -26,7 +26,7 @@ public class RoutingConfig {
     @RequestMapping(method = RequestMethod.GET, value = "/")
     @ApiOperation(value = "Redirects the user to the swagger ui page", hidden = true)
     public String swagger() {
-        return "redirect:/swagger-ui.html";
+        return "redirect:/swagger-ui/index.html";
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/chart")
