@@ -13,29 +13,17 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.paths.RelativePathProvider;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
 import javax.servlet.ServletContext;
 import java.util.Collections;
 
 @Configuration
-@EnableSwagger2
-public class SwaggerConfig implements ServletContextAware {
-    // Variables as objects
-    private ServletContext context;
+public class SwaggerConfig {
 
     @Bean
     public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_12)
+        return new Docket(DocumentationType.OAS_30)
                 .host("api.pm.chillibits.com")
-                .pathProvider(new RelativePathProvider(context) {
-                    @Override
-                    public String getApplicationBasePath() {
-                        return "/";
-                    }
-                })
                 .enableUrlTemplating(true)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.chillibits.particulatematterapi"))
@@ -64,10 +52,5 @@ public class SwaggerConfig implements ServletContextAware {
                 "https://opendatacommons.org/licenses/dbcl/1.0/",
                 Collections.emptyList()
         );
-    }
-
-    @Override
-    public void setServletContext(ServletContext servletContext) {
-        context = servletContext;
     }
 }
