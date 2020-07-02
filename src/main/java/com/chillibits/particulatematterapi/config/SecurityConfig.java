@@ -31,6 +31,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                // Swagger page
+                .antMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
                 // Sensors endpoint
                 .antMatchers(HttpMethod.GET, "/sensor").permitAll()
                 .antMatchers(HttpMethod.POST, "/sensor").hasAnyAuthority(Client.ROLE_APPLICATION, Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
@@ -66,7 +68,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/stats").permitAll()
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().httpBasic();
+                .and().httpBasic()
+                .and().requiresChannel().antMatchers("/push").requiresInsecure()
+                .anyRequest().requiresSecure();
     }
 
     @Bean
