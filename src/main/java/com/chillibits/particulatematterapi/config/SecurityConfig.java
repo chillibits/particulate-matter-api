@@ -68,8 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/stats").permitAll()
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().httpBasic()
-                .and().requiresChannel().antMatchers("/swagger-ui/**").requiresSecure();
+                .and().httpBasic();
     }
 
     @Bean
