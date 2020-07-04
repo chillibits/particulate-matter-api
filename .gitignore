@@ -29,10 +29,6 @@ build/
 ### VS Code ###
 .vscode/
 
-### Files to keep secure ###
-secrets.tar
-src/main/resources/pmapi.p12
-
 ### Downloaded libs ###
 src/main/resources/static/js/highcharts
 src/main/resources/static/js/jquery
