@@ -5,7 +5,7 @@ name: CI with Docker
 
 on:
   push:
-    branches: [ master, docker ]
+    branches: [ master ]
 
 jobs:
   build:
