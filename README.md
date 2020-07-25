@@ -64,8 +64,8 @@ If you have built your own IoT device, you can also send data to our system. Set
 
 -   Request type: **POST request**
 -   Host: **api.pm.chillibits.com**
--   Schema: **https**
--   Port: **443**
+-   Schema: **http / https**
+-   Port: **80 / 443**
 
 The required data format can be found in our API documentation at [api.pm.chillibits.com](https://api.pm.chillibits.com/swagger-ui/index.html#/push/pushDataUsingPOST)
 
