@@ -21,7 +21,7 @@ spring:
     open-in-view: true
     hibernate.ddl-auto: update
     properties.hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
-  data.mongodb.uri: mongodb://${PMAPI_MONGODB_USER}:${PMAPI_MONGODB_PW}@mongodb-1:27017,mongodb-2:27017,mongodb-3:27017/particulate-matter-data?replicaSet=rs0&tls=true
+  data.mongodb.uri: mongodb://${PMAPI_MONGODB_USER}:${PMAPI_MONGODB_PW}@mongodb-1:27017,mongodb-2:27017,mongodb-3:27017/particulate-matter-data?replicaSet=rs0&authSource=admin&ssl=false
 #  data.mongodb:
 #    host: ${PMAPI_MONGODB_HOST}
 #    port: ${PMAPI_MONGODB_PORT}
