@@ -42,12 +42,12 @@ public class PushController {
             // Update live-properties
             sensor.setLastMeasurementTimestamp(timestamp);
             sensor.setFirmwareVersion(record.getFirmwareVersion());
-            // Set gps coordinates, if they were passed
+            // Set gps coordinates, if they were passed and valid
             if(record.getSensorDataValues() != null && record.getSensorDataValues().length > 0) {
                 Optional<DataRecord.SensorDataValue> pairLat = Arrays.stream(record.getSensorDataValues()).filter(keyValuePair -> keyValuePair.getValueType().equals("GPS_lat")).findAny();
                 Optional<DataRecord.SensorDataValue> pairLng = Arrays.stream(record.getSensorDataValues()).filter(keyValuePair -> keyValuePair.getValueType().equals("GPS_lng")).findAny();
                 Optional<DataRecord.SensorDataValue> pairAlt = Arrays.stream(record.getSensorDataValues()).filter(keyValuePair -> keyValuePair.getValueType().equals("GPS_height")).findAny();
-                if(pairLat.isPresent() && pairLng.isPresent() && pairAlt.isPresent()) {
+                if(pairLat.isPresent() && pairLng.isPresent() && pairAlt.isPresent() && pairLat.get().getValue() != -200) {
                     sensor.setGpsLatitude(pairLat.get().getValue());
                     sensor.setGpsLongitude(pairLng.get().getValue());
                     sensor.setGpsAltitude((int) Math.round(pairAlt.get().getValue()));

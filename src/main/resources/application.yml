@@ -21,12 +21,13 @@ spring:
     open-in-view: true
     hibernate.ddl-auto: update
     properties.hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
-  data.mongodb:
-    host: ${PMAPI_MONGODB_HOST}
-    port: ${PMAPI_MONGODB_PORT}
-    authenticationDatabase: particulate-matter-data
-    database: particulate-matter-data
-    username: ${PMAPI_MONGODB_USER}
-    password: ${PMAPI_MONGODB_PW}
+  data.mongodb.uri: mongodb://${PMAPI_MONGODB_USER}:${PMAPI_MONGODB_PW}@${PMAPI_MONGODB_HOST_1}:${PMAPI_MONGODB_PORT_1},${PMAPI_MONGODB_HOST_2}:${PMAPI_MONGODB_PORT_2},${PMAPI_MONGODB_HOST_3}:${PMAPI_MONGODB_PORT_3}/particulate-matter-data?replicaSet=rs0&authSource=admin&ssl=false
+#  data.mongodb:
+#    host: ${PMAPI_MONGODB_HOST}
+#    port: ${PMAPI_MONGODB_PORT}
+#    authenticationDatabase: particulate-matter-data
+#    database: particulate-matter-data
+#    username: ${PMAPI_MONGODB_USER}
+#    password: ${PMAPI_MONGODB_PW}
 logging.level:
   root: INFO
