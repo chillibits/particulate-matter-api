@@ -22,9 +22,10 @@ import javax.persistence.Table;
 public class Client {
     // Constants
     public static final int STATUS_ONLINE = 1;
-    public static final int STATUS_OFFLINE = 2;
-    public static final int STATUS_MAINTENANCE = 3;
-    public static final int STATUS_SUPPORT_ENDED = 4;
+    public static final int STATUS_ONLINE_WITH_CAMPAIGN = 2;
+    public static final int STATUS_OFFLINE = 3;
+    public static final int STATUS_MAINTENANCE = 4;
+    public static final int STATUS_SUPPORT_ENDED = 5;
 
     public static final String ROLE_APPLICATION = "A";
     public static final String ROLE_APPLICATION_CHILLIBITS = "CBA";
