@@ -12,6 +12,7 @@ spring:
     max-age: 120
     must-revalidate: true
   datasource:
+#    driverClassName: com.mysql.jdbc.ReplicationDriver # Comment this out, when you use a single mysql database
     url: ${PMAPI_MYSQL_URL}
     username: ${PMAPI_MYSQL_USER}
     password: ${PMAPI_MYSQL_PW}
@@ -21,8 +22,9 @@ spring:
     open-in-view: true
     hibernate.ddl-auto: update
     properties.hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
-  data.mongodb.uri: mongodb://${PMAPI_MONGODB_USER}:${PMAPI_MONGODB_PW}@${PMAPI_MONGODB_HOST_1}:${PMAPI_MONGODB_PORT_1},${PMAPI_MONGODB_HOST_2}:${PMAPI_MONGODB_PORT_2},${PMAPI_MONGODB_HOST_3}:${PMAPI_MONGODB_PORT_3}/particulate-matter-data?replicaSet=rs0&authSource=admin&ssl=false
-#  data.mongodb:
+  data.mongodb:
+    # Comment this line out and the lines below in to use a single database
+    uri: mongodb://${PMAPI_MONGODB_USER}:${PMAPI_MONGODB_PW}@${PMAPI_MONGODB_HOST_1}:${PMAPI_MONGODB_PORT_1},${PMAPI_MONGODB_HOST_2}:${PMAPI_MONGODB_PORT_2},${PMAPI_MONGODB_HOST_3}:${PMAPI_MONGODB_PORT_3}/particulate-matter-data?replicaSet=rs0&authSource=admin&ssl=false
 #    host: ${PMAPI_MONGODB_HOST}
 #    port: ${PMAPI_MONGODB_PORT}
 #    authenticationDatabase: particulate-matter-data
