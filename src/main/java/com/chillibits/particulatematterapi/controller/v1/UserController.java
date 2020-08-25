@@ -72,9 +72,12 @@ public class UserController {
     @RequestMapping(method = RequestMethod.PUT, path = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates an existing user")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Please provide an user object with all fields filled")
+            @ApiResponse(code = 400, message = "Please provide an user object with all fields filled"),
+            @ApiResponse(code = 400, message = "This user does not exist")
     })
     public Integer updateUser(@RequestBody User user) throws UserDataException {
+        // Validity checks
+        if(userRepository.findByEmail(user.getEmail()) == null) throw new UserDataException(ErrorCodeUtils.USER_NOT_EXISTING);
         validateUserObject(user);
         return userRepository.updateUser(user.getId(), user.getFirstName(), user.getLastName(), user.getPassword(), user.getRole(), user.getStatus());
     }
