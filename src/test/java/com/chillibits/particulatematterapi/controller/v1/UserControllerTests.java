@@ -66,6 +66,7 @@ public class UserControllerTests {
         // Setup fake method calls
         Mockito.when(userRepository.findAll()).thenReturn(testData);
         Mockito.when(userRepository.findByEmail(testData.get(0).getEmail())).thenReturn(testData.get(0));
+        Mockito.when(userRepository.findByEmail(testData.get(3).getEmail())).thenReturn(testData.get(3));
         Mockito.when(userRepository.save(any(User.class))).then(returnsFirstArg());
         Mockito.when(userRepository.updateUser(anyInt(), anyString(), anyString(), anyString(), anyInt(), anyInt())).thenReturn(1);
         Mockito.doNothing().when(userRepository).deleteById(anyInt());
@@ -139,10 +140,22 @@ public class UserControllerTests {
 
     @Test
     @DisplayName("Test for updating an user, triggering a InvalidUserData exception")
-    public void testUpdateUserExceptionInvalidUserData() {
+    public void testUpdateUserExceptionNonExistingUser() {
         // Try with invalid input
         Exception exception = assertThrows(UserDataException.class, () ->
                 userController.updateUser(testData.get(2))
+        );
+
+        String expectedMessage = new UserDataException(ErrorCodeUtils.USER_NOT_EXISTING).getMessage();
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test for updating an user, triggering a InvalidUserData exception")
+    public void testUpdateUserExceptionInvalidUserData() {
+        // Try with invalid input
+        Exception exception = assertThrows(UserDataException.class, () ->
+                userController.updateUser(testData.get(3))
         );
 
         String expectedMessage = new UserDataException(ErrorCodeUtils.INVALID_USER_DATA).getMessage();
@@ -165,8 +178,9 @@ public class UserControllerTests {
         User u1 = new User(1, "Marc", "Auberer", "marc.auberer@chillibits.com", "12345678", null, User.OPERATOR, User.EMAIL_CONFIRMATION_PENDING, time, time);
         User u2 = new User(2, "Admin", "User", "info@chillibits.com", "87654321", null, User.ADMINISTRATOR, User.ACTIVE, time, time);
         User u3 = new User(3, "Test", "User", "test@chillibits.com", "", null, User.USER, User.LOCKED, time, time);
+        User u4 = new User(4, "Test", "User", "test1@chillibits.com", "", null, User.USER, User.LOCKED, time, time);
         // Add them to test data
-        return Arrays.asList(u1, u2, u3);
+        return Arrays.asList(u1, u2, u3, u4);
     }
 
     private List<UserDto> getAssertData() {
@@ -174,8 +188,9 @@ public class UserControllerTests {
         UserDto ud1 = new UserDto(1, "Marc", "Auberer", null, User.OPERATOR, User.EMAIL_CONFIRMATION_PENDING);
         UserDto ud2 = new UserDto(2, "Admin", "User", null, User.ADMINISTRATOR, User.ACTIVE);
         UserDto ud3 = new UserDto(3, "Test", "User", null, User.USER, User.LOCKED);
+        UserDto ud4 = new UserDto(4, "Test", "User", null, User.USER, User.LOCKED);
 
         // Add them to test data
-        return Arrays.asList(ud1, ud2, ud3);
+        return Arrays.asList(ud1, ud2, ud3, ud4);
     }
 }
