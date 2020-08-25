@@ -150,7 +150,7 @@ public class SensorControllerTests {
     public void testGetAllSensorsInvalidRadius() {
         // Try with invalid input
         Exception exception = assertThrows(SensorDataException.class, () ->
-                sensorController.getAllSensors(0, 0, -100, false)
+                sensorController.getAllSensors(10, 10, -100, false)
         );
 
         String expectedMessage = new SensorDataException(ErrorCodeUtils.INVALID_RADIUS).getMessage();
@@ -197,7 +197,7 @@ public class SensorControllerTests {
     public void testGetAllSensorsInvalidRadiusCompressed() {
         // Try with invalid input
         Exception exception = assertThrows(SensorDataException.class, () ->
-                sensorController.getAllSensorsCompressed(0, 0, -100, false)
+                sensorController.getAllSensorsCompressed(10, 10, -100, false)
         );
 
         String expectedMessage = new SensorDataException(ErrorCodeUtils.INVALID_RADIUS).getMessage();

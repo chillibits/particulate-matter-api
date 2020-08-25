@@ -165,8 +165,6 @@ public class SensorController {
     // ---------------------------------------------- Utility functions ------------------------------------------------
 
     private List<Sensor> getSensors(double latitude, double longitude, int radius, boolean onlyPublished) throws SensorDataException {
-        if ((latitude == 0 && longitude == 0) || (latitude == 200 && longitude == 200))
-            throw new SensorDataException(ErrorCodeUtils.INVALID_GPS_COORDINATES);
         if (radius < 0) throw new SensorDataException(ErrorCodeUtils.INVALID_RADIUS);
 
         List<Sensor> sensors;
