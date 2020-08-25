@@ -2,7 +2,9 @@
  * Copyright © Marc Auberer 2019 - 2020. All rights reserved
  */
 
-package com.chillibits.particulatematterapi.exception;
+package com.chillibits.particulatematterapi.exception.exception;
+
+import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
 
 import java.util.HashMap;
 
@@ -11,6 +13,7 @@ public class LinkDataException extends RuntimeException {
     private static final HashMap<Integer, String> descriptions = new HashMap<>() {{
         put(ErrorCodeUtils.USER_NOT_EXISTING, "Cannot assign link to a non-existent user.");
         put(ErrorCodeUtils.SENSOR_NOT_EXISTING, "Cannot assign link to a non-existent sensor.");
+        put(ErrorCodeUtils.INVALID_LINK_DATA, "Invalid link data.");
     }};
 
     public LinkDataException(int errorCode) {

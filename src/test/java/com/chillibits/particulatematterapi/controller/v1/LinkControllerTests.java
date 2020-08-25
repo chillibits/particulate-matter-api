@@ -5,7 +5,7 @@
 package com.chillibits.particulatematterapi.controller.v1;
 
 import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
-import com.chillibits.particulatematterapi.exception.LinkDataException;
+import com.chillibits.particulatematterapi.exception.exception.LinkDataException;
 import com.chillibits.particulatematterapi.model.db.main.Link;
 import com.chillibits.particulatematterapi.model.db.main.Sensor;
 import com.chillibits.particulatematterapi.model.db.main.User;

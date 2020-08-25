@@ -5,12 +5,14 @@
 package com.chillibits.particulatematterapi.controller.v1;
 
 import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
-import com.chillibits.particulatematterapi.exception.StatsDataException;
+import com.chillibits.particulatematterapi.exception.exception.StatsDataException;
 import com.chillibits.particulatematterapi.model.db.data.StatsItem;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
 import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import me.tongfei.progressbar.ProgressBar;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +77,9 @@ public class StatsController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/stats/{chipId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns stats about a specific sensor")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "The sensor you're requesting does not exist.")
+    })
     public StatsItem getStatsOfSensor(@PathVariable Long chipId) throws StatsDataException {
         // Check if sensor is existing
         Set<String> collectionNames = getDataCollections();

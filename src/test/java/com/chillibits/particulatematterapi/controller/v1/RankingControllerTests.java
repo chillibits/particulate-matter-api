@@ -5,7 +5,7 @@
 package com.chillibits.particulatematterapi.controller.v1;
 
 import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
-import com.chillibits.particulatematterapi.exception.RankingDataException;
+import com.chillibits.particulatematterapi.exception.exception.RankingDataException;
 import com.chillibits.particulatematterapi.model.dto.RankingItemCityDto;
 import com.chillibits.particulatematterapi.model.dto.RankingItemCountryDto;
 import com.chillibits.particulatematterapi.model.io.RankingItemCity;

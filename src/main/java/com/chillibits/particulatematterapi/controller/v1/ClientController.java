@@ -4,13 +4,15 @@
 
 package com.chillibits.particulatematterapi.controller.v1;
 
-import com.chillibits.particulatematterapi.exception.ClientDataException;
 import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
+import com.chillibits.particulatematterapi.exception.exception.ClientDataException;
 import com.chillibits.particulatematterapi.model.db.main.Client;
 import com.chillibits.particulatematterapi.model.dto.ClientDto;
 import com.chillibits.particulatematterapi.repository.ClientRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -41,6 +43,9 @@ public class ClientController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/client/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns info about a specific client, identified by its name")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "This client does not exist")
+    })
     public ClientDto getClientInfoByName(@PathVariable("name") String name) throws ClientDataException {
         Optional<Client> client = clientRepository.findByName(name);
         if(client.isEmpty()) throw new ClientDataException(ErrorCodeUtils.CLIENT_NOT_EXISTING);
@@ -49,6 +54,9 @@ public class ClientController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/client", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Adds a client object", hidden = true)
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Please provide a client object with all fields filled")
+    })
     public Client addClient(@RequestBody Client client) throws ClientDataException {
         validateClientObject(client);
         return clientRepository.save(client);
@@ -56,6 +64,9 @@ public class ClientController {
 
     @RequestMapping(method = RequestMethod.PUT, path = "/client", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates a specific client object", hidden = true)
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Please provide a client object with all fields filled")
+    })
     public Integer updateClient(@RequestBody Client client) throws ClientDataException {
         validateClientObject(client);
         return clientRepository.updateClient(client);

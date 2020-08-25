@@ -4,8 +4,8 @@
 
 package com.chillibits.particulatematterapi.controller.v1;
 
-import com.chillibits.particulatematterapi.exception.ClientDataException;
 import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
+import com.chillibits.particulatematterapi.exception.exception.ClientDataException;
 import com.chillibits.particulatematterapi.model.db.main.Client;
 import com.chillibits.particulatematterapi.model.dto.ClientDto;
 import com.chillibits.particulatematterapi.repository.ClientRepository;

@@ -5,7 +5,7 @@
 package com.chillibits.particulatematterapi.controller.v1;
 
 import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
-import com.chillibits.particulatematterapi.exception.SensorDataException;
+import com.chillibits.particulatematterapi.exception.exception.SensorDataException;
 import com.chillibits.particulatematterapi.model.db.main.Link;
 import com.chillibits.particulatematterapi.model.db.main.Sensor;
 import com.chillibits.particulatematterapi.model.db.main.User;
@@ -21,6 +21,8 @@ import com.chillibits.particulatematterapi.shared.SharedUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -54,6 +56,10 @@ public class SensorController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all sensors, registered in the database")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Invalid radius. Please provide a radius >= 0"),
+            @ApiResponse(code = 400, message = "Invalid gps coordinates.")
+    })
     public List<SensorDto> getAllSensors(
             @RequestParam(defaultValue = "0") double latitude,
             @RequestParam(defaultValue = "0") double longitude,
@@ -66,6 +72,10 @@ public class SensorController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE, params = "compressed")
     @ApiOperation(value = "Returns all sensors, registered in the database in a compressed form")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Invalid radius. Please provide a radius >= 0"),
+            @ApiResponse(code = 400, message = "Invalid gps coordinates.")
+    })
     public List<SensorCompressedDto> getAllSensorsCompressed(
             @RequestParam(defaultValue = "0") double latitude,
             @RequestParam(defaultValue = "0") double longitude,
@@ -82,14 +92,14 @@ public class SensorController {
         return sensorRepository.findById(chipId).map(this::convertToDto).orElse(null);
     }
 
-    /*@RequestMapping(method = RequestMethod.GET, path = "/sensor/sync", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Returns all sensors, registered in the database")
-    public List<Sensor> getAllSensorsSync(@RequestBody SyncPackage syncPackage) {
-        return null;
-    }*/
-
     @RequestMapping(method = RequestMethod.POST, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Adds a sensor to the database")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "The sensor with this chip id already exists in the database."),
+            @ApiResponse(code = 400, message = "Cannot create a sensor without having received at least one data record from it."),
+            @ApiResponse(code = 400, message = "Invalid gps coordinates."),
+            @ApiResponse(code = 400, message = "You cannot assign a sensor to a non-existing user.")
+    })
     public Sensor addSensor(@RequestBody Sensor sensor) throws SensorDataException {
         // Check for possible faulty data parameters
         if(sensorRepository.existsById(sensor.getChipId())) throw new SensorDataException(ErrorCodeUtils.SENSOR_ALREADY_EXISTS);
@@ -122,6 +132,11 @@ public class SensorController {
 
     @RequestMapping(method = RequestMethod.PUT, path = "/sensor", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates a sensor")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Cannot update a non-existing sensor."),
+            @ApiResponse(code = 400, message = "Invalid gps coordinates."),
+            @ApiResponse(code = 400, message = "You cannot assign a sensor to a non-existing user.")
+    })
     public Integer updateSensor(@RequestBody Sensor sensor) throws SensorDataException {
         // Check for possible faulty data parameters
         if(!sensorRepository.existsById(sensor.getChipId())) throw new SensorDataException(ErrorCodeUtils.SENSOR_NOT_EXISTING);
@@ -150,7 +165,10 @@ public class SensorController {
     // ---------------------------------------------- Utility functions ------------------------------------------------
 
     private List<Sensor> getSensors(double latitude, double longitude, int radius, boolean onlyPublished) throws SensorDataException {
+        if ((latitude == 0 && longitude == 0) || (latitude == 200 && longitude == 200))
+            throw new SensorDataException(ErrorCodeUtils.INVALID_GPS_COORDINATES);
         if (radius < 0) throw new SensorDataException(ErrorCodeUtils.INVALID_RADIUS);
+
         List<Sensor> sensors;
         if (onlyPublished) {
             if (radius == 0)
@@ -197,8 +215,8 @@ public class SensorController {
         // Extract requesting user
         User user = Arrays.asList(sensor.getUserLinks().toArray(new Link[0])).get(0).user;
         if(!userRepository.existsById(user.getId())) throw new SensorDataException(ErrorCodeUtils.CANNOT_ASSIGN_TO_USER);
-        if(sensor.getGpsLatitude() == 0 && sensor.getGpsLongitude() == 0) throw new SensorDataException(ErrorCodeUtils.INVALID_GPS_COORDINATES);
-        if(sensor.getGpsLatitude() == 200 && sensor.getGpsLongitude() == 200) throw new SensorDataException(ErrorCodeUtils.INVALID_GPS_COORDINATES);
+        if((sensor.getGpsLatitude() == 0 && sensor.getGpsLongitude() == 0) || (sensor.getGpsLatitude() == 200 && sensor.getGpsLongitude() == 200))
+            throw new SensorDataException(ErrorCodeUtils.INVALID_GPS_COORDINATES);
         return user;
     }
 }

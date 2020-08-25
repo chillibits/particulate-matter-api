@@ -5,13 +5,15 @@
 package com.chillibits.particulatematterapi.controller.v1;
 
 import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
-import com.chillibits.particulatematterapi.exception.LinkDataException;
+import com.chillibits.particulatematterapi.exception.exception.LinkDataException;
 import com.chillibits.particulatematterapi.model.db.main.Link;
 import com.chillibits.particulatematterapi.repository.LinkRepository;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
 import com.chillibits.particulatematterapi.repository.UserRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +36,11 @@ public class LinkController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/link", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, params = "chipId")
     @ApiOperation(value = "Adds a link to the database")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Cannot assign link to a non-existent sensor."),
+            @ApiResponse(code = 400, message = "Cannot assign link to a non-existent user."),
+            @ApiResponse(code = 400, message = "Invalid link data.")
+    })
     public Link addLink(@RequestBody Link link, @RequestParam Long chipId) throws LinkDataException {
         // Check for possible faulty data parameters
         if(sensorRepository.findById(chipId).isEmpty()) throw new LinkDataException(ErrorCodeUtils.SENSOR_NOT_EXISTING);
@@ -46,6 +53,10 @@ public class LinkController {
 
     @RequestMapping(method = RequestMethod.PUT, path = "/link", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates a link")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Cannot assign link to a non-existent user."),
+            @ApiResponse(code = 400, message = "Invalid link data.")
+    })
     public Integer updateLink(@RequestBody Link link) throws LinkDataException {
         validateLinkObject(link);
         return linkRepository.updateLink(link.getId(), link.isOwner(), link.getName(), link.getColor());

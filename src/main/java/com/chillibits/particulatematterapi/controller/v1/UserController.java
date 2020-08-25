@@ -5,12 +5,14 @@
 package com.chillibits.particulatematterapi.controller.v1;
 
 import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
-import com.chillibits.particulatematterapi.exception.UserDataException;
+import com.chillibits.particulatematterapi.exception.exception.UserDataException;
 import com.chillibits.particulatematterapi.model.db.main.User;
 import com.chillibits.particulatematterapi.model.dto.UserDto;
 import com.chillibits.particulatematterapi.repository.UserRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -50,6 +52,10 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/user", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Adds an user to the database")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Please provide an user object with all fields filled"),
+            @ApiResponse(code = 400, message = "This user already exists")
+    })
     public User addUser(@RequestBody User user) throws UserDataException {
         // Validity checks
         if(userRepository.findByEmail(user.getEmail()) != null) throw new UserDataException(ErrorCodeUtils.USER_ALREADY_EXISTS);
@@ -65,6 +71,9 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.PUT, path = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates an existing user")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Please provide an user object with all fields filled")
+    })
     public Integer updateUser(@RequestBody User user) throws UserDataException {
         validateUserObject(user);
         return userRepository.updateUser(user.getId(), user.getFirstName(), user.getLastName(), user.getPassword(), user.getRole(), user.getStatus());

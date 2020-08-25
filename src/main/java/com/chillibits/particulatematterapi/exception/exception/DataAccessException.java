@@ -2,7 +2,9 @@
  * Copyright © Marc Auberer 2019 - 2020. All rights reserved
  */
 
-package com.chillibits.particulatematterapi.exception;
+package com.chillibits.particulatematterapi.exception.exception;
+
+import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
 
 import java.util.HashMap;
 

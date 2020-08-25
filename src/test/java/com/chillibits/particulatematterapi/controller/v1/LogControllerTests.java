@@ -5,7 +5,7 @@
 package com.chillibits.particulatematterapi.controller.v1;
 
 import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
-import com.chillibits.particulatematterapi.exception.LogAccessException;
+import com.chillibits.particulatematterapi.exception.exception.LogAccessException;
 import com.chillibits.particulatematterapi.model.db.data.LogItem;
 import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import org.junit.Assert;
