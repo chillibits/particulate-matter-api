@@ -35,6 +35,7 @@ public class ErrorCodeUtils {
     public static final int INVALID_USER_DATA = 700;
     public static final int USER_NOT_EXISTING = 701;
     public static final int USER_ALREADY_EXISTS = 702;
+    public static final int PASSWORD_WRONG = 703;
 
     // Link errors (8xx)
     public static final int INVALID_LINK_DATA = 800;

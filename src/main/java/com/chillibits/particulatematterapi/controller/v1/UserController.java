@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -48,6 +49,20 @@ public class UserController {
     public UserDto getUserByEmail(@PathVariable("email") String email) {
         if(email == null) return null;
         return convertToDto(userRepository.findByEmail(email));
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/user/{email}", produces = MediaType.APPLICATION_JSON_VALUE, params = "password")
+    @ApiOperation(value = "Returns details for one specific user after checking login credentials")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "This user does not exist"),
+            @ApiResponse(code = 400, message = "The user exists, but the provided password is wrong")
+    })
+    public UserDto login(@PathVariable("email") String email, @RequestParam("password") String password) throws UserDataException {
+        if(email == null || password == null) return null;
+        User user = userRepository.findByEmail(email);
+        if(user == null) throw new UserDataException(ErrorCodeUtils.USER_NOT_EXISTING);
+        if(!user.getPassword().equals(password)) throw new UserDataException(ErrorCodeUtils.PASSWORD_WRONG);
+        return convertToDto(user);
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/user", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
