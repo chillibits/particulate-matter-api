@@ -57,8 +57,8 @@ public class SensorController {
     @RequestMapping(method = RequestMethod.GET, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all sensors, registered in the database")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Invalid radius. Please provide a radius >= 0"),
-            @ApiResponse(code = 400, message = "Invalid gps coordinates.")
+            @ApiResponse(code = 201, message = "Invalid radius. Please provide a radius >= 0"),
+            @ApiResponse(code = 201, message = "Invalid gps coordinates.")
     })
     public List<SensorDto> getAllSensors(
             @RequestParam(defaultValue = "0") double latitude,
@@ -73,8 +73,8 @@ public class SensorController {
     @RequestMapping(method = RequestMethod.GET, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE, params = "compressed")
     @ApiOperation(value = "Returns all sensors, registered in the database in a compressed form")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Invalid radius. Please provide a radius >= 0"),
-            @ApiResponse(code = 400, message = "Invalid gps coordinates.")
+            @ApiResponse(code = 201, message = "Invalid radius. Please provide a radius >= 0"),
+            @ApiResponse(code = 201, message = "Invalid gps coordinates.")
     })
     public List<SensorCompressedDto> getAllSensorsCompressed(
             @RequestParam(defaultValue = "0") double latitude,
@@ -95,10 +95,10 @@ public class SensorController {
     @RequestMapping(method = RequestMethod.POST, path = "/sensor", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Adds a sensor to the database")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "The sensor with this chip id already exists in the database."),
-            @ApiResponse(code = 400, message = "Cannot create a sensor without having received at least one data record from it."),
-            @ApiResponse(code = 400, message = "Invalid gps coordinates."),
-            @ApiResponse(code = 400, message = "You cannot assign a sensor to a non-existing user.")
+            @ApiResponse(code = 201, message = "The sensor with this chip id already exists in the database."),
+            @ApiResponse(code = 201, message = "Cannot create a sensor without having received at least one data record from it."),
+            @ApiResponse(code = 201, message = "Invalid gps coordinates."),
+            @ApiResponse(code = 201, message = "You cannot assign a sensor to a non-existing user.")
     })
     public Sensor addSensor(@RequestBody Sensor sensor) throws SensorDataException {
         // Check for possible faulty data parameters
@@ -133,9 +133,9 @@ public class SensorController {
     @RequestMapping(method = RequestMethod.PUT, path = "/sensor", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates a sensor")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Cannot update a non-existing sensor."),
-            @ApiResponse(code = 400, message = "Invalid gps coordinates."),
-            @ApiResponse(code = 400, message = "You cannot assign a sensor to a non-existing user.")
+            @ApiResponse(code = 201, message = "Cannot update a non-existing sensor."),
+            @ApiResponse(code = 201, message = "Invalid gps coordinates."),
+            @ApiResponse(code = 201, message = "You cannot assign a sensor to a non-existing user.")
     })
     public Integer updateSensor(@RequestBody Sensor sensor) throws SensorDataException {
         // Check for possible faulty data parameters

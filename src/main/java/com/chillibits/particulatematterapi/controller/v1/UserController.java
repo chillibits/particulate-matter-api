@@ -54,8 +54,8 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET, path = "/user/{email}", produces = MediaType.APPLICATION_JSON_VALUE, params = "password")
     @ApiOperation(value = "Returns details for one specific user after checking login credentials")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "This user does not exist"),
-            @ApiResponse(code = 400, message = "The user exists, but the provided password is wrong")
+            @ApiResponse(code = 201, message = "This user does not exist"),
+            @ApiResponse(code = 201, message = "The user exists, but the provided password is wrong")
     })
     public UserDto login(@PathVariable("email") String email, @RequestParam("password") String password) throws UserDataException {
         if(email == null || password == null) return null;
@@ -68,8 +68,8 @@ public class UserController {
     @RequestMapping(method = RequestMethod.POST, path = "/user", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Adds an user to the database")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Please provide an user object with all fields filled"),
-            @ApiResponse(code = 400, message = "This user already exists")
+            @ApiResponse(code = 201, message = "Please provide an user object with all fields filled"),
+            @ApiResponse(code = 201, message = "This user already exists")
     })
     public User addUser(@RequestBody User user) throws UserDataException {
         // Validity checks
@@ -87,8 +87,8 @@ public class UserController {
     @RequestMapping(method = RequestMethod.PUT, path = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates an existing user")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Please provide an user object with all fields filled"),
-            @ApiResponse(code = 400, message = "This user does not exist")
+            @ApiResponse(code = 201, message = "Please provide an user object with all fields filled"),
+            @ApiResponse(code = 201, message = "This user does not exist")
     })
     public Integer updateUser(@RequestBody User user) throws UserDataException {
         // Validity checks

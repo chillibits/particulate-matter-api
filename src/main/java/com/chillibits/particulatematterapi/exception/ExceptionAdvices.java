@@ -42,7 +42,7 @@ public class ExceptionAdvices {
             StatsDataException.class,
             UserDataException.class
     })
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CREATED)
     public String handler(RuntimeException e) { return e.getMessage(); }
 
     /**

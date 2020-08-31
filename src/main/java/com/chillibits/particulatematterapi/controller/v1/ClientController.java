@@ -44,7 +44,7 @@ public class ClientController {
     @RequestMapping(method = RequestMethod.GET, path = "/client/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns info about a specific client, identified by its name")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "This client does not exist")
+            @ApiResponse(code = 201, message = "This client does not exist")
     })
     public ClientDto getClientInfoByName(@PathVariable("name") String name) throws ClientDataException {
         Optional<Client> client = clientRepository.findByName(name);
@@ -55,7 +55,7 @@ public class ClientController {
     @RequestMapping(method = RequestMethod.POST, path = "/client", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Adds a client object", hidden = true)
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Please provide a client object with all fields filled")
+            @ApiResponse(code = 201, message = "Please provide a client object with all fields filled")
     })
     public Client addClient(@RequestBody Client client) throws ClientDataException {
         validateClientObject(client);
@@ -65,7 +65,7 @@ public class ClientController {
     @RequestMapping(method = RequestMethod.PUT, path = "/client", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates a specific client object", hidden = true)
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Please provide a client object with all fields filled")
+            @ApiResponse(code = 201, message = "Please provide a client object with all fields filled")
     })
     public Integer updateClient(@RequestBody Client client) throws ClientDataException {
         validateClientObject(client);

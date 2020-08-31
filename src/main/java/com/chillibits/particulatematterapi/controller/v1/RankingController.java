@@ -40,7 +40,7 @@ public class RankingController {
     @RequestMapping(method = RequestMethod.GET, path = "/ranking/city", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns a ranking of the top cities with the most sensors")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Invalid items number. Please provide a number >= 1")
+            @ApiResponse(code = 201, message = "Invalid items number. Please provide a number >= 1")
     })
     public List<RankingItemCity> getRankingByCity(
             @RequestParam(defaultValue = "10") int items
@@ -52,7 +52,7 @@ public class RankingController {
     @RequestMapping(method = RequestMethod.GET, path = "/ranking/city", produces = MediaType.APPLICATION_JSON_VALUE, params = "compressed")
     @ApiOperation(value = "Returns a ranking of the top cities with the most sensors")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Invalid items number. Please provide a number >= 1")
+            @ApiResponse(code = 201, message = "Invalid items number. Please provide a number >= 1")
     })
     public List<RankingItemCityDto> getRankingByCityCompressed(
             @RequestParam(defaultValue = "10") int items
@@ -67,7 +67,7 @@ public class RankingController {
     @RequestMapping(method = RequestMethod.GET, path = "/ranking/country", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns a ranking of the top countries with the most sensors")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Invalid items number. Please provide a number >= 1")
+            @ApiResponse(code = 201, message = "Invalid items number. Please provide a number >= 1")
     })
     public List<RankingItemCountry> getRankingByCountry(
             @RequestParam(defaultValue = "10") int items
@@ -79,7 +79,7 @@ public class RankingController {
     @RequestMapping(method = RequestMethod.GET, path = "/ranking/country", produces = MediaType.APPLICATION_JSON_VALUE, params = "compressed")
     @ApiOperation(value = "Returns a ranking of the top countries with the most sensors")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Invalid items number. Please provide a number >= 1")
+            @ApiResponse(code = 201, message = "Invalid items number. Please provide a number >= 1")
     })
     public List<RankingItemCountryDto> getRankingByCountryCompressed(
             @RequestParam(defaultValue = "10") int items

@@ -55,7 +55,7 @@ public class DataController {
     @RequestMapping(method = RequestMethod.GET, path = "/data/{chipId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all data records for a specific sensor")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0")
+            @ApiResponse(code = 201, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0")
     })
     public List<DataRecord> getDataRecordsUncompressed(
         @PathVariable long chipId,
@@ -68,7 +68,7 @@ public class DataController {
     @RequestMapping(method = RequestMethod.GET, path = "/data/{chipId}", params = "compressed")
     @ApiOperation(value = "Returns all data records for a specific sensor in a compressed form")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0")
+            @ApiResponse(code = 201, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0")
     })
     public List<DataRecordDto> getDataRecordsCompressed(
         @PathVariable long chipId,
@@ -115,7 +115,7 @@ public class DataController {
     @RequestMapping(method = RequestMethod.GET, path = "/data/country/{country}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all data records from sensors in a specific country")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0")
+            @ApiResponse(code = 201, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0")
     })
     public List<DataRecord> getDataCountry(
         @PathVariable String country,
@@ -147,7 +147,7 @@ public class DataController {
     @RequestMapping(method = RequestMethod.GET, path = "/data/city/{country}/{city}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all data records from sensors in a specific city")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0")
+            @ApiResponse(code = 201, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0")
     })
     public List<DataRecord> getDataCity(
         @PathVariable String country,
@@ -183,9 +183,9 @@ public class DataController {
     @RequestMapping(method = RequestMethod.GET, path = "/data/chart")
     @ApiOperation(value = "Returns chart ready data", hidden = true)
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0"),
-            @ApiResponse(code = 400, message = "Invalid merge count. Must be >= 1"),
-            @ApiResponse(code = 400, message = "Invalid field index. Please provide a number >= 0. Also make sure, it's not too high.")
+            @ApiResponse(code = 201, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0"),
+            @ApiResponse(code = 201, message = "Invalid merge count. Must be >= 1"),
+            @ApiResponse(code = 201, message = "Invalid field index. Please provide a number >= 0. Also make sure, it's not too high.")
     })
     public String getChartData(
         @RequestParam long chipId,
@@ -207,9 +207,9 @@ public class DataController {
     @RequestMapping(method = RequestMethod.GET, path = "/data/chart", params = "country")
     @ApiOperation(value = "Returns chart ready data for a specific country", hidden = true)
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0"),
-            @ApiResponse(code = 400, message = "Invalid period. Please provide a period >= 1"),
-            @ApiResponse(code = 400, message = "Invalid field index. Please provide a number >= 0. Also make sure, it's not too high.")
+            @ApiResponse(code = 201, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0"),
+            @ApiResponse(code = 201, message = "Invalid period. Please provide a period >= 1"),
+            @ApiResponse(code = 201, message = "Invalid field index. Please provide a number >= 0. Also make sure, it's not too high.")
     })
     public String getChartDataCountry(
             @RequestParam String country,
@@ -253,9 +253,9 @@ public class DataController {
     @RequestMapping(method = RequestMethod.GET, path = "/data/chart", params = {"country", "city"})
     @ApiOperation(value = "Returns chart ready data for a specific city", hidden = true)
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0"),
-            @ApiResponse(code = 400, message = "Invalid period. Please provide a period >= 1"),
-            @ApiResponse(code = 400, message = "Invalid field index. Please provide a number >= 0. Also make sure, it's not too high.")
+            @ApiResponse(code = 201, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0"),
+            @ApiResponse(code = 201, message = "Invalid period. Please provide a period >= 1"),
+            @ApiResponse(code = 201, message = "Invalid field index. Please provide a number >= 0. Also make sure, it's not too high.")
     })
     public String getChartDataCity(
             @RequestParam String country,

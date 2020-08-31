@@ -37,9 +37,9 @@ public class LinkController {
     @RequestMapping(method = RequestMethod.POST, path = "/link", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, params = "chipId")
     @ApiOperation(value = "Adds a link to the database")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Cannot assign link to a non-existent sensor."),
-            @ApiResponse(code = 400, message = "Cannot assign link to a non-existent user."),
-            @ApiResponse(code = 400, message = "Invalid link data.")
+            @ApiResponse(code = 201, message = "Cannot assign link to a non-existent sensor."),
+            @ApiResponse(code = 201, message = "Cannot assign link to a non-existent user."),
+            @ApiResponse(code = 201, message = "Invalid link data.")
     })
     public Link addLink(@RequestBody Link link, @RequestParam Long chipId) throws LinkDataException {
         // Check for possible faulty data parameters
@@ -54,8 +54,8 @@ public class LinkController {
     @RequestMapping(method = RequestMethod.PUT, path = "/link", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates a link")
     @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Cannot assign link to a non-existent user."),
-            @ApiResponse(code = 400, message = "Invalid link data.")
+            @ApiResponse(code = 201, message = "Cannot assign link to a non-existent user."),
+            @ApiResponse(code = 201, message = "Invalid link data.")
     })
     public Integer updateLink(@RequestBody Link link) throws LinkDataException {
         validateLinkObject(link);
