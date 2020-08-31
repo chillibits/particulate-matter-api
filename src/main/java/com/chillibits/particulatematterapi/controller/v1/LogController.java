@@ -37,7 +37,7 @@ public class LogController {
     @RequestMapping(method = RequestMethod.GET, path = "/log", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns the logs for the specified time span", hidden = true)
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0")
+            @ApiResponse(code = 406, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0")
     })
     public List<LogItem> getAllLogs(
             @RequestParam(defaultValue = "0") long from,
@@ -53,7 +53,7 @@ public class LogController {
     @RequestMapping(method = RequestMethod.GET, path = "/log/target/{target}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns the logs for the specified time span, filtered by target", hidden = true)
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0")
+            @ApiResponse(code = 406, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0")
     })
     public List<LogItem> getLogsByTarget(
             @PathVariable String target,
@@ -70,7 +70,7 @@ public class LogController {
     @RequestMapping(method = RequestMethod.GET, path = "/log/user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns the logs for the specified time span, filtered by user", hidden = true)
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0")
+            @ApiResponse(code = 406, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0")
     })
     public List<LogItem> getLogsByUser(
             @PathVariable int userId,
@@ -87,7 +87,7 @@ public class LogController {
     @RequestMapping(method = RequestMethod.GET, path = "/log/client/{clientId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns the logs for the specified time span, filtered by client", hidden = true)
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0")
+            @ApiResponse(code = 406, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0")
     })
     public List<LogItem> getLogsByClient(
             @PathVariable int clientId,
@@ -104,7 +104,7 @@ public class LogController {
     @RequestMapping(method = RequestMethod.GET, path = "/log/action/{action}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns the logs for the specified time span, filtered by action", hidden = true)
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0")
+            @ApiResponse(code = 406, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0")
     })
     public List<LogItem> getLogsByAction(
             @PathVariable String action,

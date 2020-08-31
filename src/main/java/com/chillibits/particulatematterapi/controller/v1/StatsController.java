@@ -78,7 +78,7 @@ public class StatsController {
     @RequestMapping(method = RequestMethod.GET, path = "/stats/{chipId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns stats about a specific sensor")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "The sensor you're requesting does not exist.")
+            @ApiResponse(code = 406, message = "The sensor you're requesting does not exist.")
     })
     public StatsItem getStatsOfSensor(@PathVariable Long chipId) throws StatsDataException {
         // Check if sensor is existing
