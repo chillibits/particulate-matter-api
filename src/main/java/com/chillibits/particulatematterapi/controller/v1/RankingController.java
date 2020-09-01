@@ -4,19 +4,17 @@
 
 package com.chillibits.particulatematterapi.controller.v1;
 
-import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
 import com.chillibits.particulatematterapi.exception.exception.RankingDataException;
+import com.chillibits.particulatematterapi.model.dto.RankingItemCityCompressedDto;
 import com.chillibits.particulatematterapi.model.dto.RankingItemCityDto;
+import com.chillibits.particulatematterapi.model.dto.RankingItemCountryCompressedDto;
 import com.chillibits.particulatematterapi.model.dto.RankingItemCountryDto;
-import com.chillibits.particulatematterapi.model.io.RankingItemCity;
-import com.chillibits.particulatematterapi.model.io.RankingItemCountry;
-import com.chillibits.particulatematterapi.repository.SensorRepository;
+import com.chillibits.particulatematterapi.service.RankingService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,20 +30,15 @@ import java.util.stream.Collectors;
 public class RankingController {
 
     @Autowired
-    private SensorRepository sensorRepository;
-    @Autowired
-    private ModelMapper mapper;
+    private RankingService rankingService;
 
     @RequestMapping(method = RequestMethod.GET, path = "/ranking/city", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns a ranking of the top cities with the most sensors")
     @ApiResponses(value = {
             @ApiResponse(code = 406, message = "Invalid items number. Please provide a number >= 1")
     })
-    public List<RankingItemCity> getRankingByCity(
-            @RequestParam(defaultValue = "10") int items
-    ) throws RankingDataException {
-        if(items < 1) throw new RankingDataException(ErrorCodeUtils.INVALID_ITEMS_NUMBER);
-        return sensorRepository.getRankingByCity(items);
+    public List<RankingItemCityDto> getRankingByCity(@RequestParam(defaultValue = "10") int items) throws RankingDataException {
+        return rankingService.getRankingByCity(items);
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/ranking/city", produces = MediaType.APPLICATION_JSON_VALUE, params = "compressed")
@@ -54,14 +46,8 @@ public class RankingController {
     @ApiResponses(value = {
             @ApiResponse(code = 406, message = "Invalid items number. Please provide a number >= 1")
     })
-    public List<RankingItemCityDto> getRankingByCityCompressed(
-            @RequestParam(defaultValue = "10") int items
-    ) throws RankingDataException {
-        if(items < 1) throw new RankingDataException(ErrorCodeUtils.INVALID_ITEMS_NUMBER);
-        return sensorRepository.getRankingByCity(items)
-                .stream()
-                .map(this::convertToCityDto)
-                .collect(Collectors.toList());
+    public List<RankingItemCityCompressedDto> getRankingByCityCompressed(@RequestParam(defaultValue = "10") int items) {
+        return rankingService.getRankingByCityCompressed(items);
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/ranking/country", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -69,11 +55,8 @@ public class RankingController {
     @ApiResponses(value = {
             @ApiResponse(code = 406, message = "Invalid items number. Please provide a number >= 1")
     })
-    public List<RankingItemCountry> getRankingByCountry(
-            @RequestParam(defaultValue = "10") int items
-    ) throws RankingDataException {
-        if(items < 1) throw new RankingDataException(ErrorCodeUtils.INVALID_ITEMS_NUMBER);
-        return sensorRepository.getRankingByCountry(items);
+    public List<RankingItemCountryDto> getRankingByCountry(@RequestParam(defaultValue = "10") int items) {
+        return rankingService.getRankingByCountry(items);
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/ranking/country", produces = MediaType.APPLICATION_JSON_VALUE, params = "compressed")
@@ -81,23 +64,7 @@ public class RankingController {
     @ApiResponses(value = {
             @ApiResponse(code = 406, message = "Invalid items number. Please provide a number >= 1")
     })
-    public List<RankingItemCountryDto> getRankingByCountryCompressed(
-            @RequestParam(defaultValue = "10") int items
-    ) throws RankingDataException {
-        if(items < 1) throw new RankingDataException(ErrorCodeUtils.INVALID_ITEMS_NUMBER);
-        return sensorRepository.getRankingByCountry(items)
-                .stream()
-                .map(this::convertToCountryDto)
-                .collect(Collectors.toList());
-    }
-
-    // ---------------------------------------------- Utility functions ------------------------------------------------
-
-    private RankingItemCityDto convertToCityDto(RankingItemCity item) {
-        return mapper.map(item, RankingItemCityDto.class);
-    }
-
-    private RankingItemCountryDto convertToCountryDto(RankingItemCountry item) {
-        return mapper.map(item, RankingItemCountryDto.class);
+    public List<RankingItemCountryCompressedDto> getRankingByCountryCompressed(@RequestParam(defaultValue = "10") int items) {
+        return rankingService.getRankingByCountryCompressed(items);
     }
 }

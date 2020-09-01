@@ -37,12 +37,12 @@ public class ClientService {
         return client.map(this::convertToDto).orElse(null);
     }
 
-    public ClientDto addClient(ClientInsertUpdateDto client) {
+    public ClientDto addClient(ClientInsertUpdateDto client) throws ClientDataException {
         validateClientObject(client);
         return convertToDto(clientRepository.save(convertToDbo(client)));
     }
 
-    public Integer updateClient(ClientInsertUpdateDto client) {
+    public Integer updateClient(ClientInsertUpdateDto client) throws ClientDataException {
         validateClientObject(client);
         return clientRepository.updateClient(convertToDbo(client));
     }
@@ -51,7 +51,7 @@ public class ClientService {
         clientRepository.deleteById(id);
     }
 
-    // ------------------------------------------------ Util functions -------------------------------------------------
+    // ---------------------------------------------- Utility functions ------------------------------------------------
 
     public ClientDto convertToDto(Client client) {
         return mapper.map(client, ClientDto.class);

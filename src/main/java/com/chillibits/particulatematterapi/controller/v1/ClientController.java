@@ -4,7 +4,6 @@
 
 package com.chillibits.particulatematterapi.controller.v1;
 
-import com.chillibits.particulatematterapi.exception.exception.ClientDataException;
 import com.chillibits.particulatematterapi.model.dto.ClientDto;
 import com.chillibits.particulatematterapi.model.dto.ClientInsertUpdateDto;
 import com.chillibits.particulatematterapi.service.ClientService;
@@ -49,7 +48,7 @@ public class ClientController {
     @ApiResponses(value = {
             @ApiResponse(code = 406, message = "Please provide a client object with all fields filled")
     })
-    public ClientDto addClient(@RequestBody ClientInsertUpdateDto client) throws ClientDataException {
+    public ClientDto addClient(@RequestBody ClientInsertUpdateDto client) {
         return clientService.addClient(client);
     }
 
@@ -58,7 +57,7 @@ public class ClientController {
     @ApiResponses(value = {
             @ApiResponse(code = 406, message = "Please provide a client object with all fields filled")
     })
-    public Integer updateClient(@RequestBody ClientInsertUpdateDto client) throws ClientDataException {
+    public Integer updateClient(@RequestBody ClientInsertUpdateDto client) {
         return clientService.updateClient(client);
     }
 
