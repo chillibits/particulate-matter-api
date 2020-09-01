@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClientInsertUpdateDto {
+    private Integer id;
     private String name;
     private String readableName;
     private String secret;

@@ -13,11 +13,12 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
-    private int id;
+public class UserInsertUpdateDto {
+    private Integer id;
     private String firstName;
     private String lastName;
     private String email;
+    private String password;
     private Set<LinkDto> sensorLinks;
     private int role;
     private int status;

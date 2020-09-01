@@ -172,11 +172,11 @@ public class ClientControllerTests {
 
     private List<ClientInsertUpdateDto> getTestInsertUpdateData() {
         // Create client objects
-        ClientInsertUpdateDto c1 = new ClientInsertUpdateDto("admin", "Particulate Matter Admin", "not set", Client.TYPE_DESKTOP_APPLICATION, Client.ROLE_APPLICATION_ADMIN, Client.STATUS_ONLINE, true, 100, "1.0.0", 100, "1.0.0", "ChilliBits", "Only for administrators");
-        ClientInsertUpdateDto c2 = new ClientInsertUpdateDto("pmapp", "Particulate Matter App", "not set", Client.TYPE_ANDROID_APP, Client.ROLE_APPLICATION_CHILLIBITS, Client.STATUS_ONLINE, true, 400, "4.0.0", 400, "4.0.0", "ChilliBits", "");
-        ClientInsertUpdateDto c3 = new ClientInsertUpdateDto("pmapp-web", "Particulate Matter App Web", "not set", Client.TYPE_WEBSITE, Client.ROLE_APPLICATION_CHILLIBITS, Client.STATUS_ONLINE, true, 123, "1.2.3", 123, "1.2.3", "ChilliBits", "");
-        ClientInsertUpdateDto c4 = new ClientInsertUpdateDto("pm-pred", "Prediction Service", "not set", Client.TYPE_NONE, Client.ROLE_APPLICATION_CHILLIBITS, Client.STATUS_OFFLINE, false, 100, "1.0.0", 100, "1.0.0", "ChilliBits", "In development");
-        ClientInsertUpdateDto c5 = new ClientInsertUpdateDto("awesome-app", "My awesome application", "12345", Client.TYPE_DESKTOP_APPLICATION, Client.ROLE_APPLICATION, Client.STATUS_SUPPORT_ENDED, false, 1230, "1.23.0", 1256, "1.25.6", "", "");
+        ClientInsertUpdateDto c1 = new ClientInsertUpdateDto(0, "admin", "Particulate Matter Admin", "not set", Client.TYPE_DESKTOP_APPLICATION, Client.ROLE_APPLICATION_ADMIN, Client.STATUS_ONLINE, true, 100, "1.0.0", 100, "1.0.0", "ChilliBits", "Only for administrators");
+        ClientInsertUpdateDto c2 = new ClientInsertUpdateDto(1, "pmapp", "Particulate Matter App", "not set", Client.TYPE_ANDROID_APP, Client.ROLE_APPLICATION_CHILLIBITS, Client.STATUS_ONLINE, true, 400, "4.0.0", 400, "4.0.0", "ChilliBits", "");
+        ClientInsertUpdateDto c3 = new ClientInsertUpdateDto(2, "pmapp-web", "Particulate Matter App Web", "not set", Client.TYPE_WEBSITE, Client.ROLE_APPLICATION_CHILLIBITS, Client.STATUS_ONLINE, true, 123, "1.2.3", 123, "1.2.3", "ChilliBits", "");
+        ClientInsertUpdateDto c4 = new ClientInsertUpdateDto(3, "pm-pred", "Prediction Service", "not set", Client.TYPE_NONE, Client.ROLE_APPLICATION_CHILLIBITS, Client.STATUS_OFFLINE, false, 100, "1.0.0", 100, "1.0.0", "ChilliBits", "In development");
+        ClientInsertUpdateDto c5 = new ClientInsertUpdateDto(4, "awesome-app", "My awesome application", "12345", Client.TYPE_DESKTOP_APPLICATION, Client.ROLE_APPLICATION, Client.STATUS_SUPPORT_ENDED, false, 1230, "1.23.0", 1256, "1.25.6", "", "");
         // Add them to test data
         return Arrays.asList(c1, c2, c3, c4, c5);
     }
