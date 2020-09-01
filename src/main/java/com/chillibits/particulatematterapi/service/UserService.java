@@ -13,6 +13,8 @@ import com.chillibits.particulatematterapi.repository.UserRepository;
 import com.chillibits.particulatematterapi.shared.SharedUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +27,8 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private ModelMapper mapper;
+    @Autowired
+    private JavaMailSender mailer;
 
     public List<UserDto> getAllUsers() {
         return userRepository.findAll().stream()
@@ -52,7 +56,7 @@ public class UserService {
         validateUserObject(user);
         if(userRepository.findByEmail(user.getEmail()) != null) throw new UserDataException(ErrorCodeUtils.USER_ALREADY_EXISTS);
         // Send confirmation email with confirmation token
-        String confirmationToken = sendConfirmationEmail(user.getEmail(), user.getFirstName(), user.getLastName());
+        String confirmationToken = sendConfirmationEmail(user.getEmail(), user.getLastName());
         // Build UserDbo object
         User userDbo = convertToDbo(user);
         long currentTimestamp = System.currentTimeMillis();
@@ -65,10 +69,12 @@ public class UserService {
     }
 
     public Boolean confirmAccount(String confirmationToken) {
-        // Search after User item with the passed confirmation token
-
+        // Search after user item with the passed confirmation token
+        User user = userRepository.findByConfirmationToken(confirmationToken);
+        if(user == null || user.getStatus() != User.EMAIL_CONFIRMATION_PENDING) return false;
         // Found. Update its status
-
+        user.setStatus(User.ACTIVE);
+        userRepository.updateUser(user);
         return true;
     }
 
@@ -85,10 +91,25 @@ public class UserService {
 
     // ---------------------------------------------- Utility functions ------------------------------------------------
 
-    private String sendConfirmationEmail(String email, String firstName, String lastName) {
+    private String sendConfirmationEmail(String email, String lastName) {
         // Generate confirmation token
         String confirmationToken = SharedUtils.generateRandomString(20);
+
+        // Generate email text
+        String salutation = lastName.isEmpty() ? "Dear app user" : "Dear Mr./Mrs. " + lastName;
+        String confirmationUrl = "https://api.pm.chillibits.com/user/confirm?confirmationToken=" + confirmationToken;
+        String text = salutation + ",\r\nThank you for downloading the Particulate Matter App.\r\nWe send you this email to verify, " +
+                "that you have control over this email address. If you got this mail mistakenly, please ignore it. Otherwise, please " +
+                "click on the button below, to activate your user account and be able to sign in.\r\n\r\n" + confirmationUrl + "\r\n" +
+                "\r\nBest regards,\r\nYour ChilliBits Team";
+
         // Send email
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("noreply@pm.chillibits.com");
+        message.setTo(email);
+        message.setSubject("Particulate Matter App - Account confirmation");
+        message.setText(text);
+        mailer.send(message);
 
         return confirmationToken;
     }

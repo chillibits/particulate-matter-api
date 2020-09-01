@@ -63,8 +63,8 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/user/confirm/{confirmationToken}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Confirms an user account", hidden = true)
-    public Boolean confirmAccount(@PathVariable String confirmationToken) {
-        return userService.confirmAccount(confirmationToken);
+    public String confirmAccount(@PathVariable String confirmationToken) {
+        return "redirect:https://www.chillibits.com/pmapp?p=confirmation&param=" + (userService.confirmAccount(confirmationToken) ? "success" : "failure");
     }
 
     @RequestMapping(method = RequestMethod.PUT, path = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
