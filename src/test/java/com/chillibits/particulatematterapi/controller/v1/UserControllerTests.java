@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -44,6 +45,8 @@ public class UserControllerTests {
     private UserController userController;
     @MockBean
     private UserRepository userRepository;
+    @MockBean
+    public JavaMailSender mailSender;
 
     private final List<User> testData = getTestData();
     private final List<UserInsertUpdateDto> insertUpdateTestData = getInsertUpdateTestData();
