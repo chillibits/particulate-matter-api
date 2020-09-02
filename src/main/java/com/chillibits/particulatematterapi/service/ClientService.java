@@ -23,7 +23,6 @@ public class ClientService {
 
     @Autowired
     private ClientRepository clientRepository;
-
     @Autowired
     private ModelMapper mapper;
 
