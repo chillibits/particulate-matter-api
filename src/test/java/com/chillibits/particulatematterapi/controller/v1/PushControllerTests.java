@@ -4,14 +4,19 @@
 
 package com.chillibits.particulatematterapi.controller.v1;
 
-import com.chillibits.particulatematterapi.model.db.data.DataRecord;
+import com.chillibits.particulatematterapi.exception.ErrorCode;
+import com.chillibits.particulatematterapi.exception.exception.PushDataException;
 import com.chillibits.particulatematterapi.model.db.main.Sensor;
+import com.chillibits.particulatematterapi.model.dto.DataRecordInsertUpdateDto;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
+import com.chillibits.particulatematterapi.service.PushService;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -25,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(SpringRunner.class)
@@ -39,7 +45,7 @@ public class PushControllerTests {
     @MockBean
     private MongoTemplate template;
 
-    private final List<DataRecord> testData = getTestData();
+    private final List<DataRecordInsertUpdateDto> testData = getTestData();
     private final List<Sensor> testSensors = getTestSensors();
 
     @TestConfiguration
@@ -48,6 +54,16 @@ public class PushControllerTests {
         @Bean
         public PushController pushController() {
             return new PushController();
+        }
+
+        @Bean
+        public PushService pushService() {
+            return new PushService();
+        }
+
+        @Bean
+        public ModelMapper mapper() {
+            return new ModelMapper();
         }
     }
 
@@ -77,24 +93,36 @@ public class PushControllerTests {
     @Test
     @DisplayName("Test pushing a data records successfully (new sensor)")
     public void testPushDataNewSensor() {
-        String result = pushController.pushData(testData.get(2), String.valueOf(testData.get(2).getChipId()), "0");
+        String result = pushController.pushData(testData.get(1), String.valueOf(testData.get(1).getChipId()), "0");
         assertEquals("ok", result);
+    }
+
+    @Test
+    @DisplayName("Test pushing a data records successfully (new sensor)")
+    public void testPushDataException() {
+        // Try with invalid input
+        Exception exception = assertThrows(PushDataException.class, () ->
+                pushController.pushData(testData.get(2), String.valueOf(testData.get(2).getChipId()), "0")
+        );
+
+        String expectedMessage = new PushDataException(ErrorCode.NO_DATA_VALUES).getMessage();
+        Assert.assertEquals(expectedMessage, exception.getMessage());
     }
 
     // -------------------------------------------------- Test data ----------------------------------------------------
 
-    private List<DataRecord> getTestData() {
+    private List<DataRecordInsertUpdateDto> getTestData() {
         // Create SensorDataValues object
-        DataRecord.SensorDataValue v1 = new DataRecord.SensorDataValue("SDS_P1", 10.1);
-        DataRecord.SensorDataValue v2 = new DataRecord.SensorDataValue("SDS_P2", 5.4);
-        DataRecord.SensorDataValue v3 = new DataRecord.SensorDataValue("GPS_lat", 37.4220251);
-        DataRecord.SensorDataValue v4 = new DataRecord.SensorDataValue("GPS_lng", -122.0846072);
-        DataRecord.SensorDataValue v5 = new DataRecord.SensorDataValue("GPS_height", 3.2);
+        DataRecordInsertUpdateDto.SensorDataValue v1 = new DataRecordInsertUpdateDto.SensorDataValue("SDS_P1", 10.1);
+        DataRecordInsertUpdateDto.SensorDataValue v2 = new DataRecordInsertUpdateDto.SensorDataValue("SDS_P2", 5.4);
+        DataRecordInsertUpdateDto.SensorDataValue v3 = new DataRecordInsertUpdateDto.SensorDataValue("GPS_lat", 37.4220251);
+        DataRecordInsertUpdateDto.SensorDataValue v4 = new DataRecordInsertUpdateDto.SensorDataValue("GPS_lng", -122.0846072);
+        DataRecordInsertUpdateDto.SensorDataValue v5 = new DataRecordInsertUpdateDto.SensorDataValue("GPS_height", 3.2);
         // Create data record objects
         long time = System.currentTimeMillis();
-        DataRecord d1 = new DataRecord(1234567, time, "2020-03", new DataRecord.SensorDataValue[]{ v1, v2, v3, v4, v5 }, "No notes");
-        DataRecord d2 = new DataRecord(12345678, time, "2020-02", null, "");
-        DataRecord d3 = new DataRecord(123456, time, "2018-03", null, "Nothing");
+        DataRecordInsertUpdateDto d1 = new DataRecordInsertUpdateDto(1234567, time, "2020-03", new DataRecordInsertUpdateDto.SensorDataValue[]{ v1, v2, v3, v4, v5 }, "No notes");
+        DataRecordInsertUpdateDto d2 = new DataRecordInsertUpdateDto(12345678, time, "2020-02", new DataRecordInsertUpdateDto.SensorDataValue[]{ v1, v2 }, "");
+        DataRecordInsertUpdateDto d3 = new DataRecordInsertUpdateDto(123456, time, "2018-03", null, "Nothing");
         // Add them to test data
         return Arrays.asList(d1, d2, d3);
     }

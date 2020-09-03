@@ -22,6 +22,7 @@ public enum ErrorCode {
     INVALID_PERIOD(203),
 
     // Push errors (3xx)
+    NO_DATA_VALUES(300),
 
     // Ranking errors (4xx)
     INVALID_ITEMS_NUMBER(400),
