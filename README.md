@@ -8,6 +8,11 @@
 
 *Attention: This repository is still in development. Up to now, there's no stable API version.*
 
+## Data Structure (MySQL database)
+![Data structure](https://github.com/ChilliBits/particulate-matter-api/blob/develop/media/er-diagram-alpha.png "Data structure")
+
+The actual measurement data gets collected in a MongoDB to keep the performance up.
+
 ## Features
 -   **Chart endpoint**
     -   Get chart from single sensor in a specific time span
@@ -70,7 +75,7 @@ If you have built your own IoT device, you can also send data to our system. Set
 The required data format can be found in our API documentation at [api.pm.chillibits.com](https://api.pm.chillibits.com/swagger-ui/index.html#/push/pushDataUsingPOST)
 
 ## Register an application
-If you're the developer of an application and you want to consume data from our API, you have to contact us via [email](mailto:contact@chillibits.com?subject=Register%20application%20pmapi).
+If you're the developer of an application and want to consume data from our API, you have to contact us via [email](mailto:contact@chillibits.com?subject=Register%20application%20pmapi).
 The registration process is as follows:
 
 -   We'll check the code of your application to ensure, that you're not using our data incorrectly or with a malicious intention. Therefore, we only accept open source applications.
