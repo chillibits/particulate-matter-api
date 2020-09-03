@@ -103,7 +103,7 @@ public class DataController {
     @ApiOperation(value = "Returns a record with the averages of the latest values of the specified sensors")
     public DataRecordDto getDataAverageFromMultipleSensors(@RequestParam Long[] chipIds) {
         List<DataRecord> records = new ArrayList<>();
-        for(Long chipId : chipIds) {
+        for(long chipId : chipIds) {
             DataRecord latestRecord = getLatestDataRecord(chipId);
             if(latestRecord != null) records.add(latestRecord);
         }
@@ -127,7 +127,7 @@ public class DataController {
 
         // Get data from all selected sensors
         List<DataRecord> data = new ArrayList<>();
-        for(Long chipId : chipIds) data.addAll(getDataRecords(chipId, from, to));
+        for(long chipId : chipIds) data.addAll(getDataRecords(chipId, from, to));
         return data;
     }
 
@@ -161,7 +161,7 @@ public class DataController {
         long startTime = System.currentTimeMillis();
         // Get data from all selected sensors
         List<DataRecord> data = new ArrayList<>();
-        for(Long chipId : chipIds) data.addAll(getDataRecords(chipId, from, to));
+        for(long chipId : chipIds) data.addAll(getDataRecords(chipId, from, to));
         log.info("LoadData: " + (System.currentTimeMillis() - startTime));
         return data;
     }
@@ -242,7 +242,7 @@ public class DataController {
         List<DataRecord> records = new ArrayList<>();
         while (currTo <= toTimestamp) {
             List<DataRecord> recordsInTimeSpan = new ArrayList<>();
-            for (Long chipId : chipIds) recordsInTimeSpan.addAll(getDataRecords(chipId, currFrom, currTo));
+            for (long chipId : chipIds) recordsInTimeSpan.addAll(getDataRecords(chipId, currFrom, currTo));
             records.add(getAverageDataRecord(recordsInTimeSpan));
             currFrom += granularityInMillis;
             currTo += granularityInMillis;

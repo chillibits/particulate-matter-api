@@ -16,7 +16,7 @@ public class SharedUtils {
         return (double) tmp / factor;
     }
 
-    public static String generateRandomString(Integer length) {
+    public static String generateRandomString(int length) {
         int leftLimit = 48; // numeral '0'
         int rightLimit = 122; // letter 'z'
 

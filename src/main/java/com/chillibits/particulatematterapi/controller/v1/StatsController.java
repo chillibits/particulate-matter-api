@@ -80,7 +80,7 @@ public class StatsController {
     @ApiResponses(value = {
             @ApiResponse(code = 406, message = "The sensor you're requesting does not exist.")
     })
-    public StatsItem getStatsOfSensor(@PathVariable Long chipId) throws StatsDataException {
+    public StatsItem getStatsOfSensor(@PathVariable long chipId) throws StatsDataException {
         // Check if sensor is existing
         Set<String> collectionNames = getDataCollections();
         if(!collectionNames.contains(String.valueOf(chipId))) throw new StatsDataException(ErrorCodeUtils.STATS_ITEM_DOES_NOT_EXIST);
