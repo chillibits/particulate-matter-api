@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class SharedUtilsTests {
+
     @Test
     public void testRound() {
         double result = SharedUtils.round(1.12345, 2);

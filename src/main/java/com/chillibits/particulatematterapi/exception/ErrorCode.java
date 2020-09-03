@@ -49,6 +49,5 @@ public enum ErrorCode {
     // Log errors (9xx)
     INVALID_TIME_RANGE_LOG(900);
 
-
     private final int value;
 }
