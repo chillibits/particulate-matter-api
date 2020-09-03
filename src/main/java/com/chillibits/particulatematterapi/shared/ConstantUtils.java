@@ -21,4 +21,5 @@ public class ConstantUtils {
     public static final int CLIENT_ID_PMAPP = 1; // Official Particulate Matter App
     public static final int CLIENT_ID_PMAPP_WEB = 2; // Official Particulate Matter App Web
     public static final int CLIENT_ID_PMAPP_GA = 3; // Official Google Actions Client
+    public static final String GOOGLE_API_KEY = System.getenv("PMAPI_GOOGLE_API_KEY");
 }

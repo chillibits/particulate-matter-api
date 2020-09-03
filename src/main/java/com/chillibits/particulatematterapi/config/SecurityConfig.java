@@ -6,6 +6,7 @@ package com.chillibits.particulatematterapi.config;
 
 import com.chillibits.particulatematterapi.model.db.main.Client;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -21,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
+    @Qualifier("authDetailsService")
     private UserDetailsService userDetailsService; // Has to be auto wired. Without it, there is a dependency cycle
 
     @Override

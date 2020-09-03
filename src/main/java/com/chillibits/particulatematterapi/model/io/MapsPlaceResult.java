@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import java.util.Arrays;
 
 public class MapsPlaceResult {
+
     // Constants
     public static  final String UNKNOWN_COUNTRY = "Unknown country";
     public static final String UNKNOWN_CITY = "Unknown city";

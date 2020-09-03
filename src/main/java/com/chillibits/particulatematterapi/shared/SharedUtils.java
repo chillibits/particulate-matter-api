@@ -7,6 +7,7 @@ package com.chillibits.particulatematterapi.shared;
 import java.util.Random;
 
 public class SharedUtils {
+    private SharedUtils() {}
 
     public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
