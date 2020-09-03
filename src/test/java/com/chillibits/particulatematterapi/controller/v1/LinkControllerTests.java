@@ -4,7 +4,7 @@
 
 package com.chillibits.particulatematterapi.controller.v1;
 
-import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
+import com.chillibits.particulatematterapi.exception.ErrorCode;
 import com.chillibits.particulatematterapi.exception.exception.LinkDataException;
 import com.chillibits.particulatematterapi.model.db.main.Link;
 import com.chillibits.particulatematterapi.model.db.main.Sensor;
@@ -113,7 +113,7 @@ public class LinkControllerTests {
                 linkController.addLink(testData.get(3))
         );
 
-        String expectedMessage = new LinkDataException(ErrorCodeUtils.SENSOR_NOT_EXISTING).getMessage();
+        String expectedMessage = new LinkDataException(ErrorCode.SENSOR_NOT_EXISTING).getMessage();
         Assert.assertEquals(expectedMessage, exception.getMessage());
     }
 
@@ -124,7 +124,7 @@ public class LinkControllerTests {
                 linkController.addLink(testData.get(1))
         );
 
-        String expectedMessage = new LinkDataException(ErrorCodeUtils.INVALID_LINK_DATA).getMessage();
+        String expectedMessage = new LinkDataException(ErrorCode.INVALID_LINK_DATA).getMessage();
         Assert.assertEquals(expectedMessage, exception.getMessage());
     }
 
@@ -135,7 +135,7 @@ public class LinkControllerTests {
                 linkController.addLink(testData.get(2))
         );
 
-        String expectedMessage = new LinkDataException(ErrorCodeUtils.USER_NOT_EXISTING).getMessage();
+        String expectedMessage = new LinkDataException(ErrorCode.USER_NOT_EXISTING).getMessage();
         Assert.assertEquals(expectedMessage, exception.getMessage());
     }
 
@@ -154,7 +154,7 @@ public class LinkControllerTests {
                 linkController.updateLink(testData.get(1))
         );
 
-        String expectedMessage = new LinkDataException(ErrorCodeUtils.INVALID_LINK_DATA).getMessage();
+        String expectedMessage = new LinkDataException(ErrorCode.INVALID_LINK_DATA).getMessage();
         Assert.assertEquals(expectedMessage, exception.getMessage());
     }
 
@@ -165,7 +165,7 @@ public class LinkControllerTests {
                 linkController.updateLink(testData.get(2))
         );
 
-        String expectedMessage = new LinkDataException(ErrorCodeUtils.USER_NOT_EXISTING).getMessage();
+        String expectedMessage = new LinkDataException(ErrorCode.USER_NOT_EXISTING).getMessage();
         Assert.assertEquals(expectedMessage, exception.getMessage());
     }
 

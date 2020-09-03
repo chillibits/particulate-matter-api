@@ -4,7 +4,7 @@
 
 package com.chillibits.particulatematterapi.controller.v1;
 
-import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
+import com.chillibits.particulatematterapi.exception.ErrorCode;
 import com.chillibits.particulatematterapi.exception.exception.ClientDataException;
 import com.chillibits.particulatematterapi.model.db.main.Client;
 import com.chillibits.particulatematterapi.model.dto.ClientDto;
@@ -103,7 +103,7 @@ public class ClientControllerTests {
                 clientController.getClientInfoByName("test")
         );
 
-        String expectedMessage = new ClientDataException(ErrorCodeUtils.CLIENT_NOT_EXISTING).getMessage();
+        String expectedMessage = new ClientDataException(ErrorCode.CLIENT_NOT_EXISTING).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
@@ -124,7 +124,7 @@ public class ClientControllerTests {
                 clientController.addClient(insertUpdateTestData.get(4))
         );
 
-        String expectedMessage = new ClientDataException(ErrorCodeUtils.INVALID_CLIENT_DATA).getMessage();
+        String expectedMessage = new ClientDataException(ErrorCode.INVALID_CLIENT_DATA).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
@@ -145,7 +145,7 @@ public class ClientControllerTests {
                 clientController.updateClient(insertUpdateTestData.get(4))
         );
 
-        String expectedMessage = new ClientDataException(ErrorCodeUtils.INVALID_CLIENT_DATA).getMessage();
+        String expectedMessage = new ClientDataException(ErrorCode.INVALID_CLIENT_DATA).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 

@@ -4,7 +4,7 @@
 
 package com.chillibits.particulatematterapi.controller.v1;
 
-import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
+import com.chillibits.particulatematterapi.exception.ErrorCode;
 import com.chillibits.particulatematterapi.exception.exception.LogAccessException;
 import com.chillibits.particulatematterapi.model.db.data.LogItem;
 import com.chillibits.particulatematterapi.shared.ConstantUtils;
@@ -121,6 +121,6 @@ public class LogController {
     // ---------------------------------------------- Utility functions ------------------------------------------------
 
     private void validateRequest(@RequestParam(defaultValue = "0") long from, @RequestParam(defaultValue = "0") long to) throws LogAccessException {
-        if (from < 0 || to < 0 || from > to) throw new LogAccessException(ErrorCodeUtils.INVALID_TIME_RANGE_LOG);
+        if (from < 0 || to < 0 || from > to) throw new LogAccessException(ErrorCode.INVALID_TIME_RANGE_LOG);
     }
 }

@@ -4,7 +4,7 @@
 
 package com.chillibits.particulatematterapi.service;
 
-import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
+import com.chillibits.particulatematterapi.exception.ErrorCode;
 import com.chillibits.particulatematterapi.exception.exception.SensorDataException;
 import com.chillibits.particulatematterapi.model.db.main.Link;
 import com.chillibits.particulatematterapi.model.db.main.Sensor;
@@ -64,8 +64,8 @@ public class SensorService {
 
     public SensorDto addSensor(SensorInsertUpdateDto sensor) throws SensorDataException {
         // Check for possible faulty data parameters
-        if(sensorRepository.existsById(sensor.getChipId())) throw new SensorDataException(ErrorCodeUtils.SENSOR_ALREADY_EXISTS);
-        if(!mongoTemplate.getCollectionNames().contains(String.valueOf(sensor.getChipId()))) throw new SensorDataException(ErrorCodeUtils.NO_DATA_RECORDS);
+        if(sensorRepository.existsById(sensor.getChipId())) throw new SensorDataException(ErrorCode.SENSOR_ALREADY_EXISTS);
+        if(!mongoTemplate.getCollectionNames().contains(String.valueOf(sensor.getChipId()))) throw new SensorDataException(ErrorCode.NO_DATA_RECORDS);
         // User can be loaded inside the validation method, cause it's needed in the addSensor and updateSensor method
         User user = validateSensorObject(sensor);
 
@@ -96,7 +96,7 @@ public class SensorService {
 
     public Integer updateSensor(SensorInsertUpdateDto sensor) throws SensorDataException {
         // Check for possible faulty data parameters
-        if(!sensorRepository.existsById(sensor.getChipId())) throw new SensorDataException(ErrorCodeUtils.SENSOR_NOT_EXISTING);
+        if(!sensorRepository.existsById(sensor.getChipId())) throw new SensorDataException(ErrorCode.SENSOR_NOT_EXISTING);
         validateSensorObject(sensor);
 
         Sensor sensorDbo = convertToDbo(sensor);
@@ -112,7 +112,7 @@ public class SensorService {
 
     private List<Sensor> getSensors(double latitude, double longitude, int radius, boolean onlyPublished) throws SensorDataException {
         // Validate parameters
-        if (radius < 0) throw new SensorDataException(ErrorCodeUtils.INVALID_RADIUS);
+        if (radius < 0) throw new SensorDataException(ErrorCode.INVALID_RADIUS);
 
         List<Sensor> sensors;
         if (onlyPublished) {
@@ -162,12 +162,12 @@ public class SensorService {
     private User validateSensorObject(SensorInsertUpdateDto sensor) throws SensorDataException {
         // Check for invalid coordinates
         if((sensor.getGpsLatitude() == 0 && sensor.getGpsLongitude() == 0) || (sensor.getGpsLatitude() == 200 && sensor.getGpsLongitude() == 200))
-            throw new SensorDataException(ErrorCodeUtils.INVALID_GPS_COORDINATES);
+            throw new SensorDataException(ErrorCode.INVALID_GPS_COORDINATES);
         // Extract requesting user
         List<LinkInsertUpdateDto> linkList = new ArrayList<>(sensor.getUserLinks());
         User user = userRepository.findById(linkList.get(0).getUser().getId()).orElse(null);
         // Check if user exists
-        if(user == null) throw new SensorDataException(ErrorCodeUtils.CANNOT_ASSIGN_TO_USER);
+        if(user == null) throw new SensorDataException(ErrorCode.CANNOT_ASSIGN_TO_USER);
         return user;
     }
 }

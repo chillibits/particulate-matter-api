@@ -4,7 +4,7 @@
 
 package com.chillibits.particulatematterapi.service;
 
-import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
+import com.chillibits.particulatematterapi.exception.ErrorCode;
 import com.chillibits.particulatematterapi.exception.exception.RankingDataException;
 import com.chillibits.particulatematterapi.model.dto.RankingItemCityCompressedDto;
 import com.chillibits.particulatematterapi.model.dto.RankingItemCityDto;
@@ -27,7 +27,7 @@ public class RankingService {
     private ModelMapper mapper;
 
     public List<RankingItemCityDto> getRankingByCity(Integer items) throws RankingDataException {
-        if(items < 1) throw new RankingDataException(ErrorCodeUtils.INVALID_ITEMS_NUMBER);
+        if(items < 1) throw new RankingDataException(ErrorCode.INVALID_ITEMS_NUMBER);
         return sensorRepository.getRankingByCity(items);
     }
 
@@ -38,7 +38,7 @@ public class RankingService {
     }
 
     public List<RankingItemCountryDto> getRankingByCountry(Integer items) throws RankingDataException {
-        if(items < 1) throw new RankingDataException(ErrorCodeUtils.INVALID_ITEMS_NUMBER);
+        if(items < 1) throw new RankingDataException(ErrorCode.INVALID_ITEMS_NUMBER);
         return sensorRepository.getRankingByCountry(items);
     }
 

@@ -4,7 +4,7 @@
 
 package com.chillibits.particulatematterapi.service;
 
-import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
+import com.chillibits.particulatematterapi.exception.ErrorCode;
 import com.chillibits.particulatematterapi.exception.exception.LinkDataException;
 import com.chillibits.particulatematterapi.model.db.main.Link;
 import com.chillibits.particulatematterapi.model.db.main.Sensor;
@@ -61,8 +61,8 @@ public class LinkService {
     }
 
     private void validateLinkObject(LinkInsertUpdateDto link) throws LinkDataException {
-        if(link.getName().isBlank()) throw new LinkDataException(ErrorCodeUtils.INVALID_LINK_DATA);
-        if(sensorRepository.findById(link.getSensor().getChipId()).isEmpty()) throw new LinkDataException(ErrorCodeUtils.SENSOR_NOT_EXISTING);
-        if(userRepository.findById(link.getUser().getId()).isEmpty()) throw new LinkDataException(ErrorCodeUtils.USER_NOT_EXISTING);
+        if(link.getName().isBlank()) throw new LinkDataException(ErrorCode.INVALID_LINK_DATA);
+        if(sensorRepository.findById(link.getSensor().getChipId()).isEmpty()) throw new LinkDataException(ErrorCode.SENSOR_NOT_EXISTING);
+        if(userRepository.findById(link.getUser().getId()).isEmpty()) throw new LinkDataException(ErrorCode.USER_NOT_EXISTING);
     }
 }

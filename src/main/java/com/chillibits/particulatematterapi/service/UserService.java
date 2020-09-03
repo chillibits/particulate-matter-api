@@ -4,7 +4,7 @@
 
 package com.chillibits.particulatematterapi.service;
 
-import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
+import com.chillibits.particulatematterapi.exception.ErrorCode;
 import com.chillibits.particulatematterapi.exception.exception.UserDataException;
 import com.chillibits.particulatematterapi.model.db.main.User;
 import com.chillibits.particulatematterapi.model.dto.UserDto;
@@ -45,8 +45,8 @@ public class UserService {
         if(email == null || password == null) return null; // Return null if one of email or password is null
 
         User user = userRepository.findByEmail(email);
-        if(user == null) throw new UserDataException(ErrorCodeUtils.USER_NOT_EXISTING);
-        if(!user.getPassword().equals(password)) throw new UserDataException(ErrorCodeUtils.PASSWORD_WRONG);
+        if(user == null) throw new UserDataException(ErrorCode.USER_NOT_EXISTING);
+        if(!user.getPassword().equals(password)) throw new UserDataException(ErrorCode.PASSWORD_WRONG);
 
         return convertToDto(user);
     }
@@ -54,7 +54,7 @@ public class UserService {
     public UserDto addUser(UserInsertUpdateDto user) throws UserDataException {
         // Validity checks
         validateUserObject(user);
-        if(userRepository.findByEmail(user.getEmail()) != null) throw new UserDataException(ErrorCodeUtils.USER_ALREADY_EXISTS);
+        if(userRepository.findByEmail(user.getEmail()) != null) throw new UserDataException(ErrorCode.USER_ALREADY_EXISTS);
         // Send confirmation email with confirmation token
         String confirmationToken = sendConfirmationEmail(user.getEmail(), user.getLastName());
         // Build UserDbo object
@@ -81,7 +81,7 @@ public class UserService {
     public Integer updateUser(UserInsertUpdateDto user) throws UserDataException {
         // Validity checks
         validateUserObject(user);
-        if(userRepository.findByEmail(user.getEmail()) == null) throw new UserDataException(ErrorCodeUtils.USER_NOT_EXISTING);
+        if(userRepository.findByEmail(user.getEmail()) == null) throw new UserDataException(ErrorCode.USER_NOT_EXISTING);
         return userRepository.updateUser(convertToDbo(user));
     }
 
@@ -115,7 +115,7 @@ public class UserService {
     }
 
     private void validateUserObject(UserInsertUpdateDto user) throws UserDataException {
-        if(user.getEmail().isBlank() || user.getPassword().isBlank()) throw new UserDataException(ErrorCodeUtils.INVALID_USER_DATA);
+        if(user.getEmail().isBlank() || user.getPassword().isBlank()) throw new UserDataException(ErrorCode.INVALID_USER_DATA);
     }
 
     private UserDto convertToDto(User user) {

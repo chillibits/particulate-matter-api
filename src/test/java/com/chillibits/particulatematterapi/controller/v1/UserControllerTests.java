@@ -4,7 +4,7 @@
 
 package com.chillibits.particulatematterapi.controller.v1;
 
-import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
+import com.chillibits.particulatematterapi.exception.ErrorCode;
 import com.chillibits.particulatematterapi.exception.exception.UserDataException;
 import com.chillibits.particulatematterapi.model.db.main.User;
 import com.chillibits.particulatematterapi.model.dto.UserDto;
@@ -123,7 +123,7 @@ public class UserControllerTests {
                 userController.addUser(insertUpdateTestData.get(0))
         );
 
-        String expectedMessage = new UserDataException(ErrorCodeUtils.USER_ALREADY_EXISTS).getMessage();
+        String expectedMessage = new UserDataException(ErrorCode.USER_ALREADY_EXISTS).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
@@ -135,7 +135,7 @@ public class UserControllerTests {
                 userController.addUser(insertUpdateTestData.get(3))
         );
 
-        String expectedMessage = new UserDataException(ErrorCodeUtils.INVALID_USER_DATA).getMessage();
+        String expectedMessage = new UserDataException(ErrorCode.INVALID_USER_DATA).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
@@ -156,7 +156,7 @@ public class UserControllerTests {
                 userController.updateUser(insertUpdateTestData.get(2))
         );
 
-        String expectedMessage = new UserDataException(ErrorCodeUtils.USER_NOT_EXISTING).getMessage();
+        String expectedMessage = new UserDataException(ErrorCode.USER_NOT_EXISTING).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
@@ -168,7 +168,7 @@ public class UserControllerTests {
                 userController.updateUser(insertUpdateTestData.get(3))
         );
 
-        String expectedMessage = new UserDataException(ErrorCodeUtils.INVALID_USER_DATA).getMessage();
+        String expectedMessage = new UserDataException(ErrorCode.INVALID_USER_DATA).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 

@@ -4,7 +4,7 @@
 
 package com.chillibits.particulatematterapi.controller.v1;
 
-import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
+import com.chillibits.particulatematterapi.exception.ErrorCode;
 import com.chillibits.particulatematterapi.exception.exception.DataAccessException;
 import com.chillibits.particulatematterapi.model.db.data.DataRecord;
 import com.chillibits.particulatematterapi.model.dto.DataRecordDto;
@@ -195,8 +195,8 @@ public class DataController {
         @RequestParam(defaultValue = "1") int mergeCount
     ) throws DataAccessException {
         // Check input parameters
-        if(fieldIndex < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_FIELD_INDEX);
-        if(mergeCount < 1) throw new DataAccessException(ErrorCodeUtils.INVALID_MERGE_COUNT);
+        if(fieldIndex < 0) throw new DataAccessException(ErrorCode.INVALID_FIELD_INDEX);
+        if(mergeCount < 1) throw new DataAccessException(ErrorCode.INVALID_MERGE_COUNT);
 
         long startTimestamp = System.currentTimeMillis();
         // Get data records of this sensor
@@ -321,7 +321,7 @@ public class DataController {
     }
 
     private List<DataRecord> getDataRecords(long chipId, long from, long to) throws DataAccessException {
-        if(from < 0 || to < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_TIME_RANGE_DATA);
+        if(from < 0 || to < 0) throw new DataAccessException(ErrorCode.INVALID_TIME_RANGE_DATA);
         long toTimestamp = to == 0 ? System.currentTimeMillis() : to;
         long fromTimestamp = from == 0 ? toTimestamp - ConstantUtils.DEFAULT_DATA_TIME_SPAN : from;
         return template.find(Query.query(Criteria.where("timestamp").gte(fromTimestamp).lte(toTimestamp)).cursorBatchSize(500), DataRecord.class, String.valueOf(chipId));
@@ -331,7 +331,7 @@ public class DataController {
         JSONObject json = new JSONObject();
         // Handle possible errors
         if(!records.isEmpty()) {
-            if(fieldIndex >= records.get(0).getSensorDataValues().length) throw new DataAccessException(ErrorCodeUtils.INVALID_FIELD_INDEX);
+            if(fieldIndex >= records.get(0).getSensorDataValues().length) throw new DataAccessException(ErrorCode.INVALID_FIELD_INDEX);
             // Bring the records into json format
             JSONArray jsonValues = new JSONArray();
             records.forEach(record -> {
@@ -352,9 +352,9 @@ public class DataController {
     }
 
     private void validateAccessProperties(long from, long to, int fieldIndex, int granularity) throws DataAccessException {
-        if (from < 0 || to < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_TIME_RANGE_DATA);
-        if (fieldIndex < 0) throw new DataAccessException(ErrorCodeUtils.INVALID_FIELD_INDEX);
-        if (granularity < 1) throw new DataAccessException(ErrorCodeUtils.INVALID_PERIOD);
+        if (from < 0 || to < 0) throw new DataAccessException(ErrorCode.INVALID_TIME_RANGE_DATA);
+        if (fieldIndex < 0) throw new DataAccessException(ErrorCode.INVALID_FIELD_INDEX);
+        if (granularity < 1) throw new DataAccessException(ErrorCode.INVALID_PERIOD);
     }
 
     private DataRecordDto convertToDto(DataRecord record) {

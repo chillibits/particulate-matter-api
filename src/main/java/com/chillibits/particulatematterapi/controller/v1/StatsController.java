@@ -4,7 +4,7 @@
 
 package com.chillibits.particulatematterapi.controller.v1;
 
-import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
+import com.chillibits.particulatematterapi.exception.ErrorCode;
 import com.chillibits.particulatematterapi.exception.exception.StatsDataException;
 import com.chillibits.particulatematterapi.model.db.data.StatsItem;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
@@ -83,7 +83,7 @@ public class StatsController {
     public StatsItem getStatsOfSensor(@PathVariable long chipId) throws StatsDataException {
         // Check if sensor is existing
         Set<String> collectionNames = getDataCollections();
-        if(!collectionNames.contains(String.valueOf(chipId))) throw new StatsDataException(ErrorCodeUtils.STATS_ITEM_DOES_NOT_EXIST);
+        if(!collectionNames.contains(String.valueOf(chipId))) throw new StatsDataException(ErrorCode.STATS_ITEM_DOES_NOT_EXIST);
         // Initialization
         long fromTime = 0;
         String collectionName = String.valueOf(chipId);

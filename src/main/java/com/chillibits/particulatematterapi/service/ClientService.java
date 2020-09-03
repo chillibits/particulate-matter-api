@@ -4,7 +4,7 @@
 
 package com.chillibits.particulatematterapi.service;
 
-import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
+import com.chillibits.particulatematterapi.exception.ErrorCode;
 import com.chillibits.particulatematterapi.exception.exception.ClientDataException;
 import com.chillibits.particulatematterapi.model.db.main.Client;
 import com.chillibits.particulatematterapi.model.dto.ClientDto;
@@ -32,7 +32,7 @@ public class ClientService {
 
     public ClientDto getClientByName(String name) throws ClientDataException {
         Optional<Client> client = clientRepository.findByName(name);
-        if(client.isEmpty()) throw new ClientDataException(ErrorCodeUtils.CLIENT_NOT_EXISTING);
+        if(client.isEmpty()) throw new ClientDataException(ErrorCode.CLIENT_NOT_EXISTING);
         return client.map(this::convertToDto).orElse(null);
     }
 
@@ -63,6 +63,6 @@ public class ClientService {
     public void validateClientObject(ClientInsertUpdateDto client) throws ClientDataException {
         if(client.getName().isBlank() || client.getLatestVersionName().isBlank() || client.getMinVersionName().isBlank()
                 || client.getRoles().isBlank() || client.getSecret().isBlank() || client.getOwner().isBlank()
-                || client.getReadableName().isBlank()) throw new ClientDataException(ErrorCodeUtils.INVALID_CLIENT_DATA);
+                || client.getReadableName().isBlank()) throw new ClientDataException(ErrorCode.INVALID_CLIENT_DATA);
     }
 }

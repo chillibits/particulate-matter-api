@@ -4,7 +4,7 @@
 
 package com.chillibits.particulatematterapi.controller.v1;
 
-import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
+import com.chillibits.particulatematterapi.exception.ErrorCode;
 import com.chillibits.particulatematterapi.exception.exception.RankingDataException;
 import com.chillibits.particulatematterapi.model.dto.RankingItemCityCompressedDto;
 import com.chillibits.particulatematterapi.model.dto.RankingItemCityDto;
@@ -89,7 +89,7 @@ public class RankingControllerTests {
                 rankingController.getRankingByCity(-1)
         );
 
-        String expectedMessage = new RankingDataException(ErrorCodeUtils.INVALID_ITEMS_NUMBER).getMessage();
+        String expectedMessage = new RankingDataException(ErrorCode.INVALID_ITEMS_NUMBER).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
@@ -106,7 +106,7 @@ public class RankingControllerTests {
                 rankingController.getRankingByCityCompressed(-1)
         );
 
-        String expectedMessage = new RankingDataException(ErrorCodeUtils.INVALID_ITEMS_NUMBER).getMessage();
+        String expectedMessage = new RankingDataException(ErrorCode.INVALID_ITEMS_NUMBER).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
@@ -125,7 +125,7 @@ public class RankingControllerTests {
                 rankingController.getRankingByCountry(-1)
         );
 
-        String expectedMessage = new RankingDataException(ErrorCodeUtils.INVALID_ITEMS_NUMBER).getMessage();
+        String expectedMessage = new RankingDataException(ErrorCode.INVALID_ITEMS_NUMBER).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
@@ -142,7 +142,7 @@ public class RankingControllerTests {
                 rankingController.getRankingByCountryCompressed(-1)
         );
 
-        String expectedMessage = new RankingDataException(ErrorCodeUtils.INVALID_ITEMS_NUMBER).getMessage();
+        String expectedMessage = new RankingDataException(ErrorCode.INVALID_ITEMS_NUMBER).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 

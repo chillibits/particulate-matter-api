@@ -4,7 +4,7 @@
 
 package com.chillibits.particulatematterapi.controller.v1;
 
-import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
+import com.chillibits.particulatematterapi.exception.ErrorCode;
 import com.chillibits.particulatematterapi.exception.exception.SensorDataException;
 import com.chillibits.particulatematterapi.model.db.main.Link;
 import com.chillibits.particulatematterapi.model.db.main.Sensor;
@@ -164,7 +164,7 @@ public class SensorControllerTests {
                 sensorController.getAllSensors(10, 10, -100, false)
         );
 
-        String expectedMessage = new SensorDataException(ErrorCodeUtils.INVALID_RADIUS).getMessage();
+        String expectedMessage = new SensorDataException(ErrorCode.INVALID_RADIUS).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
@@ -211,7 +211,7 @@ public class SensorControllerTests {
                 sensorController.getAllSensorsCompressed(10, 10, -100, false)
         );
 
-        String expectedMessage = new SensorDataException(ErrorCodeUtils.INVALID_RADIUS).getMessage();
+        String expectedMessage = new SensorDataException(ErrorCode.INVALID_RADIUS).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
@@ -253,7 +253,7 @@ public class SensorControllerTests {
                 sensorController.addSensor(testInsertUpdateData.get(2))
         );
 
-        String expectedMessage = new SensorDataException(ErrorCodeUtils.SENSOR_ALREADY_EXISTS).getMessage();
+        String expectedMessage = new SensorDataException(ErrorCode.SENSOR_ALREADY_EXISTS).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
@@ -265,7 +265,7 @@ public class SensorControllerTests {
                 sensorController.addSensor(testInsertUpdateData.get(3))
         );
 
-        String expectedMessage = new SensorDataException(ErrorCodeUtils.NO_DATA_RECORDS).getMessage();
+        String expectedMessage = new SensorDataException(ErrorCode.NO_DATA_RECORDS).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
@@ -277,7 +277,7 @@ public class SensorControllerTests {
                 sensorController.addSensor(testInsertUpdateData.get(4))
         );
 
-        String expectedMessage = new SensorDataException(ErrorCodeUtils.CANNOT_ASSIGN_TO_USER).getMessage();
+        String expectedMessage = new SensorDataException(ErrorCode.CANNOT_ASSIGN_TO_USER).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
@@ -306,7 +306,7 @@ public class SensorControllerTests {
                 sensorController.updateSensor(testInsertUpdateData.get(0))
         );
 
-        String expectedMessage = new SensorDataException(ErrorCodeUtils.SENSOR_NOT_EXISTING).getMessage();
+        String expectedMessage = new SensorDataException(ErrorCode.SENSOR_NOT_EXISTING).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
@@ -318,7 +318,7 @@ public class SensorControllerTests {
                 sensorController.updateSensor(testInsertUpdateData.get(7))
         );
 
-        String expectedMessage = new SensorDataException(ErrorCodeUtils.CANNOT_ASSIGN_TO_USER).getMessage();
+        String expectedMessage = new SensorDataException(ErrorCode.CANNOT_ASSIGN_TO_USER).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
