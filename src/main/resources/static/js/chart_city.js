@@ -3,7 +3,7 @@
  */
 
 function drawLineChart(label, series, responseTime, country, city, sensorCount, width, height, type, chartType) {
-    var config = {
+    let config = {
         chart: {
             type: "line",
             width,
@@ -49,14 +49,14 @@ function drawLineChart(label, series, responseTime, country, city, sensorCount, 
 // -------------------------------------------------- Main code --------------------------------------------------------
 
 // Get url parameter
-var params = getAllUrlParams();
-var urlSuffix = encodeQueryData(params);
-var country = params.country;
-var city = params.city;
-var width = params.width ? params.width : 800;
-var height = params.height ? params.height : 600;
-var type = params.type ? params.type : "line";
-var chartType = params.chartType ? params.chartType : "chart";
+let params = getAllUrlParams();
+let urlSuffix = encodeQueryData(params);
+let country = params.country;
+let city = params.city;
+let width = params.width ? params.width : 800;
+let height = params.height ? params.height : 600;
+let type = params.type ? params.type : "line";
+let chartType = params.chartType ? params.chartType : "chart";
 
 // Execute request for data
 $.ajax({

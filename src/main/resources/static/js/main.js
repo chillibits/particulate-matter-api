@@ -1,19 +1,23 @@
+/*
+ * Copyright © Marc Auberer 2019 - 2020. All rights reserved
+ */
+
 function getAllUrlParams() {
-    var queryString = window.location.search.slice(1);
-    var obj = {};
+    let queryString = window.location.search.slice(1);
+    let obj = {};
     if (queryString) {
         queryString = queryString.split("#")[0];
-        var arr = queryString.split("&");
+        let arr = queryString.split("&");
 
-        for (var i = 0; i < arr.length; i++) {
-            var a = arr[i].split("=");
-            var paramName = a[0];
-            var paramValue = typeof (a[1]) === "undefined" ? true : a[1];
+        for (let i = 0; i < arr.length; i++) {
+            let a = arr[i].split("=");
+            let paramName = a[0];
+            let paramValue = typeof (a[1]) === "undefined" ? true : a[1];
             if (paramName.match(/\[(\d+)?\]$/)) {
-                var key = paramName.replace(/\[(\d+)?\]/, "");
+                let key = paramName.replace(/\[(\d+)?\]/, "");
                 if (!obj[key]) obj[key] = [];
                 if (paramName.match(/\[\d+\]$/)) {
-                    var index = /\[(\d+)\]/.exec(paramName)[1];
+                    let index = /\[(\d+)\]/.exec(paramName)[1];
                     obj[key][index] = paramValue;
                 } else {
                     obj[key].push(paramValue);
