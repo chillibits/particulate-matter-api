@@ -17,9 +17,12 @@ import javax.persistence.Transient;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DataRecord {
-    @Transient private long chipId;
+
+    @Transient
+    private long chipId;
     private long timestamp = 0;
-    @Transient private String firmwareVersion;
+    @Transient
+    private String firmwareVersion;
     private SensorDataValue[] sensorDataValues;
     private String note = ConstantUtils.BLANK_COLUMN;
 

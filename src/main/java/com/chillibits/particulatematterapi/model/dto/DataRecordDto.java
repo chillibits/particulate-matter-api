@@ -4,23 +4,33 @@
 
 package com.chillibits.particulatematterapi.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.chillibits.particulatematterapi.shared.ConstantUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
+@Document
 @AllArgsConstructor
 @NoArgsConstructor
-public class DataRecordDto {
-    @JsonProperty("t") private long timestamp = 0;
-    @JsonProperty("d") private SensorDataValuesDto[] sensorDataValues;
+public class DataRecordDto implements Comparable<DataRecordDto> {
+
+    private long timestamp = 0;
+    private String firmwareVersion;
+    private SensorDataValue[] sensorDataValues;
+    private String note = ConstantUtils.BLANK_COLUMN;
+
+    @Override
+    public int compareTo(DataRecordDto other) {
+        return Long.compare(timestamp, other.timestamp);
+    }
 
     @Data
-    @NoArgsConstructor
     @AllArgsConstructor
-    public static class SensorDataValuesDto {
-        @JsonProperty("t") private String valueType;
-        @JsonProperty("v") private double value;
+    @NoArgsConstructor
+    public static class SensorDataValue {
+        private String valueType;
+        private double value;
     }
 }

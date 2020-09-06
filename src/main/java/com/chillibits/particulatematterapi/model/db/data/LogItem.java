@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LogItem {
+
     // Actions
     public static final String ACTION_PUSH = "Push";
 

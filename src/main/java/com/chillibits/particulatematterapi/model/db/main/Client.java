@@ -20,6 +20,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Client {
+
     // Constants
     public static final int STATUS_ONLINE = 1;
     public static final int STATUS_ONLINE_WITH_CAMPAIGN = 2;
