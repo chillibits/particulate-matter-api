@@ -22,7 +22,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -41,6 +40,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("logging")
@@ -84,18 +85,18 @@ public class LinkControllerTests {
     @Before
     public void init() {
         // Setup fake method calls
-        Mockito.when(sensorRepository.findById(getInsertUpdateTestData().get(0).getSensor().getChipId())).thenReturn(Optional.of(sensorTestData.get(0)));
-        Mockito.when(sensorRepository.findById(getInsertUpdateTestData().get(1).getSensor().getChipId())).thenReturn(Optional.of(sensorTestData.get(1)));
-        Mockito.when(sensorRepository.findById(getInsertUpdateTestData().get(2).getSensor().getChipId())).thenReturn(Optional.of(sensorTestData.get(2)));
-        Mockito.when(sensorRepository.findById(getInsertUpdateTestData().get(3).getSensor().getChipId())).thenReturn(Optional.empty());
-        Mockito.when(sensorRepository.getOne(getInsertUpdateTestData().get(0).getSensor().getChipId())).thenReturn(sensorTestData.get(0));
-        Mockito.when(sensorRepository.getOne(getInsertUpdateTestData().get(1).getSensor().getChipId())).thenReturn(sensorTestData.get(1));
-        Mockito.when(sensorRepository.getOne(getInsertUpdateTestData().get(2).getSensor().getChipId())).thenReturn(sensorTestData.get(2));
-        Mockito.when(userRepository.findById(testData.get(0).getUser().getId())).thenReturn(Optional.of(userTestData.get(0)));
-        Mockito.when(userRepository.findById(testData.get(1).getUser().getId())).thenReturn(Optional.of(userTestData.get(1)));
-        Mockito.when(linkRepository.save(any(Link.class))).then(returnsFirstArg());
-        Mockito.when(linkRepository.updateLink(any(Link.class))).thenReturn(1);
-        Mockito.doNothing().when(linkRepository).deleteById(anyInt());
+        when(sensorRepository.findById(getInsertUpdateTestData().get(0).getSensor().getChipId())).thenReturn(Optional.of(sensorTestData.get(0)));
+        when(sensorRepository.findById(getInsertUpdateTestData().get(1).getSensor().getChipId())).thenReturn(Optional.of(sensorTestData.get(1)));
+        when(sensorRepository.findById(getInsertUpdateTestData().get(2).getSensor().getChipId())).thenReturn(Optional.of(sensorTestData.get(2)));
+        when(sensorRepository.findById(getInsertUpdateTestData().get(3).getSensor().getChipId())).thenReturn(Optional.empty());
+        when(sensorRepository.getOne(getInsertUpdateTestData().get(0).getSensor().getChipId())).thenReturn(sensorTestData.get(0));
+        when(sensorRepository.getOne(getInsertUpdateTestData().get(1).getSensor().getChipId())).thenReturn(sensorTestData.get(1));
+        when(sensorRepository.getOne(getInsertUpdateTestData().get(2).getSensor().getChipId())).thenReturn(sensorTestData.get(2));
+        when(userRepository.findById(testData.get(0).getUser().getId())).thenReturn(Optional.of(userTestData.get(0)));
+        when(userRepository.findById(testData.get(1).getUser().getId())).thenReturn(Optional.of(userTestData.get(1)));
+        when(linkRepository.save(any(Link.class))).then(returnsFirstArg());
+        when(linkRepository.updateLink(any(Link.class))).thenReturn(1);
+        doNothing().when(linkRepository).deleteById(anyInt());
     }
 
     // --------------------------------------------------- Add link ----------------------------------------------------

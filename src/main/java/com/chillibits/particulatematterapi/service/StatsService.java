@@ -41,11 +41,11 @@ public class StatsService {
         // Initialization
         long currentTime = System.currentTimeMillis();
         long[] timestamps = calculateTimestamps(currentTime);
-        StatsItem newItem = new StatsItem();
         // Load already calculated item from cache table
         List<StatsItem> items = template.find(Query.query(Criteria.where("chipId").is(0)).limit(1), StatsItem.class, ConstantUtils.STATS_TABLE_NAME);
-        if(!items.isEmpty()) newItem = items.get(0);
+        StatsItem newItem = items.stream().findFirst().orElse(new StatsItem());
         // Retrieve newItem
+        newItem.setTimestamp(currentTime);
         Set<String> collectionNames = getDataCollections();
         // Data records
         long dataRecordsToday = 0;
@@ -53,9 +53,7 @@ public class StatsService {
             dataRecordsToday += getRecordCountFromTimestamp(collectionName, timestamps[1], currentTime);
         newItem.setDataRecordsToday(dataRecordsToday);
         // Sensor count
-        newItem.setSensorsMapTotal(sensorRepository.getSensorsMapTotal());
-        newItem.setSensorsMapActive(sensorRepository.getSensorsMapActive(timestamps[0]));
-        newItem.setSensorsTotal(collectionNames.size());
+        applySensorStats(newItem, collectionNames, timestamps[0]);
         // Server request count
         newItem.setServerRequestsTodayApp(getServerRequestsCountFromTimestamp(ConstantUtils.CLIENT_ID_PMAPP, timestamps[1], currentTime));
         newItem.setServerRequestsTodayWebApp(getServerRequestsCountFromTimestamp(ConstantUtils.CLIENT_ID_PMAPP_WEB, timestamps[1], currentTime));
@@ -71,24 +69,19 @@ public class StatsService {
     public StatsItemDto getStatsBySensor(long chipId) throws StatsDataException {
         // Check if sensor is existing
         Set<String> collectionNames = getDataCollections();
-        if(!collectionNames.contains(String.valueOf(chipId))) throw new StatsDataException(ErrorCode.STATS_ITEM_DOES_NOT_EXIST);
-        // Initialization
-        long fromTime = 0;
         String collectionName = String.valueOf(chipId);
+        if(!collectionNames.contains(collectionName)) throw new StatsDataException(ErrorCode.STATS_ITEM_DOES_NOT_EXIST);
+        // Initialization
         long currentTime = System.currentTimeMillis();
         long[] timestamps = calculateTimestamps(currentTime);
-        StatsItem newItem = new StatsItem();
         // Load already calculated item from cache table
-        List<StatsItem> items = template.find(Query.query(Criteria.where("sensorsTotal").ne(0)).limit(1), StatsItem.class, ConstantUtils.STATS_TABLE_NAME);
-        if(!items.isEmpty()) {
-            newItem = items.get(0);
-            fromTime = newItem.getTimestamp();
-        }
+        StatsItem newItem = template.find(Query.query(Criteria.where("chipId").is(chipId)).limit(1), StatsItem.class, ConstantUtils.STATS_TABLE_NAME).stream().findFirst().orElse(new StatsItem());
+        long fromTime = newItem.getChipId() != 0L ? newItem.getTimestamp() : 0;
         newItem.setChipId(chipId);
+        newItem.setTimestamp(currentTime);
 
         // Sensor count
-        newItem.setSensorsMapTotal(sensorRepository.getSensorsMapTotal());
-        newItem.setSensorsMapActive(sensorRepository.getSensorsMapActive(timestamps[0]));
+        applySensorStats(newItem, collectionNames, timestamps[0]);
         // Records count
         newItem.setDataRecordsTotal(getRecordCountFromTimestamp(collectionName, 0, currentTime));
         newItem.setDataRecordsToday(getRecordCountFromTimestamp(collectionName, timestamps[1], currentTime));
@@ -113,10 +106,6 @@ public class StatsService {
 
     // ---------------------------------------------- Utility functions ------------------------------------------------
 
-    private StatsItemDto convertToDto(StatsItem statsItem) {
-        return mapper.map(statsItem, StatsItemDto.class);
-    }
-
     private long getRecordCountFromTimestamp(String collectionName, long from, long to) {
         return template.count(Query.query(Criteria.where("timestamp").gte(from).lte(to)).cursorBatchSize(500), collectionName);
     }
@@ -137,22 +126,40 @@ public class StatsService {
         return template.count(Query.query(Criteria.where("timestamp").gte(from).lte(to).and("target").is(chipId).and("clientId")).cursorBatchSize(500), ConstantUtils.LOG_TABLE_NAME);
     }
 
-    private long[] calculateTimestamps(long currentTime) {
+    private void applySensorStats(StatsItem newItem, Set<String> collectionNames, long timestamp) {
+        newItem.setSensorsMapTotal(sensorRepository.getSensorsMapTotal());
+        newItem.setSensorsMapActive(sensorRepository.getSensorsMapActive(timestamp));
+        newItem.setSensorsTotal(collectionNames.size());
+    }
+
+    public long[] calculateTimestamps(long currentTime) {
         long[] timestamps = new long[5];
         // Calculate timestamps
         timestamps[0] = currentTime - ConstantUtils.MINUTES_UNTIL_INACTIVITY;
         Calendar cal = new GregorianCalendar();
+        cal.setTimeInMillis(currentTime);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         timestamps[1] = cal.getTimeInMillis(); // Midnight today
         timestamps[2] = timestamps[1] - 24 * 60 * 60 * 1000; // Midnight yesterday
-        cal.set(Calendar.DAY_OF_MONTH , 0);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
         timestamps[3] = cal.getTimeInMillis(); // Midnight 1st of this month
         cal.add(Calendar.MONTH, -1);
         timestamps[4] = cal.getTimeInMillis(); // Midnight 1st of previous month
         return timestamps;
+    }
+
+    private Set<String> getDataCollections() {
+        Set<String> collectionNames = template.getCollectionNames();
+        collectionNames.remove(ConstantUtils.LOG_TABLE_NAME);
+        collectionNames.remove(ConstantUtils.STATS_TABLE_NAME);
+        return collectionNames;
+    }
+
+    private StatsItemDto convertToDto(StatsItem statsItem) {
+        return mapper.map(statsItem, StatsItemDto.class);
     }
 
     // ---------------------------------------------------- Cron jobs --------------------------------------------------
@@ -162,18 +169,14 @@ public class StatsService {
         if(ConstantUtils.CALC_STATS_ON_STARTUP) calculateStats();
     }
 
-    @Scheduled(cron = "0 0 0 * * ?") // Every day at midnight
-    //@Scheduled(cron = "30 * * * * ?")
+    @Scheduled(cron = "0 0 0 * * ?") // Schedule cron job every day at midnight
     public void calculateStats() {
         log.info("Calculating stats ...");
         // Initialization
         long fromTime = 0;
         long currentTime = System.currentTimeMillis();
         long[] timestamps = calculateTimestamps(currentTime);
-        long recordsTotal,
-                recordsYesterday,
-                recordsThisMonth,
-                recordsPrevMonth;
+        long recordsTotal, recordsYesterday, recordsThisMonth, recordsPrevMonth;
         recordsTotal = recordsYesterday = recordsThisMonth = recordsPrevMonth = 0;
         // Load already calculated item from cache table
         List<StatsItem> items = template.find(Query.query(Criteria.where("chipId").is(0)).limit(1), StatsItem.class, ConstantUtils.STATS_TABLE_NAME);
@@ -211,12 +214,5 @@ public class StatsService {
         template.save(newItem, ConstantUtils.STATS_TABLE_NAME);
 
         log.info("Finished.");
-    }
-
-    private Set<String> getDataCollections() {
-        Set<String> collectionNames = template.getCollectionNames();
-        collectionNames.remove(ConstantUtils.LOG_TABLE_NAME);
-        collectionNames.remove(ConstantUtils.STATS_TABLE_NAME);
-        return collectionNames;
     }
 }

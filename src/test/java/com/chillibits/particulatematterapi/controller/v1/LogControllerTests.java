@@ -15,7 +15,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -33,6 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("logging")
@@ -69,17 +69,17 @@ public class LogControllerTests {
 
     @Before
     public void init() {
-        /*Mockito.when(template.find(Query.query(Criteria.where("timestamp").gte(anyLong()).lte(anyLong())), LogItem.class))
+        /*when(template.find(Query.query(Criteria.where("timestamp").gte(anyLong()).lte(anyLong())), LogItem.class))
                 .thenReturn(testData);
-        Mockito.when(template.find(Query.query(Criteria.where("timestamp").gte(anyLong()).lte(anyLong()).and("target").regex("User 2")), LogItem.class))
+        when(template.find(Query.query(Criteria.where("timestamp").gte(anyLong()).lte(anyLong()).and("target").regex("User 2")), LogItem.class))
                 .thenReturn(testData.stream().filter(item -> item.getTarget().equals("User 2")).collect(Collectors.toList()));
-        Mockito.when(template.find(Query.query(Criteria.where("timestamp").gte(anyLong()).lte(anyLong()).and("userId").is(2)), LogItem.class))
+        when(template.find(Query.query(Criteria.where("timestamp").gte(anyLong()).lte(anyLong()).and("userId").is(2)), LogItem.class))
                 .thenReturn(testData.stream().filter(item -> item.getUserId() == 2).collect(Collectors.toList()));
-        Mockito.when(template.find(Query.query(Criteria.where("timestamp").gte(anyLong()).lte(anyLong()).and("clientId").is(ConstantUtils.CLIENT_ID_PMAPP)), LogItem.class))
+        when(template.find(Query.query(Criteria.where("timestamp").gte(anyLong()).lte(anyLong()).and("clientId").is(ConstantUtils.CLIENT_ID_PMAPP)), LogItem.class))
                 .thenReturn(testData.stream().filter(item -> item.getClientId() == ConstantUtils.CLIENT_ID_PMAPP).collect(Collectors.toList()));
-        Mockito.when(template.find(Query.query(Criteria.where("timestamp").gte(anyLong()).lte(anyLong()).and("action").regex("Get data")), LogItem.class))
+        when(template.find(Query.query(Criteria.where("timestamp").gte(anyLong()).lte(anyLong()).and("action").regex("Get data")), LogItem.class))
                 .thenReturn(testData.stream().filter(item -> item.getAction().equals("Get data")).collect(Collectors.toList()));*/
-        Mockito.when(template.find(any(Query.class), eq(LogItem.class))).thenReturn(testData);
+        when(template.find(any(Query.class), eq(LogItem.class))).thenReturn(testData);
     }
 
     // --------------------------------------------------- Get logs ----------------------------------------------------

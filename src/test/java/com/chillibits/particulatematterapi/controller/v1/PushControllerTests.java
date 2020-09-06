@@ -15,7 +15,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -32,6 +31,7 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("logging")
@@ -42,14 +42,15 @@ public class PushControllerTests {
     private PushController pushController;
     @MockBean
     private SensorRepository sensorRepository;
-    @MockBean
-    private MongoTemplate template;
 
     private final List<DataRecordInsertUpdateDto> testData = getTestData();
     private final List<Sensor> testSensors = getTestSensors();
 
     @TestConfiguration
     static class PushControllerImplTestContextConfiguration {
+
+        @MockBean
+        private MongoTemplate template;
 
         @Bean
         public PushController pushController() {
@@ -70,8 +71,8 @@ public class PushControllerTests {
     @Before
     public void init() {
         // Setup fake method calls
-        Mockito.when(sensorRepository.findById(testSensors.get(0).getChipId())).thenReturn(Optional.of(testSensors.get(0)));
-        Mockito.when(sensorRepository.save(any(Sensor.class))).thenReturn(null);
+        when(sensorRepository.findById(testSensors.get(0).getChipId())).thenReturn(Optional.of(testSensors.get(0)));
+        when(sensorRepository.save(any(Sensor.class))).thenReturn(null);
     }
 
     // -------------------------------------------------- Push data ----------------------------------------------------

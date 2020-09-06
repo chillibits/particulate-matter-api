@@ -15,7 +15,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -35,6 +34,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("logging")
@@ -74,12 +75,12 @@ public class UserControllerTests {
     @Before
     public void init() {
         // Setup fake method calls
-        Mockito.when(userRepository.findAll()).thenReturn(testData);
-        Mockito.when(userRepository.findByEmail(testData.get(0).getEmail())).thenReturn(testData.get(0));
-        Mockito.when(userRepository.findByEmail(testData.get(3).getEmail())).thenReturn(testData.get(3));
-        Mockito.when(userRepository.save(any(User.class))).then(returnsFirstArg());
-        Mockito.when(userRepository.updateUser(any(User.class))).thenReturn(1);
-        Mockito.doNothing().when(userRepository).deleteById(anyInt());
+        when(userRepository.findAll()).thenReturn(testData);
+        when(userRepository.findByEmail(testData.get(0).getEmail())).thenReturn(testData.get(0));
+        when(userRepository.findByEmail(testData.get(3).getEmail())).thenReturn(testData.get(3));
+        when(userRepository.save(any(User.class))).then(returnsFirstArg());
+        when(userRepository.updateUser(any(User.class))).thenReturn(1);
+        doNothing().when(userRepository).deleteById(anyInt());
     }
 
     // -------------------------------------------------- Get users ----------------------------------------------------

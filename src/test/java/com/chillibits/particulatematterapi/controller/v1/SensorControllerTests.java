@@ -24,7 +24,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -49,6 +48,8 @@ import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("logging")
@@ -94,20 +95,20 @@ public class SensorControllerTests {
     @Before
     public void init() {
         // Setup fake method calls
-        Mockito.when(sensorRepository.findAll()).thenReturn(testData);
-        Mockito.when(sensorRepository.findAllInRadius(0, 0, 100)).thenReturn(Arrays.asList(testData.get(1), testData.get(3), testData.get(4)));
-        Mockito.when(sensorRepository.findAllPublished()).thenReturn(Arrays.asList(testData.get(0), testData.get(2), testData.get(4)));
-        Mockito.when(sensorRepository.findAllPublishedInRadius(0, 0, 100)).thenReturn(Collections.singletonList(testData.get(4)));
-        Mockito.when(sensorRepository.findById(testInsertUpdateData.get(0).getChipId())).thenReturn(Optional.ofNullable(testData.get(0)));
-        Mockito.when(sensorRepository.save(any(Sensor.class))).then(returnsFirstArg());
-        Mockito.when(sensorRepository.existsById(anyLong())).thenReturn(false);
-        Mockito.when(sensorRepository.existsById(testInsertUpdateData.get(2).getChipId())).thenReturn(true);
-        Mockito.when(sensorRepository.existsById(testInsertUpdateData.get(6).getChipId())).thenReturn(true);
-        Mockito.when(sensorRepository.existsById(testInsertUpdateData.get(7).getChipId())).thenReturn(true);
-        Mockito.when(sensorRepository.updateSensor(any(Sensor.class))).thenReturn(1);
-        Mockito.doNothing().when(sensorRepository).deleteById(anyLong());
+        when(sensorRepository.findAll()).thenReturn(testData);
+        when(sensorRepository.findAllInRadius(0, 0, 100)).thenReturn(Arrays.asList(testData.get(1), testData.get(3), testData.get(4)));
+        when(sensorRepository.findAllPublished()).thenReturn(Arrays.asList(testData.get(0), testData.get(2), testData.get(4)));
+        when(sensorRepository.findAllPublishedInRadius(0, 0, 100)).thenReturn(Collections.singletonList(testData.get(4)));
+        when(sensorRepository.findById(testInsertUpdateData.get(0).getChipId())).thenReturn(Optional.ofNullable(testData.get(0)));
+        when(sensorRepository.save(any(Sensor.class))).then(returnsFirstArg());
+        when(sensorRepository.existsById(anyLong())).thenReturn(false);
+        when(sensorRepository.existsById(testInsertUpdateData.get(2).getChipId())).thenReturn(true);
+        when(sensorRepository.existsById(testInsertUpdateData.get(6).getChipId())).thenReturn(true);
+        when(sensorRepository.existsById(testInsertUpdateData.get(7).getChipId())).thenReturn(true);
+        when(sensorRepository.updateSensor(any(Sensor.class))).thenReturn(1);
+        doNothing().when(sensorRepository).deleteById(anyLong());
         // MongoTemplate
-        Mockito.when(mongoTemplate.getCollectionNames())
+        when(mongoTemplate.getCollectionNames())
                 .thenReturn(new HashSet<>(Arrays.asList(
                         String.valueOf(testInsertUpdateData.get(0).getChipId()),
                         String.valueOf(testInsertUpdateData.get(1).getChipId()),
@@ -115,10 +116,10 @@ public class SensorControllerTests {
                         String.valueOf(testInsertUpdateData.get(5).getChipId())
                 )));
         // UserRepository
-        Mockito.when(userRepository.existsById(anyInt())).thenReturn(true);
+        when(userRepository.existsById(anyInt())).thenReturn(true);
         int userId = new ArrayList<>(testInsertUpdateData.get(4).getUserLinks()).get(0).getUser().getId();
-        Mockito.when(userRepository.existsById(userId)).thenReturn(false);
-        Mockito.when(userRepository.findById(new ArrayList<>(testInsertUpdateData.get(6).getUserLinks()).get(0).getUser().getId()))
+        when(userRepository.existsById(userId)).thenReturn(false);
+        when(userRepository.findById(new ArrayList<>(testInsertUpdateData.get(6).getUserLinks()).get(0).getUser().getId()))
                 .thenReturn(Optional.of(new ArrayList<>(testData.get(6).getUserLinks()).get(0).getUser()));
     }
 

@@ -16,7 +16,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -32,6 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("logging")
@@ -70,8 +70,8 @@ public class RankingControllerTests {
     @Before
     public void init() {
         // Setup fake method calls
-        Mockito.when(sensorRepository.getRankingByCity(anyInt())).thenReturn(testDataCity);
-        Mockito.when(sensorRepository.getRankingByCountry(anyInt())).thenReturn(testDataCountry);
+        when(sensorRepository.getRankingByCity(anyInt())).thenReturn(testDataCity);
+        when(sensorRepository.getRankingByCountry(anyInt())).thenReturn(testDataCountry);
     }
 
     // ----------------------------------------------- Get city ranking ------------------------------------------------
