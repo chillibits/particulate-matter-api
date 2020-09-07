@@ -51,7 +51,8 @@ public class DataService {
 
     public DataRecordDto getLatestDataRecord(long chipId) throws DataAccessException {
         Query query = new Query().with(Sort.by(new Sort.Order(Sort.Direction.DESC, "timestamp"))).limit(1);
-        return convertToDto(template.find(query, DataRecord.class, String.valueOf(chipId)).stream().findFirst().orElse(null));
+        List<DataRecord> records = template.find(query, DataRecord.class, String.valueOf(chipId));
+        return records != null ? convertToDto(records.get(0)) : null; // Do not remove items != null
     }
 
     public List<DataRecordCompressedDto> getAllDataRecordsCompressed(long chipId) throws DataAccessException {
@@ -174,10 +175,11 @@ public class DataService {
     }
 
     private List<DataRecord> getDataRecordsRaw(long chipId, long from, long to) throws DataAccessException {
-        if(from < 0 || to < 0) throw new DataAccessException(ErrorCode.INVALID_TIME_RANGE_DATA);
+        if((from < 0 || to < 0) || (from > to)) throw new DataAccessException(ErrorCode.INVALID_TIME_RANGE_DATA);
         long toTimestamp = to == 0 ? System.currentTimeMillis() : to;
         long fromTimestamp = from == 0 ? toTimestamp - ConstantUtils.DEFAULT_DATA_TIME_SPAN : from;
-        return template.find(Query.query(Criteria.where("timestamp").gte(fromTimestamp).lte(toTimestamp)).cursorBatchSize(500), DataRecord.class, String.valueOf(chipId));
+        List<DataRecord> records = template.find(Query.query(Criteria.where("timestamp").gte(fromTimestamp).lte(toTimestamp)).cursorBatchSize(500), DataRecord.class, String.valueOf(chipId));
+        return records != null ? records : new ArrayList<>(); // Do not remove items != null
     }
 
     private List<DataRecordDto> loopWithGranularity(int granularity, long toTimestamp, long fromTimestamp, List<Long> chipIds) throws DataAccessException {

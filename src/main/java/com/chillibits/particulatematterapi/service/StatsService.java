@@ -43,7 +43,7 @@ public class StatsService {
         long[] timestamps = calculateTimestamps(currentTime);
         // Load already calculated item from cache table
         List<StatsItem> items = template.find(Query.query(Criteria.where("chipId").is(0)).limit(1), StatsItem.class, ConstantUtils.STATS_TABLE_NAME);
-        StatsItem newItem = items.stream().findFirst().orElse(new StatsItem());
+        StatsItem newItem = items == null? new StatsItem() : items.get(0); // Do not remove items == null
         // Retrieve newItem
         newItem.setTimestamp(currentTime);
         Set<String> collectionNames = getDataCollections();
@@ -75,7 +75,8 @@ public class StatsService {
         long currentTime = System.currentTimeMillis();
         long[] timestamps = calculateTimestamps(currentTime);
         // Load already calculated item from cache table
-        StatsItem newItem = template.find(Query.query(Criteria.where("chipId").is(chipId)).limit(1), StatsItem.class, ConstantUtils.STATS_TABLE_NAME).stream().findFirst().orElse(new StatsItem());
+        List<StatsItem> items = template.find(Query.query(Criteria.where("chipId").is(chipId)).limit(1), StatsItem.class, ConstantUtils.STATS_TABLE_NAME);
+        StatsItem newItem = items.isEmpty() ? new StatsItem() : items.get(0);
         long fromTime = newItem.getChipId() != 0L ? newItem.getTimestamp() : 0;
         newItem.setChipId(chipId);
         newItem.setTimestamp(currentTime);
