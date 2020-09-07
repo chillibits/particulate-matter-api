@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("logging")
-@DisplayName("Push Controller")
+@DisplayName("Stats Controller")
 public class StatsControllerTests {
 
     @Autowired
@@ -94,7 +94,6 @@ public class StatsControllerTests {
                 .thenReturn(Collections.singletonList(getCachedSingleItem()));
         when(template.count(any(Query.class), eq("12345678")))
                 .thenReturn(271235L).thenReturn(1244L).thenReturn(1433L).thenReturn(17556L).thenReturn(21343L);
-
     }
 
     // -------------------------------------------- Calculate Timestamps -----------------------------------------------
