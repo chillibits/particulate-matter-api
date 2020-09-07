@@ -27,7 +27,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -101,12 +103,13 @@ public class StatsControllerTests {
     @DisplayName("Test for calculating timestamp, relative to the current timestamp")
     public void testCalculateTimestamps() {
         long time = 1599407749874L; // Sun Sep 06 2020 15:55:49
+        long timezoneOffset = TimeZone.getDefault().getOffset(new Date(time).getTime());
         long[] timestamps = statsService.calculateTimestamps(time);
         assertEquals(time - ConstantUtils.MINUTES_UNTIL_INACTIVITY, timestamps[0]); // Inactivity offset
-        assertEquals(1599343200000L /* Sun Sep 06 2020 00:00:00 */, timestamps[1]); // Midnight today
-        assertEquals(1599256800000L /* Sat Sep 05 2020 00:00:00 */, timestamps[2]); // Midnight yesterday
-        assertEquals(1598911200000L /* Tue Sep 01 2020 00:00:00 */, timestamps[3]); // Midnight 1st of this month
-        assertEquals(1596232800000L /* Sat Aug 01 2020 00:00:00 */, timestamps[4]); // Midnight 1st of prev month
+        assertEquals(1599350400000L /* Sun Sep 06 2020 00:00:00 */ - timezoneOffset, timestamps[1]); // Midnight today
+        assertEquals(1599264000000L /* Sat Sep 05 2020 00:00:00 */ - timezoneOffset, timestamps[2]); // Midnight yesterday
+        assertEquals(1598918400000L /* Tue Sep 01 2020 00:00:00 */ - timezoneOffset, timestamps[3]); // Midnight 1st of this month
+        assertEquals(1596240000000L /* Sat Aug 01 2020 00:00:00 */ - timezoneOffset, timestamps[4]); // Midnight 1st of prev month
     }
 
     // -------------------------------------------------- Get stats ----------------------------------------------------
