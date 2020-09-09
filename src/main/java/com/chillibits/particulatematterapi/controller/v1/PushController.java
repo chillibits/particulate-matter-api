@@ -18,6 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Push endpoint
+ *
+ * Endpoint for receiving measurement data from sensors.
+ * <p>Note: Please use an unsecured http connection to send data to this endpoint. This saves server capacity</p>
+ */
 @RestController
 @Api(value = "Push REST Endpoint", tags = "push")
 public class PushController {
@@ -25,6 +31,15 @@ public class PushController {
     @Autowired
     private PushService pushService;
 
+    /**
+     * Pushes a measurement record to the database
+     * <p>Note: Please use an unsecured http connection to send data to this endpoint. This saves server capacity</p>
+     *
+     * @param record Instance of DataRecordInsertUpdateDto with all required data values
+     * @param xSensorHeader Header attribute which contains the Chip-Id of a sensor with a pre-/suffix (e.g. esp8266-4017638)
+     * @param sensorHeader Header attribute which contains the Chip-Id of a sensor with a pre-/suffix (e.g. esp8266-4017638)
+     * @return "ok" / "error"
+     */
     @RequestMapping(method = RequestMethod.POST, path = "/push", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Pushes a measurement record to the database")
     @ApiResponses(value = {
