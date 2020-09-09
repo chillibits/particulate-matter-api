@@ -62,7 +62,7 @@ public class ClientController {
 
     /**
      * Adds a client object
-     * <p>Note: Requires application role AA (Admin Application)</p>
+     * <p>Note: Requires application role AA (admin application)</p>
      *
      * @return Client info as a ClientDto object
      */
@@ -77,7 +77,7 @@ public class ClientController {
 
     /**
      * Updates a specific client object
-     * <p>Note: Requires application role AA (Admin Application)</p>
+     * <p>Note: Requires application role AA (admin application)</p>
      *
      * @return Client info as a ClientDto object
      */
@@ -92,7 +92,7 @@ public class ClientController {
 
     /**
      * Deletes an user from the database
-     * <p>Note: Requires application role AA (Admin Application)</p>
+     * <p>Note: Requires application role AA (admin application)</p>
      */
     @RequestMapping(method = RequestMethod.DELETE, path = "/client/{id}")
     @ApiOperation(value = "Deletes an user from the database", hidden = true)
