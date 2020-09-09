@@ -196,7 +196,6 @@ public class UserControllerTests {
 
     private List<UserInsertUpdateDto> getInsertUpdateTestData() {
         // Create user objects
-        long time = System.currentTimeMillis();
         UserInsertUpdateDto u1 = new UserInsertUpdateDto(1, "Marc", "Auberer", "marc.auberer@chillibits.com", "12345678", null, User.OPERATOR, User.EMAIL_CONFIRMATION_PENDING);
         UserInsertUpdateDto u2 = new UserInsertUpdateDto(2, "Admin", "User", "info@chillibits.com", "87654321", null, User.ADMINISTRATOR, User.ACTIVE);
         UserInsertUpdateDto u3 = new UserInsertUpdateDto(3, "Test", "User", "test@chillibits.com", "87654321", null, User.USER, User.EMAIL_CONFIRMATION_PENDING);

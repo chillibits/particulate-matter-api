@@ -383,8 +383,6 @@ public class SensorControllerTests {
         SensorDto s4 = new SensorDto(1234568, "2020-04", 0, 30.0, 70.0, 10, "Russia", "Moskva", false, false);
         SensorDto s5 = new SensorDto(1234563, "2020-05", 0, 40.0, 80.0, 80, "Ireland", "Dublin", true, true);
         SensorDto s6 = new SensorDto(2439573, "2020-06", 0, -1, 0, 1, "Bulgaria", "Sofia", false, true);
-        SensorDto s7 = new SensorDto(24395731, "2020-07", 0, -1, 0, 1, "Belgium", "Brussels", true, true);
-        SensorDto s8 = new SensorDto(24395732, "2020-08", 0, -1, 0, 1, "Netherlands", "Amsterdam", false, true);
         // Create sensorInsertUpdateDto objects
         SensorInsertUpdateDto siu1 = new SensorInsertUpdateDto(1234567, null, 0.0, 0.0, 0, false, true);
         SensorInsertUpdateDto siu2 = new SensorInsertUpdateDto(12345678, null, 10.0, 30.0, 50, true, false);

@@ -44,8 +44,6 @@ public class DataControllerTests {
 
     @Autowired
     private DataController dataController;
-    @Autowired
-    private DataService dataService;
     @MockBean
     private MongoTemplate template;
     @MockBean

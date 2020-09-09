@@ -10,7 +10,6 @@ import com.chillibits.particulatematterapi.model.db.main.Sensor;
 import com.chillibits.particulatematterapi.model.dto.DataRecordInsertUpdateDto;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
 import com.chillibits.particulatematterapi.service.PushService;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -107,7 +106,7 @@ public class PushControllerTests {
         );
 
         String expectedMessage = new PushDataException(ErrorCode.NO_DATA_VALUES).getMessage();
-        Assert.assertEquals(expectedMessage, exception.getMessage());
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     // -------------------------------------------------- Test data ----------------------------------------------------
