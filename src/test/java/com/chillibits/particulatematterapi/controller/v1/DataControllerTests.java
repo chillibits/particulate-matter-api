@@ -252,37 +252,79 @@ public class DataControllerTests {
     @Test
     @DisplayName("Test for getting json data for a chart for a single sensor for a certain timespan - successful")
     public void testGetChartDataSuccessful() {
+        String result = dataController.getChartData(12345678L, time - 4 * timestampOffset, time, 0, 1);
 
+        // Replace responseTime, cause it's not the same every time
+        int indexStart = result.indexOf("responseTime") + 14;
+        String value = result.substring(indexStart, result.indexOf(",", indexStart));
+        result = result.replace("responseTime\":" + value, "responseTime\":0");
+
+        assertEquals(getChartDataAssertString(), result);
     }
 
     @Test
     @DisplayName("Test for getting json data for a chart for a single sensor for a certain timespan - failure")
     public void testGetChartDataFailure() {
+        String result = dataController.getChartData(123456789L, time - 4 * timestampOffset, time, 0, 1);
 
+        // Replace responseTime, cause it's not the same every time
+        int indexStart = result.indexOf("responseTime") + 14;
+        String value = result.substring(indexStart, result.indexOf("}", indexStart));
+        result = result.replace("responseTime\":" + value, "responseTime\":0");
+
+        assertEquals(getChartDataAssertStringNoData(), result);
     }
 
     @Test
     @DisplayName("Test for getting json data for a chart for sensors from a country for a certain timespan - successful")
     public void testGetChartDataCountrySuccessful() {
+        String result = dataController.getChartDataCountry("Germany", time - 4 * timestampOffset, time, 0, 1);
 
+        // Replace responseTime, cause it's not the same every time
+        int indexStart = result.indexOf("responseTime") + 14;
+        String value = result.substring(indexStart, result.indexOf(",", indexStart));
+        result = result.replace("responseTime\":" + value, "responseTime\":0");
+
+        assertEquals(getChartDataCountryAssertString(), result);
     }
 
     @Test
     @DisplayName("Test for getting json data for a chart for sensors from a country for a certain timespan - failure")
     public void testGetChartDataCountryFailure() {
+        String result = dataController.getChartDataCountry("Germany", time - 4 * timestampOffset, time, 0, 1);
 
+        // Replace responseTime, cause it's not the same every time
+        int indexStart = result.indexOf("responseTime") + 14;
+        String value = result.substring(indexStart, result.indexOf("}", indexStart));
+        result = result.replace("responseTime\":" + value, "responseTime\":0");
+
+        assertEquals(getChartDataCountryAssertStringNoData(), result);
     }
 
     @Test
     @DisplayName("Test for getting json data for a chart for sensors from a city for a certain timespan - successful")
     public void testGetChartDataCitySuccessful() {
+        String result = dataController.getChartDataCity("Germany", "Berlin", time - 4 * timestampOffset, time, 0, 1);
 
+        // Replace responseTime, cause it's not the same every time
+        int indexStart = result.indexOf("responseTime") + 14;
+        String value = result.substring(indexStart, result.indexOf(",", indexStart));
+        result = result.replace("responseTime\":" + value, "responseTime\":0");
+
+        assertEquals(getChartDataCityAssertString(), result);
     }
 
     @Test
     @DisplayName("Test for getting json data for a chart for sensors from a city for a certain timespan - failure")
     public void testGetChartDataCityFailure() {
+        String result = dataController.getChartDataCity("Germany", "Berlin", time - 4 * timestampOffset, time, 0, 1);
 
+        // Replace responseTime, cause it's not the same every time
+        int indexStart = result.indexOf("responseTime") + 14;
+        String value = result.substring(indexStart, result.indexOf("}", indexStart));
+        result = result.replace("responseTime\":" + value, "responseTime\":0");
+
+        assertEquals(getChartDataCityAssertStringNoData(), result);
     }
 
     // -------------------------------------------------- Test data ----------------------------------------------------
@@ -435,5 +477,31 @@ public class DataControllerTests {
                 new DataRecordDto.SensorDataValue("SDS_P2", 1.05)
         };
         return new DataRecordDto(time, null, sensorDataValues, "");
+    }
+
+    private String getChartDataAssertString() {
+        return "{\"sensorCount\":1,\"field\":\"SDS_P1\",\"responseTime\":0,\"values\":[[" + (time - 4 * timestampOffset)
+                + ",3.3],[" + (time - 3 * timestampOffset) + ",3.3],[" + (time - 2 * timestampOffset) + ",3.3],[" +
+                (time - timestampOffset) + ",3.1],[" + time + ",1.3]]}";
+    }
+
+    private String getChartDataAssertStringNoData() {
+        return "{\"sensorCount\":1,\"responseTime\":0}";
+    }
+
+    private String getChartDataCountryAssertString() {
+        return "{\"sensorCount\":3,\"field\":\"SDS_P1\",\"responseTime\":0,\"values\":[[" + (time - 4 * timestampOffset) + ",2.461]]}";
+    }
+
+    private String getChartDataCountryAssertStringNoData() {
+        return "{\"sensorCount\":3,\"field\":\"SDS_P1\",\"responseTime\":0}";
+    }
+
+    private String getChartDataCityAssertString() {
+        return "{\"sensorCount\":2,\"field\":\"SDS_P1\",\"responseTime\":0,\"values\":[[" + (time - 4 * timestampOffset) + ",2.239]]}";
+    }
+
+    private String getChartDataCityAssertStringNoData() {
+        return "{\"sensorCount\":2,\"field\":\"SDS_P1\",\"responseTime\":0}";
     }
 }
