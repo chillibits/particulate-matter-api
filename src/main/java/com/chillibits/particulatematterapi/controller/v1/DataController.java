@@ -28,6 +28,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Data endpoint
+ *
+ * Main endpoint for the read accesses of the measurement data (write access via the push endpoint).
+ */
 @RestController
 @Slf4j
 @Api(value = "Data REST Endpoint", tags = "data")
@@ -38,8 +43,16 @@ public class DataController {
 
     // ------------------------------------------- Data for single sensor ----------------------------------------------
 
+    /**
+     * Returns data records for a specific sensor
+     *
+     * @param chipId Chip-ID of the requested sensor
+     * @param from Begin of the requested time range (unix timestamp in milliseconds)
+     * @param to End of the requested time range (unix timestamp in milliseconds)
+     * @return List of data records as List of DataRecordDto
+     */
     @RequestMapping(method = RequestMethod.GET, path = "/data/{chipId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Returns all data records for a specific sensor")
+    @ApiOperation(value = "Returns data records for a specific sensor")
     @ApiResponses(value = {
             @ApiResponse(code = 406, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0")
     })
@@ -51,8 +64,16 @@ public class DataController {
         return dataService.getDataRecords(chipId, from, to);
     }
 
+    /**
+     * Returns data records for a specific sensor in a compressed form
+     *
+     * @param chipId Chip-ID of the requested sensor
+     * @param from Begin of the requested time range (unix timestamp in milliseconds)
+     * @param to End of the requested time range (unix timestamp in milliseconds)
+     * @return List of data records as List of DataRecordCompressedDto
+     */
     @RequestMapping(method = RequestMethod.GET, path = "/data/{chipId}", params = "compressed")
-    @ApiOperation(value = "Returns all data records for a specific sensor in a compressed form")
+    @ApiOperation(value = "Returns data records for a specific sensor in a compressed form")
     @ApiResponses(value = {
             @ApiResponse(code = 406, message = "Invalid time range. Please provide an unix timestamp: from >= 0 and to >=0")
     })
@@ -64,12 +85,24 @@ public class DataController {
         return dataService.getDataRecordsCompressed(chipId, from, to);
     }
 
+    /**
+     * Returns the latest data record for a specific sensor
+     *
+     * @param chipId Chip-ID of the requested sensor
+     * @return Data record as DataRecordDto, which has the average values in it
+     */
     @RequestMapping(method = RequestMethod.GET, path = "/data/{chipId}/latest", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns the latest data record for a specific sensor")
     public DataRecordDto getLatestDataRecord(@PathVariable long chipId) {
         return dataService.getLatestDataRecord(chipId);
     }
 
+    /**
+     * Returns all data records for a specific sensor (should only be used for archiving purposes)
+     *
+     * @param chipId Chip-ID of the requested sensor
+     * @return List of data records as List of DataRecordCompressedDto
+     */
     @RequestMapping(method = RequestMethod.GET, path = "/data/{chipId}/all", produces = MediaType.APPLICATION_JSON_VALUE, params = "compressed")
     @ApiOperation(value = "Returns all data records for a specific sensor", hidden = true)
     public List<DataRecordCompressedDto> getAllDataRecordsCompressed(@PathVariable long chipId) {
@@ -78,6 +111,12 @@ public class DataController {
 
     // ----------------------------------------------- Data for multiple sensors ---------------------------------------
 
+    /**
+     * Returns a record with the averages of the latest values of the specified sensors
+     *
+     * @param chipIds Array of all requested Chip-Ids
+     * @return Data record as DataRecordDto, which has the average values in it
+     */
     @RequestMapping(method = RequestMethod.GET, path = "/data/average", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns a record with the averages of the latest values of the specified sensors")
     public DataRecordDto getDataAverageMultipleSensors(@RequestParam Long[] chipIds) {
@@ -86,6 +125,14 @@ public class DataController {
 
     // --------------------------------------------------- Data for country --------------------------------------------
 
+    /**
+     * Returns all data records from sensors in a specific country
+     *
+     * @param country Name of the requested country
+     * @param from Begin of the requested time range (unix timestamp in milliseconds)
+     * @param to End of the requested time range (unix timestamp in milliseconds)
+     * @return List of data records as List of DataRecordCompressedDto
+     */
     @RequestMapping(method = RequestMethod.GET, path = "/data/country/{country}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all data records from sensors in a specific country")
     @ApiResponses(value = {
@@ -99,8 +146,14 @@ public class DataController {
         return dataService.getDataCountry(country, from, to);
     }
 
+    /**
+     * Returns the average of all latest data records from all sensors within a specific country
+     *
+     * @param country Name of the requested country
+     * @return Data record as DataRecordDto, which has the average values in it
+     */
     @RequestMapping(method = RequestMethod.GET, path = "/data/country/{country}/latest", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Returns the latest data record for a specific country")
+    @ApiOperation(value = "Returns the average of all latest data records from all sensors within a specific country")
     public DataRecordDto getDataCountryLatest(
         @PathVariable String country
     ) {
@@ -109,6 +162,15 @@ public class DataController {
 
     // ---------------------------------------------------- Data for city ----------------------------------------------
 
+    /**
+     * Returns all data records from sensors in a specific city
+     *
+     * @param country Name of the requested country
+     * @param city Name of the requested city
+     * @param from Begin of the requested time range (unix timestamp in milliseconds)
+     * @param to End of the requested time range (unix timestamp in milliseconds)
+     * @return List of data records as List of DataRecordCompressedDto
+     */
     @RequestMapping(method = RequestMethod.GET, path = "/data/city/{country}/{city}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all data records from sensors in a specific city")
     @ApiResponses(value = {
@@ -123,8 +185,15 @@ public class DataController {
         return dataService.getDataCity(country, city, from, to);
     }
 
+    /**
+     * Returns the average of all latest data records from all sensors within a specific city
+     *
+     * @param country Name of the requested country
+     * @param city Name of the requested city
+     * @return Data record as DataRecordDto, which has the average values in it
+     */
     @RequestMapping(method = RequestMethod.GET, path = "/data/city/{country}/{city}/latest", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Returns the latest data record for a specific city")
+    @ApiOperation(value = "Returns the average of all latest data records from all sensors within a specific city")
     public DataRecordDto getDataCityLatest(
         @PathVariable String country,
         @PathVariable String city
@@ -134,6 +203,16 @@ public class DataController {
 
     // --------------------------------------------- Chart data functions ----------------------------------------------
 
+    /**
+     * Returns the average of all latest data records from all sensors within a specific city
+     *
+     * @param chipId Chip-ID of the requested sensor
+     * @param from Begin of the requested time range (unix timestamp in milliseconds)
+     * @param to End of the requested time range (unix timestamp in milliseconds)
+     * @param fieldIndex Index of the field which is needed (e.g. 0 for PM10, 1 for PM2.5, etc.)
+     * @param mergeCount How many records will be merged to one (for performance purposes)
+     * @return Json string, which can be processed by the chart endpoint
+     */
     @RequestMapping(method = RequestMethod.GET, path = "/data/chart")
     @ApiOperation(value = "Returns chart ready data", hidden = true)
     @ApiResponses(value = {
@@ -153,6 +232,15 @@ public class DataController {
         return chartDataToJson(fieldIndex, startTimestamp, records, 1);
     }
 
+    /**
+     *
+     * @param country Name of the requested country
+     * @param from Begin of the requested time range (unix timestamp in milliseconds)
+     * @param to End of the requested time range (unix timestamp in milliseconds)
+     * @param fieldIndex Index of the field which is needed (e.g. 0 for PM10, 1 for PM2.5, etc.)
+     * @param granularity Granularity in minutes (similar to mergeCount)
+     * @return Json string, which can be processed by the chart endpoint
+     */
     @RequestMapping(method = RequestMethod.GET, path = "/data/chart", params = "country")
     @ApiOperation(value = "Returns chart ready data for a specific country", hidden = true)
     @ApiResponses(value = {
@@ -172,6 +260,16 @@ public class DataController {
         return chartDataToJson(fieldIndex, startTimestamp, result.left, result.right);
     }
 
+    /**
+     *
+     * @param country Name of the requested country
+     * @param city Name of the requested city
+     * @param from Begin of the requested time range (unix timestamp in milliseconds)
+     * @param to End of the requested time range (unix timestamp in milliseconds)
+     * @param fieldIndex Index of the field which is needed (e.g. 0 for PM10, 1 for PM2.5, etc.)
+     * @param granularity Granularity in minutes (similar to mergeCount)
+     * @return Json string, which can be processed by the chart endpoint
+     */
     @RequestMapping(method = RequestMethod.GET, path = "/data/chart", params = {"country", "city"})
     @ApiOperation(value = "Returns chart ready data for a specific city", hidden = true)
     @ApiResponses(value = {

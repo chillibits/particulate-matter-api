@@ -21,6 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * Client endpoint
+ *
+ * A client is a data record, which represents an application with access to the Particulate Matter API.
+ * For each client, there are one or several roles defined. These roles limit the access permissions of the application.
+ * Clients can only to be registered by the ChilliBits team. Please contact us via email (contact@chillibits.com)
+ */
 @RestController
 @Api(value = "Client REST Endpoint", tags = "client")
 public class ClientController {
@@ -28,14 +35,24 @@ public class ClientController {
     @Autowired
     private ClientService clientService;
 
+    /**
+     * Returns all client objects, found in the database
+     *
+     * @return List of all clients
+     */
     @RequestMapping(method = RequestMethod.GET, path = "/client", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all client objects, found in the database")
     public List<ClientDto> getAllClients() {
         return clientService.getAllClients();
     }
 
+    /**
+     * Returns info about a specific client by its name
+     *
+     * @return Client info as a ClientDto object
+     */
     @RequestMapping(method = RequestMethod.GET, path = "/client/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Returns info about a specific client, identified by its name")
+    @ApiOperation(value = "Returns info about a specific client by its name")
     @ApiResponses(value = {
             @ApiResponse(code = 406, message = "This client does not exist")
     })
@@ -43,6 +60,12 @@ public class ClientController {
         return clientService.getClientByName(name);
     }
 
+    /**
+     * Adds a client object
+     * <p>Note: Requires application role AA (Admin Application)</p>
+     *
+     * @return Client info as a ClientDto object
+     */
     @RequestMapping(method = RequestMethod.POST, path = "/client", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Adds a client object", hidden = true)
     @ApiResponses(value = {
@@ -52,6 +75,12 @@ public class ClientController {
         return clientService.addClient(client);
     }
 
+    /**
+     * Updates a specific client object
+     * <p>Note: Requires application role AA (Admin Application)</p>
+     *
+     * @return Client info as a ClientDto object
+     */
     @RequestMapping(method = RequestMethod.PUT, path = "/client", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates a specific client object", hidden = true)
     @ApiResponses(value = {
@@ -61,6 +90,10 @@ public class ClientController {
         return clientService.updateClient(client);
     }
 
+    /**
+     * Deletes an user from the database
+     * <p>Note: Requires application role AA (Admin Application)</p>
+     */
     @RequestMapping(method = RequestMethod.DELETE, path = "/client/{id}")
     @ApiOperation(value = "Deletes an user from the database", hidden = true)
     public void deleteClient(@PathVariable int id) {
