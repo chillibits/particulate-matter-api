@@ -52,7 +52,7 @@ public class DataService {
     public DataRecordDto getLatestDataRecord(long chipId) throws DataAccessException {
         Query query = new Query().with(Sort.by(new Sort.Order(Sort.Direction.DESC, "timestamp"))).limit(1);
         List<DataRecord> records = template.find(query, DataRecord.class, String.valueOf(chipId));
-        return records != null ? convertToDto(records.get(0)) : null; // Do not remove items != null
+        return records == null || records.isEmpty() ? null : convertToDto(records.get(0)); // Do not remove records == null
     }
 
     public List<DataRecordCompressedDto> getAllDataRecordsCompressed(long chipId) throws DataAccessException {

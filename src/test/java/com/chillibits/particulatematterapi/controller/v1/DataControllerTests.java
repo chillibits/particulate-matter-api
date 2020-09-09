@@ -79,12 +79,16 @@ public class DataControllerTests {
     @Before
     public void init() {
         // Setup fake method calls
+        when(template.find(any(Query.class), eq(DataRecord.class), eq("12345")))
+                .thenReturn(getTestDataForChipId12345());
         when(template.find(any(Query.class), eq(DataRecord.class), eq("123456")))
                 .thenReturn(getTestDataForChipId123456());
         when(template.find(any(Query.class), eq(DataRecord.class), eq("1234567")))
                 .thenReturn(null);
         when(template.find(any(Query.class), eq(DataRecord.class), eq("12345678")))
                 .thenReturn(testData);
+        when(sensorRepository.getChipIdsOfSensorFromCountry("Germany")).thenReturn(Arrays.asList(12345L, 12345678L, 123456L));
+        when(sensorRepository.getChipIdsOfSensorFromCity("Germany", "Berlin")).thenReturn(Arrays.asList(12345L, 123456L));
     }
 
     // -------------------------------------------- Data for single sensor ---------------------------------------------
@@ -92,7 +96,7 @@ public class DataControllerTests {
     @Test
     @DisplayName("Test for getting data from timespan of a single sensor - successful")
     public void testGetDataRecordsSuccessful() {
-        List<DataRecordDto> result = dataController.getDataRecords(123456, time, time + timestampOffset * 3);
+        List<DataRecordDto> result = dataController.getDataRecords(123456, time - timestampOffset * 3, time);
         assertThat(result).containsExactlyInAnyOrder(assertData.get(0), assertData.get(1), assertData.get(2), assertData.get(3));
     }
 
@@ -111,7 +115,7 @@ public class DataControllerTests {
     @Test
     @DisplayName("Test for getting data from timespan of a single sensor compressed - successful")
     public void testGetDataRecordsCompressedSuccessful() {
-        List<DataRecordCompressedDto> result = dataController.getDataRecordsCompressed(123456, time, time + timestampOffset * 3);
+        List<DataRecordCompressedDto> result = dataController.getDataRecordsCompressed(123456, time - timestampOffset * 3, time);
         assertThat(result).containsExactlyInAnyOrder(assertDataCompressed.get(0), assertDataCompressed.get(1),
                 assertDataCompressed.get(2), assertDataCompressed.get(3));
     }
@@ -160,13 +164,16 @@ public class DataControllerTests {
     @Test
     @DisplayName("Test for getting the average record of several sensors - successful")
     public void testGetDataAverageMultipleSensorsSuccessful() {
-
+        DataRecordDto result = dataController.getDataAverageMultipleSensors(new Long[]{ 12345L, 123456L, 12345678L });
+        result.setTimestamp(time);
+        assertEquals(getAssertDataAverage(), result);
     }
 
     @Test
     @DisplayName("Test for getting the average record of several sensors - failure")
     public void testGetDataAverageMultipleSensorsFailure() {
-
+        DataRecordDto result = dataController.getDataAverageMultipleSensors(new Long[]{ 1234L, 123456789L, 1234567890L });
+        assertEquals(new DataRecordDto(), result);
     }
 
     // ----------------------------------------------- Data for country ------------------------------------------------
@@ -174,25 +181,35 @@ public class DataControllerTests {
     @Test
     @DisplayName("Test for getting all data records of sensors from a specific country in a certain timespan - successful")
     public void testGetDataCountrySuccessful() {
+        List<DataRecordCompressedDto> result = dataController.getDataCountry("Germany", time - 4 * timestampOffset, time);
 
+        List<DataRecordCompressedDto> assertDate12345 = getAssertDataCompressedChipId12345();
+        assertThat(result).containsExactlyInAnyOrder(assertDataCompressed.get(0), assertDataCompressed.get(1), assertDataCompressed.get(2),
+                assertDataCompressed.get(3), assertDataCompressed.get(4), assertDataCompressed.get(0), assertDataCompressed.get(1),
+                assertDataCompressed.get(2), assertDataCompressed.get(3), assertDate12345.get(0), assertDate12345.get(1),
+                assertDate12345.get(2), assertDate12345.get(3), assertDate12345.get(4));
     }
 
     @Test
     @DisplayName("Test for getting all data records of sensors from a specific country in a certain timespan - failure")
     public void testGetDataCountryFailure() {
-
+        List<DataRecordCompressedDto> result = dataController.getDataCountry("NonExisting", time - 4 * timestampOffset, time);
+        assertThat(result).isEmpty();
     }
 
     @Test
     @DisplayName("Test for getting the average record of sensors from a specific country in a certain timespan - successful")
     public void testGetDataCountryLatestSuccessful() {
-
+        DataRecordDto result = dataController.getDataCountryLatest("Germany");
+        result.setTimestamp(time);
+        assertEquals(getAssertDataAverage(), result);
     }
 
     @Test
     @DisplayName("Test for getting the average record of sensors from a specific country in a certain timespan - failure")
     public void testGetDataCountryLatestFailure() {
-
+        DataRecordDto result = dataController.getDataCountryLatest("NonExisting");
+        assertEquals(new DataRecordDto(), result);
     }
 
     // ------------------------------------------------- Data for city -------------------------------------------------
@@ -200,25 +217,34 @@ public class DataControllerTests {
     @Test
     @DisplayName("Test for getting all data records of sensors from a specific city in a certain timespan - successful")
     public void testGetDataCitySuccessful() {
+        List<DataRecordCompressedDto> result = dataController.getDataCity("Germany", "Berlin", time - 4 * timestampOffset, time);
 
+        List<DataRecordCompressedDto> assertDate12345 = getAssertDataCompressedChipId12345();
+        assertThat(result).containsExactlyInAnyOrder(assertDataCompressed.get(0), assertDataCompressed.get(1),
+                assertDataCompressed.get(2), assertDataCompressed.get(3), assertDate12345.get(0), assertDate12345.get(1),
+                assertDate12345.get(2), assertDate12345.get(3), assertDate12345.get(4));
     }
 
     @Test
     @DisplayName("Test for getting all data records of sensors from a specific city in a certain timespan - failure")
     public void testGetDataCityFailure() {
-
+        List<DataRecordCompressedDto> result = dataController.getDataCity("Germany", "NonExisting", time - 4 * timestampOffset, time);
+        assertThat(result).isEmpty();
     }
 
     @Test
     @DisplayName("Test for getting the average record of sensors from a specific city in a certain timespan - successful")
     public void testGetDataCityLatestSuccessful() {
-
+        DataRecordDto result = dataController.getDataCityLatest("Germany", "Berlin");
+        result.setTimestamp(time);
+        assertEquals(getAssertDataAverageCity(), result);
     }
 
     @Test
     @DisplayName("Test for getting the average record of sensors from a specific city in a certain timespan - failure")
     public void testGetDataCityLatestFailure() {
-
+        DataRecordDto result = dataController.getDataCityLatest("Germany", "NonExisting");
+        assertEquals(new DataRecordDto(), result);
     }
 
     // --------------------------------------------- Chart data functions ----------------------------------------------
@@ -289,18 +315,38 @@ public class DataControllerTests {
                 new DataRecord.SensorDataValue("SDS_P2", 0.6)
         };
 
-        DataRecord r1 = new DataRecord(12345678, time, "2020-07", sdv1, "");
-        DataRecord r2 = new DataRecord(12345678, time + timestampOffset, "2020-08", sdv2, "");
-        DataRecord r3 = new DataRecord(12345678, time + 2 * timestampOffset, "2020-08", sdv3, "Test");
-        DataRecord r4 = new DataRecord(12345678, time + 3 * timestampOffset, "2020-08", sdv4, "");
-        DataRecord r5 = new DataRecord(12345678, time + 4 * timestampOffset, "2020-08", sdv5, "Note");
+        DataRecord r1 = new DataRecord(12345678, time - 4 * timestampOffset, "2020-07", sdv1, "");
+        DataRecord r2 = new DataRecord(12345678, time - 3 *timestampOffset, "2020-08", sdv2, "");
+        DataRecord r3 = new DataRecord(12345678, time - 2 * timestampOffset, "2020-08", sdv3, "Test");
+        DataRecord r4 = new DataRecord(12345678, time - timestampOffset, "2020-08", sdv4, "");
+        DataRecord r5 = new DataRecord(12345678, time, "2020-08", sdv5, "Note");
         return Arrays.asList(r1, r2, r3, r4, r5);
     }
 
     private List<DataRecord> getTestDataForChipId123456() {
         return getTestDataForChipId12345678().stream()
-                .filter( r -> r.getTimestamp() != time + timestampOffset * 4)
+                .filter(r -> r.getTimestamp() != time)
                 .collect(Collectors.toList());
+    }
+
+    private List<DataRecord> getTestDataForChipId12345() {
+        return getTestDataForChipId12345678().stream()
+                .map(r -> {
+                    DataRecord.SensorDataValue[] newSensorDataValues = r.getSensorDataValues().clone();
+                    for (DataRecord.SensorDataValue newSensorDataValue : newSensorDataValues)
+                        newSensorDataValue.setValue(newSensorDataValue.getValue() / 2);
+                    return new DataRecord(r.getChipId(), r.getTimestamp(), r.getFirmwareVersion(), newSensorDataValues, r.getNote());
+                }).collect(Collectors.toList());
+    }
+
+    private List<DataRecordCompressedDto> getAssertDataCompressedChipId12345() {
+        return getAssertDataForChipId12345678Compressed().stream()
+                .map(r -> {
+                    DataRecordCompressedDto.SensorDataValuesDto[] newSensorDataValues = r.getSensorDataValues().clone();
+                    for (DataRecordCompressedDto.SensorDataValuesDto newSensorDataValue : newSensorDataValues)
+                        newSensorDataValue.setValue(newSensorDataValue.getValue() / 2);
+                    return new DataRecordCompressedDto(r.getTimestamp(), newSensorDataValues);
+                }).collect(Collectors.toList());
     }
 
     private List<DataRecordDto> getAssertDataForChipId12345678() {
@@ -331,11 +377,11 @@ public class DataControllerTests {
                 new DataRecordDto.SensorDataValue("SDS_P2", 0.6)
         };
 
-        DataRecordDto r1 = new DataRecordDto(time, "2020-07", sdv1, "");
-        DataRecordDto r2 = new DataRecordDto(time + timestampOffset, "2020-08", sdv2, "");
-        DataRecordDto r3 = new DataRecordDto(time + 2 * timestampOffset, "2020-08", sdv3, "Test");
-        DataRecordDto r4 = new DataRecordDto(time + 3 * timestampOffset, "2020-08", sdv4, "");
-        DataRecordDto r5 = new DataRecordDto(time + 4 * timestampOffset, "2020-08", sdv5, "Note");
+        DataRecordDto r1 = new DataRecordDto(time - 4 * timestampOffset, "2020-07", sdv1, "");
+        DataRecordDto r2 = new DataRecordDto(time - 3 * timestampOffset, "2020-08", sdv2, "");
+        DataRecordDto r3 = new DataRecordDto(time - 2 * timestampOffset, "2020-08", sdv3, "Test");
+        DataRecordDto r4 = new DataRecordDto(time - timestampOffset, "2020-08", sdv4, "");
+        DataRecordDto r5 = new DataRecordDto(time, "2020-08", sdv5, "Note");
         return Arrays.asList(r1, r2, r3, r4, r5);
     }
 
@@ -367,11 +413,27 @@ public class DataControllerTests {
                 new DataRecordCompressedDto.SensorDataValuesDto("SDS_P2", 0.6)
         };
 
-        DataRecordCompressedDto r1 = new DataRecordCompressedDto(time / 1000, sdv1);
-        DataRecordCompressedDto r2 = new DataRecordCompressedDto((time + timestampOffset) / 1000, sdv2);
-        DataRecordCompressedDto r3 = new DataRecordCompressedDto((time + 2 * timestampOffset) / 1000, sdv3);
-        DataRecordCompressedDto r4 = new DataRecordCompressedDto((time + 3 * timestampOffset) / 1000, sdv4);
-        DataRecordCompressedDto r5 = new DataRecordCompressedDto((time + 4 * timestampOffset) / 1000, sdv5);
+        DataRecordCompressedDto r1 = new DataRecordCompressedDto((time - 4 * timestampOffset) / 1000, sdv1);
+        DataRecordCompressedDto r2 = new DataRecordCompressedDto((time - 3 * timestampOffset) / 1000, sdv2);
+        DataRecordCompressedDto r3 = new DataRecordCompressedDto((time - 2 * timestampOffset) / 1000, sdv3);
+        DataRecordCompressedDto r4 = new DataRecordCompressedDto((time - timestampOffset) / 1000, sdv4);
+        DataRecordCompressedDto r5 = new DataRecordCompressedDto(time / 1000, sdv5);
         return Arrays.asList(r1, r2, r3, r4, r5);
+    }
+
+    private DataRecordDto getAssertDataAverage() {
+        DataRecordDto.SensorDataValue[] sensorDataValues = new DataRecordDto.SensorDataValue[] {
+                new DataRecordDto.SensorDataValue("SDS_P1", 2.75),
+                new DataRecordDto.SensorDataValue("SDS_P2", 1.167)
+        };
+        return new DataRecordDto(time, null, sensorDataValues, "");
+    }
+
+    private DataRecordDto getAssertDataAverageCity() {
+        DataRecordDto.SensorDataValue[] sensorDataValues = new DataRecordDto.SensorDataValue[] {
+                new DataRecordDto.SensorDataValue("SDS_P1", 2.475),
+                new DataRecordDto.SensorDataValue("SDS_P2", 1.05)
+        };
+        return new DataRecordDto(time, null, sensorDataValues, "");
     }
 }
