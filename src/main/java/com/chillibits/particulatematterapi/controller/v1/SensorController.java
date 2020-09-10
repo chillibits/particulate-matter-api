@@ -98,7 +98,7 @@ public class SensorController {
 
     /**
      * Adds a sensor to the database
-     * <p>Note: Requires application role A (usual application)</p>
+     * <p>Note: Requires at least application role A (usual application)</p>
      *
      * @param sensor Instance of SensorInsertUpdateDto with all required data values
      * @return Inserted sensor record as SensorDto

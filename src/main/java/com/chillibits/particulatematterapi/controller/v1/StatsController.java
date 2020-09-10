@@ -18,6 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Stats endpoint
+ *
+ * Endpoint for getting comprehensive stats about the usage of the API
+ */
 @RestController
 @Slf4j
 @Api(value = "Stats REST Endpoint", tags = "stats")
@@ -26,12 +31,23 @@ public class StatsController {
     @Autowired
     private StatsService statsService;
 
+    /**
+     * Returns the global stats of the API
+     *
+     * @return Stats item as StatsItemDto
+     */
     @RequestMapping(method = RequestMethod.GET, path = "/stats", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Returns stats about the API")
+    @ApiOperation(value = "Returns the global stats of the API")
     public StatsItemDto getStats() {
         return statsService.getAllStats();
     }
 
+    /**
+     * Returns stats about a specific sensor
+     *
+     * @param chipId Chip-Id of the requested sensor
+     * @return Stats item as StatsItemDto
+     */
     @RequestMapping(method = RequestMethod.GET, path = "/stats/{chipId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns stats about a specific sensor")
     @ApiResponses(value = {

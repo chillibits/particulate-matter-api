@@ -11,6 +11,7 @@ import com.chillibits.particulatematterapi.model.dto.UserDto;
 import com.chillibits.particulatematterapi.model.dto.UserInsertUpdateDto;
 import com.chillibits.particulatematterapi.repository.UserRepository;
 import com.chillibits.particulatematterapi.shared.SharedUtils;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -46,7 +47,7 @@ public class UserService {
 
         User user = userRepository.findByEmail(email);
         if(user == null) throw new UserDataException(ErrorCode.USER_NOT_EXISTING);
-        if(!user.getPassword().equals(password)) throw new UserDataException(ErrorCode.PASSWORD_WRONG);
+        if(!DigestUtils.sha256Hex(user.getPassword()).equals(password)) throw new UserDataException(ErrorCode.PASSWORD_WRONG);
 
         return convertToDto(user);
     }
