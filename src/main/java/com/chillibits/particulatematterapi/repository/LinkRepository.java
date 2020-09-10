@@ -17,11 +17,6 @@ public interface LinkRepository extends JpaRepository<Link, Integer> {
     List<Link> getLinksByUserId(Integer userId);
 
     @Modifying
-    @Query("UPDATE Link l SET l.owner = ?2, l.name = ?3, l.color = ?4 WHERE l.id = ?1")
-    Integer updateLink(
-            Integer id,
-            boolean owner,
-            String name,
-            int color
-    );
+    @Query("UPDATE Link l SET l.owner = :#{#link.owner}, l.name = :#{#link.name}, l.color = :#{#link.color} WHERE l.id = :#{#link.id}")
+    Integer updateLink(Link link);
 }

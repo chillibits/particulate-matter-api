@@ -4,15 +4,16 @@
 
 package com.chillibits.particulatematterapi.shared;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class SharedUtilsTests {
+
     @Test
     public void testRound() {
         double result = SharedUtils.round(1.12345, 2);
@@ -30,6 +31,20 @@ public class SharedUtilsTests {
         );
 
         String expectedMessage = new IllegalArgumentException().getMessage();
-        Assert.assertEquals(expectedMessage, exception.getMessage());
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
+    @Test
+    public void testGenerateRandomStringLength20() {
+        String result = SharedUtils.generateRandomString(20);
+        assertEquals(20, result.length());
+        assertTrue(result.matches("^[a-zA-Z0-9]+$"));
+    }
+
+    @Test
+    public void testGenerateRandomStringLength10000() {
+        String result = SharedUtils.generateRandomString(10000);
+        assertEquals(10000, result.length());
+        assertTrue(result.matches("^[a-zA-Z0-9]+$"));
     }
 }

@@ -26,6 +26,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class Link {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

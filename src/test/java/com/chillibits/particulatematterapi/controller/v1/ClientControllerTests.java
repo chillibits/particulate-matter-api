@@ -4,16 +4,17 @@
 
 package com.chillibits.particulatematterapi.controller.v1;
 
-import com.chillibits.particulatematterapi.exception.ClientDataException;
-import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
+import com.chillibits.particulatematterapi.exception.ErrorCode;
+import com.chillibits.particulatematterapi.exception.exception.ClientDataException;
 import com.chillibits.particulatematterapi.model.db.main.Client;
 import com.chillibits.particulatematterapi.model.dto.ClientDto;
+import com.chillibits.particulatematterapi.model.dto.ClientInsertUpdateDto;
 import com.chillibits.particulatematterapi.repository.ClientRepository;
+import com.chillibits.particulatematterapi.service.ClientService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -33,6 +34,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("logging")
@@ -45,6 +48,7 @@ public class ClientControllerTests {
     private ClientRepository clientRepository;
 
     private final List<Client> testData = getTestData();
+    private final List<ClientInsertUpdateDto> insertUpdateTestData = getTestInsertUpdateData();
     private final List<ClientDto> assertData = getAssertData();
 
     @TestConfiguration
@@ -56,6 +60,11 @@ public class ClientControllerTests {
         }
 
         @Bean
+        public ClientService clientService() {
+            return new ClientService();
+        }
+
+        @Bean
         public ModelMapper modelMapper() {
             return new ModelMapper();
         }
@@ -64,11 +73,11 @@ public class ClientControllerTests {
     @Before
     public void init() {
         // Setup fake method calls
-        Mockito.when(clientRepository.findAll()).thenReturn(testData);
-        Mockito.when(clientRepository.findByName(testData.get(0).getName())).thenReturn(Optional.of(testData.get(0)));
-        Mockito.when(clientRepository.save(any(Client.class))).then(returnsFirstArg());
-        Mockito.when(clientRepository.updateClient(any(Client.class))).thenReturn(1);
-        Mockito.doNothing().when(clientRepository).deleteById(anyInt());
+        when(clientRepository.findAll()).thenReturn(testData);
+        when(clientRepository.findByName(testData.get(0).getName())).thenReturn(Optional.of(testData.get(0)));
+        when(clientRepository.save(any(Client.class))).then(returnsFirstArg());
+        when(clientRepository.updateClient(any(Client.class))).thenReturn(1);
+        doNothing().when(clientRepository).deleteById(anyInt());
     }
 
     // ------------------------------------------------- Get client ----------------------------------------------------
@@ -95,7 +104,7 @@ public class ClientControllerTests {
                 clientController.getClientInfoByName("test")
         );
 
-        String expectedMessage = new ClientDataException(ErrorCodeUtils.CLIENT_NOT_EXISTING).getMessage();
+        String expectedMessage = new ClientDataException(ErrorCode.CLIENT_NOT_EXISTING).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
@@ -104,8 +113,8 @@ public class ClientControllerTests {
     @Test
     @DisplayName("Test for adding a client successfully")
     public void testAddClient() throws ClientDataException {
-        Client result = clientController.addClient(testData.get(1));
-        assertEquals(testData.get(1), result);
+        ClientDto result = clientController.addClient(insertUpdateTestData.get(1));
+        assertEquals(assertData.get(1), result);
     }
 
     @Test
@@ -113,10 +122,10 @@ public class ClientControllerTests {
     public void testAddClientInvalidClientDataException() {
         // Try with invalid input
         Exception exception = assertThrows(ClientDataException.class, () ->
-                clientController.addClient(testData.get(4))
+                clientController.addClient(insertUpdateTestData.get(4))
         );
 
-        String expectedMessage = new ClientDataException(ErrorCodeUtils.INVALID_CLIENT_DATA).getMessage();
+        String expectedMessage = new ClientDataException(ErrorCode.INVALID_CLIENT_DATA).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
@@ -125,7 +134,7 @@ public class ClientControllerTests {
     @Test
     @DisplayName("Test for updating a client successfully")
     public void testUpdateClient() throws ClientDataException {
-        int result = clientController.updateClient(testData.get(1));
+        int result = clientController.updateClient(insertUpdateTestData.get(1));
         assertEquals(1, result);
     }
 
@@ -134,10 +143,10 @@ public class ClientControllerTests {
     public void testUpdateClientInvalidClientDataException() {
         // Try with invalid input
         Exception exception = assertThrows(ClientDataException.class, () ->
-                clientController.updateClient(testData.get(4))
+                clientController.updateClient(insertUpdateTestData.get(4))
         );
 
-        String expectedMessage = new ClientDataException(ErrorCodeUtils.INVALID_CLIENT_DATA).getMessage();
+        String expectedMessage = new ClientDataException(ErrorCode.INVALID_CLIENT_DATA).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
@@ -154,10 +163,21 @@ public class ClientControllerTests {
     private List<Client> getTestData() {
         // Create client objects
         Client c1 = new Client(0, "admin", "Particulate Matter Admin", "not set", Client.TYPE_DESKTOP_APPLICATION, Client.ROLE_APPLICATION_ADMIN, Client.STATUS_ONLINE, true, 100, "1.0.0", 100, "1.0.0", "ChilliBits", "Only for administrators");
-        Client c2 = new Client(0, "pmapp", "Particulate Matter App", "not set", Client.TYPE_ANDROID_APP, Client.ROLE_APPLICATION_CHILLIBITS, Client.STATUS_ONLINE, true, 400, "4.0.0", 400, "4.0.0", "ChilliBits", "");
-        Client c3 = new Client(0, "pmapp-web", "Particulate Matter App Web", "not set", Client.TYPE_WEBSITE, Client.ROLE_APPLICATION_CHILLIBITS, Client.STATUS_ONLINE, true, 123, "1.2.3", 123, "1.2.3", "ChilliBits", "");
-        Client c4 = new Client(0, "pm-pred", "Prediction Service", "not set", Client.TYPE_NONE, Client.ROLE_APPLICATION_CHILLIBITS, Client.STATUS_OFFLINE, false, 100, "1.0.0", 100, "1.0.0", "ChilliBits", "In development");
-        Client c5 = new Client(0, "awesome-app", "My awesome application", "12345", Client.TYPE_DESKTOP_APPLICATION, Client.ROLE_APPLICATION, Client.STATUS_SUPPORT_ENDED, false, 1230, "1.23.0", 1256, "1.25.6", "", "");
+        Client c2 = new Client(1, "pmapp", "Particulate Matter App", "not set", Client.TYPE_ANDROID_APP, Client.ROLE_APPLICATION_CHILLIBITS, Client.STATUS_ONLINE, true, 400, "4.0.0", 400, "4.0.0", "ChilliBits", "");
+        Client c3 = new Client(2, "pmapp-web", "Particulate Matter App Web", "not set", Client.TYPE_WEBSITE, Client.ROLE_APPLICATION_CHILLIBITS, Client.STATUS_ONLINE, true, 123, "1.2.3", 123, "1.2.3", "ChilliBits", "");
+        Client c4 = new Client(3, "pm-pred", "Prediction Service", "not set", Client.TYPE_NONE, Client.ROLE_APPLICATION_CHILLIBITS, Client.STATUS_OFFLINE, false, 100, "1.0.0", 100, "1.0.0", "ChilliBits", "In development");
+        Client c5 = new Client(4, "awesome-app", "My awesome application", "12345", Client.TYPE_DESKTOP_APPLICATION, Client.ROLE_APPLICATION, Client.STATUS_SUPPORT_ENDED, false, 1230, "1.23.0", 1256, "1.25.6", "", "");
+        // Add them to test data
+        return Arrays.asList(c1, c2, c3, c4, c5);
+    }
+
+    private List<ClientInsertUpdateDto> getTestInsertUpdateData() {
+        // Create client objects
+        ClientInsertUpdateDto c1 = new ClientInsertUpdateDto(0, "admin", "Particulate Matter Admin", "not set", Client.TYPE_DESKTOP_APPLICATION, Client.ROLE_APPLICATION_ADMIN, Client.STATUS_ONLINE, true, 100, "1.0.0", 100, "1.0.0", "ChilliBits", "Only for administrators");
+        ClientInsertUpdateDto c2 = new ClientInsertUpdateDto(1, "pmapp", "Particulate Matter App", "not set", Client.TYPE_ANDROID_APP, Client.ROLE_APPLICATION_CHILLIBITS, Client.STATUS_ONLINE, true, 400, "4.0.0", 400, "4.0.0", "ChilliBits", "");
+        ClientInsertUpdateDto c3 = new ClientInsertUpdateDto(2, "pmapp-web", "Particulate Matter App Web", "not set", Client.TYPE_WEBSITE, Client.ROLE_APPLICATION_CHILLIBITS, Client.STATUS_ONLINE, true, 123, "1.2.3", 123, "1.2.3", "ChilliBits", "");
+        ClientInsertUpdateDto c4 = new ClientInsertUpdateDto(3, "pm-pred", "Prediction Service", "not set", Client.TYPE_NONE, Client.ROLE_APPLICATION_CHILLIBITS, Client.STATUS_OFFLINE, false, 100, "1.0.0", 100, "1.0.0", "ChilliBits", "In development");
+        ClientInsertUpdateDto c5 = new ClientInsertUpdateDto(4, "awesome-app", "My awesome application", "12345", Client.TYPE_DESKTOP_APPLICATION, Client.ROLE_APPLICATION, Client.STATUS_SUPPORT_ENDED, false, 1230, "1.23.0", 1256, "1.25.6", "", "");
         // Add them to test data
         return Arrays.asList(c1, c2, c3, c4, c5);
     }

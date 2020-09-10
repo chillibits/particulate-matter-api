@@ -1,12 +1,18 @@
 # Particulate Matter API
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d9a58b28e5294920b2aa6a24910f3187)](https://app.codacy.com/gh/ChilliBits/particulate-matter-api?utm_source=github.com&utm_medium=referral&utm_content=ChilliBits/particulate-matter-api&utm_campaign=Badge_Grade_Dashboard)
-![Maven Build](https://github.com/ChilliBits/particulate-matter-api/workflows/Maven%20Build/badge.svg)
+![CI Master](https://github.com/ChilliBits/particulate-matter-api/workflows/CI%20Master/badge.svg?branch=master)
+![CI Develop](https://github.com/ChilliBits/particulate-matter-api/workflows/CI%20Develop/badge.svg?branch=develop)
 [![codecov](https://codecov.io/gh/ChilliBits/particulate-matter-api/branch/master/graph/badge.svg)](https://codecov.io/gh/ChilliBits/particulate-matter-api)
 [![Uptime Robot ratio (7 days)](https://img.shields.io/uptimerobot/ratio/7/m785103971-22fa0dc3d91b97bed5bbc269)](https://status.pm.chillibits.com/)
 
 **This is the ChilliBits Particulate Matter REST API.**
 
 *Attention: This repository is still in development. Up to now, there's no stable API version.*
+
+## Data Structure (MySQL database)
+![Data structure](https://github.com/ChilliBits/particulate-matter-api/blob/develop/media/er-diagram-alpha.png "Data structure")
+
+The actual measurement data gets collected in a MongoDB to keep the performance up.
 
 ## Features
 -   **Chart endpoint**
@@ -67,10 +73,12 @@ If you have built your own IoT device, you can also send data to our system. Set
 -   Schema: **http / https**
 -   Port: **80 / 443**
 
+**Note: Please use http for the data transmission from sensors to our API and https for transmissions between our API and your service.**
+
 The required data format can be found in our API documentation at [api.pm.chillibits.com](https://api.pm.chillibits.com/swagger-ui/index.html#/push/pushDataUsingPOST)
 
 ## Register an application
-If you're the developer of an application and you want to consume data from our API, you have to contact us via [email](mailto:contact@chillibits.com?subject=Register%20application%20pmapi).
+If you're the developer of an application and want to consume data from our API, you have to contact us via [email](mailto:contact@chillibits.com?subject=Register%20application%20pmapi).
 The registration process is as follows:
 
 -   We'll check the code of your application to ensure, that you're not using our data incorrectly or with a malicious intention. Therefore, we only accept open source applications.

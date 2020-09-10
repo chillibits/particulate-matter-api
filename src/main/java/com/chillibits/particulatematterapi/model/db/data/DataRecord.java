@@ -5,7 +5,6 @@
 package com.chillibits.particulatematterapi.model.db.data;
 
 import com.chillibits.particulatematterapi.shared.ConstantUtils;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,17 +17,20 @@ import javax.persistence.Transient;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DataRecord {
-    @JsonProperty("esp8266id") @Transient private long chipId;
+
+    @Transient
+    private long chipId;
     private long timestamp = 0;
-    @JsonProperty("software_version") @Transient private String firmwareVersion;
-    @JsonProperty("sensordatavalues") private SensorDataValue[] sensorDataValues;
+    @Transient
+    private String firmwareVersion;
+    private SensorDataValue[] sensorDataValues;
     private String note = ConstantUtils.BLANK_COLUMN;
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
     public static class SensorDataValue {
-        @JsonProperty("value_type") private String valueType;
-        @JsonProperty("value") private double value;
+        private String valueType;
+        private double value;
     }
 }

@@ -4,7 +4,11 @@
 
 package com.chillibits.particulatematterapi.shared;
 
+import java.util.Random;
+
 public class SharedUtils {
+    private SharedUtils() {}
+
     public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
         long factor = (long) Math.pow(10, places);
@@ -13,13 +17,14 @@ public class SharedUtils {
         return (double) tmp / factor;
     }
 
-    /*public static String hashMD5(String stringToHash) {
-        try {
-            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-            messageDigest.update(stringToHash.getBytes());
-            byte[] digest = messageDigest.digest();
-            return DatatypeConverter.printHexBinary(digest);
-        } catch (Exception ignored) {}
-        return stringToHash;
-    }*/
+    public static String generateRandomString(int length) {
+        int leftLimit = 48; // numeral '0'
+        int rightLimit = 122; // letter 'z'
+
+        return new Random().ints(leftLimit, rightLimit + 1)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(length)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+    }
 }

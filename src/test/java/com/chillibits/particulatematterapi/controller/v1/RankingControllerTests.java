@@ -4,18 +4,18 @@
 
 package com.chillibits.particulatematterapi.controller.v1;
 
-import com.chillibits.particulatematterapi.exception.ErrorCodeUtils;
-import com.chillibits.particulatematterapi.exception.RankingDataException;
+import com.chillibits.particulatematterapi.exception.ErrorCode;
+import com.chillibits.particulatematterapi.exception.exception.RankingDataException;
+import com.chillibits.particulatematterapi.model.dto.RankingItemCityCompressedDto;
 import com.chillibits.particulatematterapi.model.dto.RankingItemCityDto;
+import com.chillibits.particulatematterapi.model.dto.RankingItemCountryCompressedDto;
 import com.chillibits.particulatematterapi.model.dto.RankingItemCountryDto;
-import com.chillibits.particulatematterapi.model.io.RankingItemCity;
-import com.chillibits.particulatematterapi.model.io.RankingItemCountry;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
+import com.chillibits.particulatematterapi.service.RankingService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -31,6 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("logging")
@@ -42,10 +43,10 @@ public class RankingControllerTests {
     @MockBean
     private SensorRepository sensorRepository;
 
-    private final List<RankingItemCity> testDataCity = getTestDataCity();
-    private final List<RankingItemCountry> testDataCountry = getTestDataCountry();
-    private final List<RankingItemCityDto> assertDataCity = getAssertDataCity();
-    private final List<RankingItemCountryDto> assertDataCountry = getAssertDataCountry();
+    private final List<RankingItemCityDto> testDataCity = getTestDataCity();
+    private final List<RankingItemCountryDto> testDataCountry = getTestDataCountry();
+    private final List<RankingItemCityCompressedDto> assertDataCity = getAssertDataCity();
+    private final List<RankingItemCountryCompressedDto> assertDataCountry = getAssertDataCountry();
 
     @TestConfiguration
     static class SensorControllerImplTestContextConfiguration {
@@ -53,6 +54,11 @@ public class RankingControllerTests {
         @Bean
         public RankingController rankingController() {
             return new RankingController();
+        }
+
+        @Bean
+        public RankingService rankingService() {
+            return new RankingService();
         }
 
         @Bean
@@ -64,16 +70,16 @@ public class RankingControllerTests {
     @Before
     public void init() {
         // Setup fake method calls
-        Mockito.when(sensorRepository.getRankingByCity(anyInt())).thenReturn(testDataCity);
-        Mockito.when(sensorRepository.getRankingByCountry(anyInt())).thenReturn(testDataCountry);
+        when(sensorRepository.getRankingByCity(anyInt())).thenReturn(testDataCity);
+        when(sensorRepository.getRankingByCountry(anyInt())).thenReturn(testDataCountry);
     }
 
     // ----------------------------------------------- Get city ranking ------------------------------------------------
 
     @Test
     public void getCityRankingSuccessfully() throws RankingDataException {
-        List<RankingItemCity> result = rankingController.getRankingByCity(5);
-        assertThat(result).containsExactlyInAnyOrder(testDataCity.toArray(RankingItemCity[]::new));
+        List<RankingItemCityDto> result = rankingController.getRankingByCity(5);
+        assertThat(result).containsExactlyInAnyOrder(testDataCity.toArray(RankingItemCityDto[]::new));
     }
 
     @Test
@@ -83,14 +89,14 @@ public class RankingControllerTests {
                 rankingController.getRankingByCity(-1)
         );
 
-        String expectedMessage = new RankingDataException(ErrorCodeUtils.INVALID_ITEMS_NUMBER).getMessage();
+        String expectedMessage = new RankingDataException(ErrorCode.INVALID_ITEMS_NUMBER).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
     public void getCityRankingCompressedSuccessfully() throws RankingDataException {
-        List<RankingItemCityDto> result = rankingController.getRankingByCityCompressed(5);
-        assertThat(result).containsExactlyInAnyOrder(assertDataCity.toArray(RankingItemCityDto[]::new));
+        List<RankingItemCityCompressedDto> result = rankingController.getRankingByCityCompressed(5);
+        assertThat(result).containsExactlyInAnyOrder(assertDataCity.toArray(RankingItemCityCompressedDto[]::new));
     }
 
     @Test
@@ -100,7 +106,7 @@ public class RankingControllerTests {
                 rankingController.getRankingByCityCompressed(-1)
         );
 
-        String expectedMessage = new RankingDataException(ErrorCodeUtils.INVALID_ITEMS_NUMBER).getMessage();
+        String expectedMessage = new RankingDataException(ErrorCode.INVALID_ITEMS_NUMBER).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
@@ -108,8 +114,8 @@ public class RankingControllerTests {
 
     @Test
     public void getCountryRankingSuccessfully() throws RankingDataException {
-        List<RankingItemCountry> result = rankingController.getRankingByCountry(5);
-        assertThat(result).containsExactlyInAnyOrder(testDataCountry.toArray(RankingItemCountry[]::new));
+        List<RankingItemCountryDto> result = rankingController.getRankingByCountry(5);
+        assertThat(result).containsExactlyInAnyOrder(testDataCountry.toArray(RankingItemCountryDto[]::new));
     }
 
     @Test
@@ -119,14 +125,14 @@ public class RankingControllerTests {
                 rankingController.getRankingByCountry(-1)
         );
 
-        String expectedMessage = new RankingDataException(ErrorCodeUtils.INVALID_ITEMS_NUMBER).getMessage();
+        String expectedMessage = new RankingDataException(ErrorCode.INVALID_ITEMS_NUMBER).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
     public void getCountryRankingCompressedSuccessfully() throws RankingDataException {
-        List<RankingItemCountryDto> result = rankingController.getRankingByCountryCompressed(5);
-        assertThat(result).containsExactlyInAnyOrder(assertDataCountry.toArray(RankingItemCountryDto[]::new));
+        List<RankingItemCountryCompressedDto> result = rankingController.getRankingByCountryCompressed(5);
+        assertThat(result).containsExactlyInAnyOrder(assertDataCountry.toArray(RankingItemCountryCompressedDto[]::new));
     }
 
     @Test
@@ -136,37 +142,13 @@ public class RankingControllerTests {
                 rankingController.getRankingByCountryCompressed(-1)
         );
 
-        String expectedMessage = new RankingDataException(ErrorCodeUtils.INVALID_ITEMS_NUMBER).getMessage();
+        String expectedMessage = new RankingDataException(ErrorCode.INVALID_ITEMS_NUMBER).getMessage();
         assertEquals(expectedMessage, exception.getMessage());
     }
 
     // -------------------------------------------------- Test data ----------------------------------------------------
 
-    private List<RankingItemCity> getTestDataCity() {
-        // Create ranking item objects
-        RankingItemCity r1 = new RankingItemCity("Russia", "Moskva", 55);
-        RankingItemCity r2 = new RankingItemCity("Germany", "Berlin", 42);
-        RankingItemCity r3 = new RankingItemCity("Germany", "Hamburg", 22);
-        RankingItemCity r4 = new RankingItemCity("Germany", "München", 22);
-        RankingItemCity r5 = new RankingItemCity("Italy", "Parma", 22);
-
-        // Add them to test data
-        return Arrays.asList(r1, r2, r3, r4, r5);
-    }
-
-    private List<RankingItemCountry> getTestDataCountry() {
-        // Create ranking item objects
-        RankingItemCountry r1 = new RankingItemCountry("Germany", 722);
-        RankingItemCountry r2 = new RankingItemCountry("Poland", 203);
-        RankingItemCountry r3 = new RankingItemCountry("Italy", 149);
-        RankingItemCountry r4 = new RankingItemCountry("Russia", 124);
-        RankingItemCountry r5 = new RankingItemCountry("Netherlands", 84);
-
-        // Add them to test data
-        return Arrays.asList(r1, r2, r3, r4, r5);
-    }
-
-    private List<RankingItemCityDto> getAssertDataCity() {
+    private List<RankingItemCityDto> getTestDataCity() {
         // Create ranking item objects
         RankingItemCityDto r1 = new RankingItemCityDto("Russia", "Moskva", 55);
         RankingItemCityDto r2 = new RankingItemCityDto("Germany", "Berlin", 42);
@@ -178,13 +160,37 @@ public class RankingControllerTests {
         return Arrays.asList(r1, r2, r3, r4, r5);
     }
 
-    private List<RankingItemCountryDto> getAssertDataCountry() {
+    private List<RankingItemCountryDto> getTestDataCountry() {
         // Create ranking item objects
         RankingItemCountryDto r1 = new RankingItemCountryDto("Germany", 722);
         RankingItemCountryDto r2 = new RankingItemCountryDto("Poland", 203);
         RankingItemCountryDto r3 = new RankingItemCountryDto("Italy", 149);
         RankingItemCountryDto r4 = new RankingItemCountryDto("Russia", 124);
         RankingItemCountryDto r5 = new RankingItemCountryDto("Netherlands", 84);
+
+        // Add them to test data
+        return Arrays.asList(r1, r2, r3, r4, r5);
+    }
+
+    private List<RankingItemCityCompressedDto> getAssertDataCity() {
+        // Create ranking item objects
+        RankingItemCityCompressedDto r1 = new RankingItemCityCompressedDto("Russia", "Moskva", 55);
+        RankingItemCityCompressedDto r2 = new RankingItemCityCompressedDto("Germany", "Berlin", 42);
+        RankingItemCityCompressedDto r3 = new RankingItemCityCompressedDto("Germany", "Hamburg", 22);
+        RankingItemCityCompressedDto r4 = new RankingItemCityCompressedDto("Germany", "München", 22);
+        RankingItemCityCompressedDto r5 = new RankingItemCityCompressedDto("Italy", "Parma", 22);
+
+        // Add them to test data
+        return Arrays.asList(r1, r2, r3, r4, r5);
+    }
+
+    private List<RankingItemCountryCompressedDto> getAssertDataCountry() {
+        // Create ranking item objects
+        RankingItemCountryCompressedDto r1 = new RankingItemCountryCompressedDto("Germany", 722);
+        RankingItemCountryCompressedDto r2 = new RankingItemCountryCompressedDto("Poland", 203);
+        RankingItemCountryCompressedDto r3 = new RankingItemCountryCompressedDto("Italy", 149);
+        RankingItemCountryCompressedDto r4 = new RankingItemCountryCompressedDto("Russia", 124);
+        RankingItemCountryCompressedDto r5 = new RankingItemCountryCompressedDto("Netherlands", 84);
 
         // Add them to test data
         return Arrays.asList(r1, r2, r3, r4, r5);

@@ -6,6 +6,8 @@ name: CI with Docker
 on:
   push:
     branches: [ master ]
+  release:
+    branches: [ master ]
 
 jobs:
   build:
@@ -20,8 +22,6 @@ jobs:
       run: mvn -B package --file pom.xml
       env:
         PMAPI_GOOGLE_API_KEY: ${{ secrets.PMAPI_GOOGLE_API_KEY }}
-    - name: CodeCov report deploy
-      run: bash <(curl -s https://codecov.io/bash)
     - name: Prepare environment
       run: |
         sudo apt-get install --yes --no-install-recommends libxml-xpath-perl

@@ -27,6 +27,7 @@ import java.util.Set;
 @Setter
 @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class User {
+
     // Constants
     public static final int ACTIVE = 1;
     public static final int EMAIL_CONFIRMATION_PENDING = 2;
@@ -44,6 +45,7 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
+    private String confirmationToken;
     private String password;
     @OneToMany(mappedBy = "user")
     private Set<Link> sensorLinks;

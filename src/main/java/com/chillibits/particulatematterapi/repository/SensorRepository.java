@@ -5,8 +5,8 @@
 package com.chillibits.particulatematterapi.repository;
 
 import com.chillibits.particulatematterapi.model.db.main.Sensor;
-import com.chillibits.particulatematterapi.model.io.RankingItemCity;
-import com.chillibits.particulatematterapi.model.io.RankingItemCountry;
+import com.chillibits.particulatematterapi.model.dto.RankingItemCityDto;
+import com.chillibits.particulatematterapi.model.dto.RankingItemCountryDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -28,12 +28,12 @@ public interface SensorRepository extends JpaRepository<Sensor, Long> {
     List<Sensor> findAllPublishedInRadius(double lat, double lng, int radius);
 
     @Meta(cursorBatchSize = 100)
-    @Query(value = "SELECT new com.chillibits.particulatematterapi.model.io.RankingItemCity(s.country, s.city, COUNT(s.city)) FROM Sensor s GROUP BY s.city, s.country ORDER BY COUNT(s.city) DESC, s.country, s.city")
-    List<RankingItemCity> getRankingByCity(int items);
+    @Query(value = "SELECT new com.chillibits.particulatematterapi.model.dto.RankingItemCityDto(s.country, s.city, COUNT(s.city)) FROM Sensor s GROUP BY s.city, s.country ORDER BY COUNT(s.city) DESC, s.country, s.city")
+    List<RankingItemCityDto> getRankingByCity(int items);
 
     @Meta(cursorBatchSize = 10)
-    @Query("SELECT new com.chillibits.particulatematterapi.model.io.RankingItemCountry(s.country, COUNT(s.country)) FROM Sensor s GROUP BY s.country ORDER BY COUNT(s.country) DESC, s.country")
-    List<RankingItemCountry> getRankingByCountry(int items);
+    @Query("SELECT new com.chillibits.particulatematterapi.model.dto.RankingItemCountryDto(s.country, COUNT(s.country)) FROM Sensor s GROUP BY s.country ORDER BY COUNT(s.country) DESC, s.country")
+    List<RankingItemCountryDto> getRankingByCountry(int items);
 
     @Meta(cursorBatchSize = 10)
     @Query("SELECT s.chipId FROM Sensor s WHERE s.country = ?1")
@@ -56,16 +56,6 @@ public interface SensorRepository extends JpaRepository<Sensor, Long> {
     Integer getSensorsMapActive(long minLastMeasurementTimestamp);
 
     @Modifying
-    @Query("UPDATE Sensor s SET s.gpsLatitude = ?2, s.gpsLongitude = ?3, s.country = ?4, s.city = ?5, s.lastEditTimestamp = ?6, s.notes = ?7, s.indoor = ?8, s.published = ?9 WHERE s.chipId = ?1")
-    Integer updateSensor(
-            long chipId,
-            double latitude,
-            double longitude,
-            String country,
-            String city,
-            long lastEdit,
-            String notes,
-            boolean indoor,
-            boolean published
-    );
+    @Query("UPDATE Sensor s SET s.gpsLatitude = :#{#sensor.gpsLatitude}, s.gpsLongitude = :#{#sensor.gpsLongitude}, s.country = :#{#sensor.country}, s.city = :#{#sensor.city}, s.lastEditTimestamp = :#{#sensor.lastEditTimestamp}, s.notes = :#{#sensor.notes}, s.indoor = :#{#sensor.indoor}, s.published = :#{#sensor.published} WHERE s.chipId = :#{#sensor.chipId}")
+    Integer updateSensor(Sensor sensor);
 }

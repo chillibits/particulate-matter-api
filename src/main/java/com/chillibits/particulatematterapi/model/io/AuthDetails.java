@@ -15,11 +15,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AuthDetails implements UserDetails {
-    // Variables
-    private String name;
-    private String secret;
-    private boolean active;
-    private List<GrantedAuthority> authorities;
+
+    // Attributes
+    private final String name;
+    private final String secret;
+    private final boolean active;
+    private final List<GrantedAuthority> authorities;
 
     public AuthDetails(Client client) {
         this.name = client.getName();

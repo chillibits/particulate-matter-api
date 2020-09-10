@@ -56,10 +56,15 @@ public class ParticulateMatterApiApplication implements CommandLineRunner {
 		if(ConstantUtils.ROLLBACK_TIMESTAMP > 0) rollbackToTimestamp(ConstantUtils.ROLLBACK_TIMESTAMP);
 
 		// Create mandatory data records
-		if(userRepository.count() == 0) userRepository.save(new User(ConstantUtils.UNKNOWN_USER_ID, "Unknown", "User", "info@chillibits.com", "not set", Collections.emptySet(), User.USER, User.LOCKED, System.currentTimeMillis(), System.currentTimeMillis()));
-		if(clientRepository.count() == 0) clientRepository.save(new Client(ConstantUtils.UNKNOWN_CLIENT_ID, "unknownclient", "Unknown Client", "not set", Client.TYPE_NONE, "", Client.STATUS_SUPPORT_ENDED, false, 0, "0", 0, "0", "ChilliBits", ""));
+		if(userRepository.count() == 0) userRepository.save(new User(ConstantUtils.UNKNOWN_USER_ID, "Unknown",
+				"User", "info@chillibits.com", "not set", "not set",
+				Collections.emptySet(), User.USER, User.LOCKED, System.currentTimeMillis(), System.currentTimeMillis()));
+		if(clientRepository.count() == 0) clientRepository.save(new Client(ConstantUtils.UNKNOWN_CLIENT_ID,
+				"default-client", "Default Client", "not set", Client.TYPE_NONE, "",
+				Client.STATUS_SUPPORT_ENDED, false, 0, "0", 0,
+				"0", "ChilliBits", ""));
 
-		// Test space (will not be included in a stable build)
+		// Test space (will not be included in a stable builds)
 
 	}
 
@@ -88,23 +93,12 @@ public class ParticulateMatterApiApplication implements CommandLineRunner {
 	}
 
 	private Sensor convertOldToNewSensor(OldSensor oldSensor) {
-		return new Sensor(
-				oldSensor.getChipId(),
-				Collections.emptySet(),
-				oldSensor.getFirmwareVersion(),
-				oldSensor.getCreationDate() * 1000,
-				oldSensor.getNotes(),
-				oldSensor.getLastUpdate() * 1000,
-				oldSensor.getLastEdit() * 1000,
-				Double.parseDouble(oldSensor.getLat()),
-				Double.parseDouble(oldSensor.getLng()),
-				(int) (Double.parseDouble(oldSensor.getAlt()) * 100),
-				oldSensor.getCountry(),
-				oldSensor.getCity(),
-				false,
-				true,
-				false
-		);
+		return new Sensor(oldSensor.getChipId(), Collections.emptySet(), oldSensor.getFirmwareVersion(),
+				oldSensor.getCreationDate() * 1000, oldSensor.getNotes(),
+				oldSensor.getLastUpdate() * 1000, oldSensor.getLastEdit() * 1000,
+				Double.parseDouble(oldSensor.getLat()), Double.parseDouble(oldSensor.getLng()),
+				(int) (Double.parseDouble(oldSensor.getAlt()) * 100), oldSensor.getCountry(), oldSensor.getCity(),
+				false, true, false);
 	}
 
 	private Set<String> getDataCollections() {
