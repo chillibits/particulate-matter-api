@@ -50,6 +50,11 @@ public class UserService {
         if(!password.equals(user.getPassword()) && !DigestUtils.sha256Hex(password).equals(user.getPassword()))
             throw new UserDataException(ErrorCode.PASSWORD_WRONG);
 
+        switch (user.getStatus()) {
+            case User.EMAIL_CONFIRMATION_PENDING: throw new UserDataException(ErrorCode.USER_EMAIL_CONFIRMATION_PENDING);
+            case User.SUSPENDED: throw new UserDataException(ErrorCode.USER_SUSPENDED);
+            case User.LOCKED: throw new UserDataException(ErrorCode.USER_LOCKED);
+        }
         return convertToDto(user);
     }
 
