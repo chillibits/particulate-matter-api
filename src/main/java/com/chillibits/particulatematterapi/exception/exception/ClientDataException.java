@@ -17,6 +17,6 @@ public class ClientDataException extends RuntimeException {
 
     public ClientDataException(ErrorCode errorCode) {
         // Error description as json string to process the error code on client side for localizing the error messages, presented to the users.
-        super("{\"error_code\": " + errorCode + ", \"description\": \"" + descriptions.get(errorCode) + "\"}");
+        super("{\"error_code\": " + errorCode.getCode() + ", \"description\": \"" + descriptions.get(errorCode) + "\"}");
     }
 }
