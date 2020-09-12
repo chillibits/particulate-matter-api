@@ -49,12 +49,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // Chart endpoint
                 .antMatchers(HttpMethod.GET, "/chart/**").permitAll()
                 // User endpoint
-                .antMatchers(HttpMethod.GET, "/user/{email}").hasAnyAuthority(Client.ROLE_APPLICATION, Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
+                .antMatchers(HttpMethod.GET, "/user/confirm/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/user/**").hasAnyAuthority(Client.ROLE_APPLICATION, Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
                 .antMatchers(HttpMethod.GET, "/user").hasAuthority(Client.ROLE_APPLICATION_ADMIN)
                 .antMatchers(HttpMethod.POST, "/user").hasAnyAuthority(Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
                 .antMatchers(HttpMethod.PUT, "/user").hasAnyAuthority(Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
                 .antMatchers(HttpMethod.DELETE, "/user").hasAnyAuthority(Client.ROLE_APPLICATION_CHILLIBITS, Client.ROLE_APPLICATION_ADMIN)
-                .antMatchers(HttpMethod.GET, "/user/confirm").permitAll()
                 // Client endpoint
                 .antMatchers(HttpMethod.POST, "/client").hasAuthority(Client.ROLE_APPLICATION_ADMIN)
                 .antMatchers(HttpMethod.PUT, "/client").hasAuthority(Client.ROLE_APPLICATION_ADMIN)
