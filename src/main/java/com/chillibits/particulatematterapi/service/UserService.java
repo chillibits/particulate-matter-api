@@ -47,7 +47,8 @@ public class UserService {
 
         User user = userRepository.findByEmail(email);
         if(user == null) throw new UserDataException(ErrorCode.USER_NOT_EXISTING);
-        if(!DigestUtils.sha256Hex(user.getPassword()).equals(password)) throw new UserDataException(ErrorCode.PASSWORD_WRONG);
+        if(!DigestUtils.sha256Hex(user.getPassword()).equals(password) && !user.getPassword().equals(password))
+            throw new UserDataException(ErrorCode.PASSWORD_WRONG);
 
         return convertToDto(user);
     }
