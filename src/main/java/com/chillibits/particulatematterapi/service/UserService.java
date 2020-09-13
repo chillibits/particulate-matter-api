@@ -104,7 +104,7 @@ public class UserService {
 
         // Generate email text
         String salutation = lastName.isEmpty() ? "Dear app user" : "Dear Mr./Mrs. " + lastName;
-        String confirmationUrl = "https://api.pm.chillibits.com/user/confirm?confirmationToken=" + confirmationToken;
+        String confirmationUrl = "https://api.pm.chillibits.com/confirm?token=" + confirmationToken;
         String text = salutation + ",\r\nThank you for downloading the Particulate Matter App.\r\nWe send you this email to verify, " +
                 "that you have control over this email address. If you got this mail mistakenly, please ignore it. Otherwise, please " +
                 "click on the button below, to activate your user account and be able to sign in.\r\n\r\n" + confirmationUrl + "\r\n" +

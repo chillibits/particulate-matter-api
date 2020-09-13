@@ -97,13 +97,13 @@ public class UserController {
     /**
      * Confirms an user account
      *
-     * @param confirmationToken Randomly generated confirmation token, which is included in confirmation links
+     * @param token Randomly generated confirmation token, which is included in confirmation links
      * @return Redirect to the pmapp website to show a success / failure message
      */
-    @RequestMapping(method = RequestMethod.GET, path = "/user/confirm/{confirmationToken}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, path = "/confirm")
     @ApiOperation(value = "Confirms an user account", hidden = true)
-    public String confirmAccount(@PathVariable String confirmationToken) {
-        return "redirect:https://www.chillibits.com/pmapp?p=confirmation&param=" + (userService.confirmAccount(confirmationToken) ? "success" : "failure");
+    public String confirmAccount(@RequestParam String token) {
+        return "redirect:https://www.chillibits.com/pmapp?p=confirmation&param=" + (userService.confirmAccount(token) ? "success" : "failure");
     }
 
     /**
