@@ -38,6 +38,6 @@ public class RoutingConfig {
     @RequestMapping(method = RequestMethod.GET, path = "/confirm")
     @ApiOperation(value = "Confirms an user account", hidden = true)
     public String confirmAccount(@RequestParam String token) {
-        return "redirect:https://www.chillibits.com/pmapp?p=confirmation&param=" + (userService.confirmAccount(token) ? "success" : "failure");
+        return "redirect:https://www.chillibits.com/pmapp?p=confirmation/" + (userService.confirmAccount(token) ? "success" : "failure");
     }
 }
