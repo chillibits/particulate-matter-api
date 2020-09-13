@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.mongodb.repository.Meta;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -56,6 +57,7 @@ public interface SensorRepository extends JpaRepository<Sensor, Long> {
     Integer getSensorsMapActive(long minLastMeasurementTimestamp);
 
     @Modifying
+    @Transactional
     @Query("UPDATE Sensor s SET s.gpsLatitude = :#{#sensor.gpsLatitude}, s.gpsLongitude = :#{#sensor.gpsLongitude}, s.country = :#{#sensor.country}, s.city = :#{#sensor.city}, s.lastEditTimestamp = :#{#sensor.lastEditTimestamp}, s.notes = :#{#sensor.notes}, s.indoor = :#{#sensor.indoor}, s.published = :#{#sensor.published} WHERE s.chipId = :#{#sensor.chipId}")
     Integer updateSensor(Sensor sensor);
 }
