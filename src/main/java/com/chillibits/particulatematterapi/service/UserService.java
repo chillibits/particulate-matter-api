@@ -43,7 +43,7 @@ public class UserService {
     }
 
     public UserDto checkUserDataAndSignIn(String email, String password) throws UserDataException {
-        if(email == null || password == null) return null; // Return null if one of email or password is null
+        if(email == null || email.isBlank() || password == null || password.isBlank()) return null; // Return null if one of email or password is null
 
         User user = userRepository.findByEmail(email);
         if(user == null) throw new UserDataException(ErrorCode.USER_NOT_EXISTING);
