@@ -54,6 +54,7 @@ public class UserService {
             case User.EMAIL_CONFIRMATION_PENDING: throw new UserDataException(ErrorCode.USER_EMAIL_CONFIRMATION_PENDING);
             case User.SUSPENDED: throw new UserDataException(ErrorCode.USER_SUSPENDED);
             case User.LOCKED: throw new UserDataException(ErrorCode.USER_LOCKED);
+            default:
         }
         return convertToDto(user);
     }

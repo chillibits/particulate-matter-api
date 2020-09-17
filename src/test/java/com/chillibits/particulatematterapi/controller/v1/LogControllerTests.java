@@ -51,7 +51,7 @@ public class LogControllerTests {
     private final List<LogItemDto> assertData = getAssertData();
 
     @TestConfiguration
-    static class SensorControllerImplTestContextConfiguration {
+    static class LogControllerImplTestContextConfiguration {
 
         @Bean
         public LogController logController() {

@@ -53,7 +53,7 @@ public class StatsControllerTests {
     private SensorRepository sensorRepository;
 
     @TestConfiguration
-    static class PushControllerImplTestContextConfiguration {
+    static class StatsControllerImplTestContextConfiguration {
 
         @Bean
         public StatsController statsController() {

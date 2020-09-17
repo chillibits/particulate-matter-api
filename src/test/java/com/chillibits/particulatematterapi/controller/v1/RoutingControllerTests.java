@@ -39,7 +39,7 @@ public class RoutingControllerTests {
     private final List<User> testData = getTestData();
 
     @TestConfiguration
-    static class SensorControllerImplTestContextConfiguration {
+    static class RoutingControllerImplTestContextConfiguration {
 
         @Bean
         public RoutingController routingController() {

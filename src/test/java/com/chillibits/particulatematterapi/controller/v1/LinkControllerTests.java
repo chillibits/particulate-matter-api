@@ -64,7 +64,7 @@ public class LinkControllerTests {
     private final List<LinkDto> assertData = getAssertData();
 
     @TestConfiguration
-    static class SensorControllerImplTestContextConfiguration {
+    static class LinkControllerImplTestContextConfiguration {
 
         @Bean
         public LinkController linkController() {

@@ -114,6 +114,7 @@ public class UserControllerTests {
     @DisplayName("Test for signing in with email and password successfully")
     public void testSignIn() {
         UserDto result = userController.signIn("info@chillibits.com", "87654321");
+        assertEquals(getAssertData().get(1), result);
     }
 
     @Test

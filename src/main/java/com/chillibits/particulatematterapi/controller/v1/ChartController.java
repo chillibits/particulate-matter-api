@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Api(value = "Chart REST Endpoint", tags = "chart")
 public class ChartController {
 
-    private enum TYPES { chart, stock }
-    private enum DATA_TYPES { line, spline, area, areaspline, bar, column }
+    private enum Types { chart, stock }
+    private enum DataTypes { line, spline, area, areaspline, bar, column }
 
     @RequestMapping(method = RequestMethod.GET, value = "/chart")
     @ApiOperation(value = "Returns a chart of the measurements")
@@ -27,10 +27,10 @@ public class ChartController {
             @RequestParam(defaultValue = "0") int fieldIndex,
             @RequestParam(defaultValue = "800") int width,
             @RequestParam(defaultValue = "600") int height,
-            @RequestParam(defaultValue = "chart") TYPES chartType,
-            @RequestParam(defaultValue = "line") DATA_TYPES type
+            @RequestParam(defaultValue = "chart") Types chartType,
+            @RequestParam(defaultValue = "line") DataTypes type
     ) {
-        return chartType == TYPES.chart ? "chart.html" : "chart_stock.html";
+        return chartType == Types.chart ? "chart.html" : "chart_stock.html";
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/chart", params = "country")
@@ -43,10 +43,10 @@ public class ChartController {
             @RequestParam(defaultValue = "60") int granularity, // in minutes
             @RequestParam(defaultValue = "800") int width,
             @RequestParam(defaultValue = "600") int height,
-            @RequestParam(defaultValue = "chart") TYPES chartType,
-            @RequestParam(defaultValue = "line") DATA_TYPES type
+            @RequestParam(defaultValue = "chart") Types chartType,
+            @RequestParam(defaultValue = "line") DataTypes type
     ) {
-        return chartType == TYPES.chart ? "chart_country.html" : "chart_stock_country.html";
+        return chartType == Types.chart ? "chart_country.html" : "chart_stock_country.html";
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/chart", params = {"country", "city"})
@@ -60,9 +60,9 @@ public class ChartController {
             @RequestParam(defaultValue = "60") int granularity, // in minutes
             @RequestParam(defaultValue = "800") int width,
             @RequestParam(defaultValue = "600") int height,
-            @RequestParam(defaultValue = "chart") TYPES chartType,
-            @RequestParam(defaultValue = "line") DATA_TYPES type
+            @RequestParam(defaultValue = "chart") Types chartType,
+            @RequestParam(defaultValue = "line") DataTypes type
     ) {
-        return chartType == TYPES.chart ? "chart_city.html" : "chart_stock_city.html";
+        return chartType == Types.chart ? "chart_city.html" : "chart_stock_city.html";
     }
 }

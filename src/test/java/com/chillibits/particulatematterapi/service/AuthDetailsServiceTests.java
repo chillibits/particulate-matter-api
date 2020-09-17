@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -39,7 +40,7 @@ public class AuthDetailsServiceTests {
     private ClientRepository clientRepository;
 
     @TestConfiguration
-    static class PushControllerImplTestContextConfiguration {
+    static class AuthDetailsControllerImplTestContextConfiguration {
 
         @Autowired
         private ClientRepository clientRepository;
@@ -53,10 +54,8 @@ public class AuthDetailsServiceTests {
     @Before
     public void init() {
         // Setup fake method calls
-        when(clientRepository.findByName("pmapp"))
-                .thenReturn(Optional.of(getTestClient()));
-        when(clientRepository.findByName("pmapp-web"))
-                .thenReturn(Optional.empty());
+        when(clientRepository.findByName("pmapp")).thenReturn(Optional.of(getTestClient()));
+        when(clientRepository.findByName("pmapp-web")).thenReturn(Optional.empty());
     }
 
     // -------------------------------------------------- Test data ----------------------------------------------------
@@ -66,9 +65,13 @@ public class AuthDetailsServiceTests {
         UserDetails result = authDetailsService.loadUserByUsername("pmapp");
         assertEquals("pmapp", result.getUsername());
         assertEquals("1234567890", result.getPassword());
-        System.out.println(result.getAuthorities().toString());
         assertThat(result.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .containsExactlyInAnyOrder("A", "CBA");
+        assertTrue(result.isAccountNonExpired());
+        assertTrue(result.isAccountNonLocked());
+        assertTrue(result.isAccountNonExpired());
+        assertTrue(result.isCredentialsNonExpired());
+        assertTrue(result.isEnabled());
     }
 
     @Test
@@ -85,6 +88,9 @@ public class AuthDetailsServiceTests {
     // ---------------------------------------------------- Tests ------------------------------------------------------
 
     private Client getTestClient() {
-        return new Client(1, "pmapp", "Particluate Matter App", "1234567890", Client.TYPE_ANDROID_APP, Client.ROLE_APPLICATION + "," + Client.ROLE_APPLICATION_CHILLIBITS, Client.STATUS_ONLINE, true, 400, "4.0.0", 400, "4.0.0", "ChilliBits", "");
+        return new Client(1, "pmapp", "Particluate Matter App", "1234567890",
+                Client.TYPE_ANDROID_APP, Client.ROLE_APPLICATION + "," + Client.ROLE_APPLICATION_CHILLIBITS,
+                Client.STATUS_ONLINE, true, 400, "4.0.0", 400,
+                "4.0.0", "ChilliBits", "");
     }
 }

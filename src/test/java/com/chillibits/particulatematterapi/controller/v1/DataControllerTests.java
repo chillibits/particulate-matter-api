@@ -56,7 +56,7 @@ public class DataControllerTests {
     private final List<DataRecordCompressedDto> assertDataCompressed = getAssertDataForChipId12345678Compressed();
 
     @TestConfiguration
-    static class PushControllerImplTestContextConfiguration {
+    static class DataControllerImplTestContextConfiguration {
 
         @Bean
         public DataController dataController() {

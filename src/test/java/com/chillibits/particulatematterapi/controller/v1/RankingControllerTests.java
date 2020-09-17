@@ -49,7 +49,7 @@ public class RankingControllerTests {
     private final List<RankingItemCountryCompressedDto> assertDataCountry = getAssertDataCountry();
 
     @TestConfiguration
-    static class SensorControllerImplTestContextConfiguration {
+    static class RankingControllerImplTestContextConfiguration {
 
         @Bean
         public RankingController rankingController() {
