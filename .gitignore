@@ -30,5 +30,5 @@ build/
 .vscode/
 
 ### Downloaded libs ###
-src/main/resources/static/js/highcharts
-src/main/resources/static/js/jquery
+#src/main/resources/static/js/highcharts
+#src/main/resources/static/js/jquery

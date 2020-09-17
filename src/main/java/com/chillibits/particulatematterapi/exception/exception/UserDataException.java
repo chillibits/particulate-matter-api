@@ -15,10 +15,13 @@ public class UserDataException extends RuntimeException {
         put(ErrorCode.USER_ALREADY_EXISTS, "This user already exists");
         put(ErrorCode.USER_NOT_EXISTING, "This user does not exist");
         put(ErrorCode.PASSWORD_WRONG, "The user exists, but the provided password is wrong");
+        put(ErrorCode.USER_EMAIL_CONFIRMATION_PENDING, "The user exists, but the users email was not confirmed yet");
+        put(ErrorCode.USER_SUSPENDED, "This user is suspended");
+        put(ErrorCode.USER_LOCKED, "This user is locked");
     }};
 
     public UserDataException(ErrorCode errorCode) {
         // Error description as json string to process the error code on client side for localizing the error messages, presented to the users.
-        super("{\"error_code\": " + errorCode + ", \"description\": \"" + descriptions.get(errorCode) + "\"}");
+        super("{\"error_code\": " + errorCode.getCode() + ", \"description\": \"" + descriptions.get(errorCode) + "\"}");
     }
 }

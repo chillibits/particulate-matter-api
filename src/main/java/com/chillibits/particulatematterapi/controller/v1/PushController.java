@@ -48,8 +48,9 @@ public class PushController {
     public String pushData(@RequestBody DataRecordInsertUpdateDto record, @RequestHeader(value = "X-Sensor", defaultValue = "0") String xSensorHeader, @RequestHeader(value = "Sensor", defaultValue = "0") String sensorHeader) {
         // Set chip id value correctly
         if(record.getChipId() == 0 && xSensorHeader.contains("-")) record.setChipId(Long.parseLong(xSensorHeader.substring(xSensorHeader.indexOf("-") +1)));
-        if(record.getChipId() == 0 && sensorHeader.contains("-")) record.setChipId(Long.parseLong(sensorHeader.substring(xSensorHeader.indexOf("-") +1)));
+        if(record.getChipId() == 0 && sensorHeader.contains("-")) record.setChipId(Long.parseLong(sensorHeader.substring(sensorHeader.indexOf("-") +1)));
         // Push record into the database
-        return pushService.pushData(record) ? "ok" : "error";
+        pushService.pushData(record);
+        return "ok";
     }
 }

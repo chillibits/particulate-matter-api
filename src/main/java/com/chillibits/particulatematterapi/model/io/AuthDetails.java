@@ -20,12 +20,14 @@ public class AuthDetails implements UserDetails {
     private final String name;
     private final String secret;
     private final boolean active;
+    private final boolean locked;
     private final List<GrantedAuthority> authorities;
 
     public AuthDetails(Client client) {
         this.name = client.getName();
         this.secret = client.getSecret();
         this.active = client.isActive();
+        this.locked = client.getStatus() == Client.STATUS_SUPPORT_ENDED;
         this.authorities = Arrays.stream(client.getRoles().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
@@ -53,7 +55,7 @@ public class AuthDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !locked;
     }
 
     @Override

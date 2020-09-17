@@ -53,7 +53,7 @@ public class StatsControllerTests {
     private SensorRepository sensorRepository;
 
     @TestConfiguration
-    static class PushControllerImplTestContextConfiguration {
+    static class StatsControllerImplTestContextConfiguration {
 
         @Bean
         public StatsController statsController() {
@@ -127,9 +127,8 @@ public class StatsControllerTests {
     @DisplayName("Test for getting the stats of a single sensor - successful")
     public void testGetStatsOfSensorSuccess() {
         // Execute 3 times to skip 3 x thenReturn for fake function
-        template.count(Query.query(Criteria.where("timestamp").gte(0).lte(1)).cursorBatchSize(500), ConstantUtils.LOG_TABLE_NAME);
-        template.count(Query.query(Criteria.where("timestamp").gte(0).lte(1)).cursorBatchSize(500), ConstantUtils.LOG_TABLE_NAME);
-        template.count(Query.query(Criteria.where("timestamp").gte(0).lte(1)).cursorBatchSize(500), ConstantUtils.LOG_TABLE_NAME);
+        for(int i = 0; i < 3; i++)
+            template.count(Query.query(Criteria.where("timestamp").gte(0).lte(1)).cursorBatchSize(500), ConstantUtils.LOG_TABLE_NAME);
 
         StatsItemDto result = statsController.getStatsOfSensor(12345678);
         result.setTimestamp(0);

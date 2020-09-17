@@ -43,12 +43,19 @@ public class UserService {
     }
 
     public UserDto checkUserDataAndSignIn(String email, String password) throws UserDataException {
-        if(email == null || password == null) return null; // Return null if one of email or password is null
+        if(email == null || email.isBlank() || password == null || password.isBlank()) return null; // Return null if one of email or password is null
 
         User user = userRepository.findByEmail(email);
         if(user == null) throw new UserDataException(ErrorCode.USER_NOT_EXISTING);
-        if(!DigestUtils.sha256Hex(user.getPassword()).equals(password)) throw new UserDataException(ErrorCode.PASSWORD_WRONG);
+        if(!password.equals(user.getPassword()) && !DigestUtils.sha256Hex(password).equals(user.getPassword()))
+            throw new UserDataException(ErrorCode.PASSWORD_WRONG);
 
+        switch (user.getStatus()) {
+            case User.EMAIL_CONFIRMATION_PENDING: throw new UserDataException(ErrorCode.USER_EMAIL_CONFIRMATION_PENDING);
+            case User.SUSPENDED: throw new UserDataException(ErrorCode.USER_SUSPENDED);
+            case User.LOCKED: throw new UserDataException(ErrorCode.USER_LOCKED);
+            default:
+        }
         return convertToDto(user);
     }
 
@@ -98,7 +105,7 @@ public class UserService {
 
         // Generate email text
         String salutation = lastName.isEmpty() ? "Dear app user" : "Dear Mr./Mrs. " + lastName;
-        String confirmationUrl = "https://api.pm.chillibits.com/user/confirm?confirmationToken=" + confirmationToken;
+        String confirmationUrl = "https://api.pm.chillibits.com/confirm?token=" + confirmationToken;
         String text = salutation + ",\r\nThank you for downloading the Particulate Matter App.\r\nWe send you this email to verify, " +
                 "that you have control over this email address. If you got this mail mistakenly, please ignore it. Otherwise, please " +
                 "click on the button below, to activate your user account and be able to sign in.\r\n\r\n" + confirmationUrl + "\r\n" +

@@ -56,7 +56,7 @@ public class DataControllerTests {
     private final List<DataRecordCompressedDto> assertDataCompressed = getAssertDataForChipId12345678Compressed();
 
     @TestConfiguration
-    static class PushControllerImplTestContextConfiguration {
+    static class DataControllerImplTestContextConfiguration {
 
         @Bean
         public DataController dataController() {
@@ -271,6 +271,36 @@ public class DataControllerTests {
         result = result.replace("responseTime\":" + value, "responseTime\":0");
 
         assertEquals(getChartDataAssertStringNoData(), result);
+    }
+
+    @Test
+    @DisplayName("Test for getting json data for a chart for a single sensor for a certain timespan - failure")
+    public void testGetChartDataInvalidInputData() {
+        // Try it with a fieldIndex out of range
+        String result1 = dataController.getChartData(123456789L, time - 4 * timestampOffset, time, 10, 1);
+
+        // Replace responseTime, cause it's not the same every time
+        int indexStart = result1.indexOf("responseTime") + 14;
+        String value = result1.substring(indexStart, result1.indexOf("}", indexStart));
+        result1 = result1.replace("responseTime\":" + value, "responseTime\":0");
+
+        assertEquals(getChartDataAssertStringNoData(), result1);
+
+        // Try with a negative fieldIndex
+        Exception exception = assertThrows(DataAccessException.class, () ->
+                dataController.getChartData(123456789L, time - 4 * timestampOffset, time, -2, 1)
+        );
+
+        String expectedMessage = new DataAccessException(ErrorCode.INVALID_FIELD_INDEX).getMessage();
+        assertEquals(expectedMessage, exception.getMessage());
+
+        // Try with a negative mergeCount
+        exception = assertThrows(DataAccessException.class, () ->
+                dataController.getChartData(123456789L, time - 4 * timestampOffset, time, 0, -1)
+        );
+
+        expectedMessage = new DataAccessException(ErrorCode.INVALID_MERGE_COUNT).getMessage();
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
