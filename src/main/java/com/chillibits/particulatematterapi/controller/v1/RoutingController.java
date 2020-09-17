@@ -2,7 +2,7 @@
  * Copyright © Marc Auberer 2019 - 2020. All rights reserved
  */
 
-package com.chillibits.particulatematterapi.config;
+package com.chillibits.particulatematterapi.controller.v1;
 
 import com.chillibits.particulatematterapi.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class RoutingConfig {
+public class RoutingController {
 
     @Autowired
     private UserService userService;
