@@ -79,14 +79,14 @@ public class PushControllerTests {
     @Test
     @DisplayName("Test pushing a data records successfully (X-Header)")
     public void testPushDataXHeader() {
-        String result = pushController.pushData(testData.get(0), "esp8266-1234567", "0");
+        String result = pushController.pushData(testData.get(0), "esp8266-1234567", "");
         assertEquals("ok", result);
     }
 
     @Test
     @DisplayName("Test pushing a data records successfully (Header)")
     public void testPushDataHeader() {
-        String result = pushController.pushData(testData.get(0), "0", "esp8266-1234567");
+        String result = pushController.pushData(testData.get(0), "", "esp8266-1234567");
         assertEquals("ok", result);
     }
 
