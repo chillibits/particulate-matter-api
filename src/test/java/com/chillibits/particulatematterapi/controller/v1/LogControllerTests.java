@@ -10,7 +10,6 @@ import com.chillibits.particulatematterapi.model.db.data.LogItem;
 import com.chillibits.particulatematterapi.model.dto.LogItemDto;
 import com.chillibits.particulatematterapi.service.LogService;
 import com.chillibits.particulatematterapi.shared.ConstantUtils;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -31,6 +30,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -95,7 +95,7 @@ public class LogControllerTests {
         );
 
         String expectedMessage = new LogAccessException(ErrorCode.INVALID_TIME_RANGE_LOG).getMessage();
-        Assert.assertEquals(expectedMessage, exception.getMessage());
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -116,7 +116,7 @@ public class LogControllerTests {
         );
 
         String expectedMessage = new LogAccessException(ErrorCode.INVALID_TIME_RANGE_LOG).getMessage();
-        Assert.assertEquals(expectedMessage, exception.getMessage());
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -137,7 +137,7 @@ public class LogControllerTests {
         );
 
         String expectedMessage = new LogAccessException(ErrorCode.INVALID_TIME_RANGE_LOG).getMessage();
-        Assert.assertEquals(expectedMessage, exception.getMessage());
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -158,7 +158,7 @@ public class LogControllerTests {
         );
 
         String expectedMessage = new LogAccessException(ErrorCode.INVALID_TIME_RANGE_LOG).getMessage();
-        Assert.assertEquals(expectedMessage, exception.getMessage());
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -179,7 +179,7 @@ public class LogControllerTests {
         );
 
         String expectedMessage = new LogAccessException(ErrorCode.INVALID_TIME_RANGE_LOG).getMessage();
-        Assert.assertEquals(expectedMessage, exception.getMessage());
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     // -------------------------------------------------- Test data ----------------------------------------------------
