@@ -38,11 +38,12 @@ public class StatsServiceTests {
     private StatsService statsService;
     @MockBean
     private MongoTemplate template;
-    @MockBean
-    private SensorRepository sensorRepository;
 
     @TestConfiguration
     static class StatsServiceImplTestContextConfiguration {
+
+        @MockBean
+        private SensorRepository sensorRepository;
 
         @Bean
         public StatsService statsService() {
