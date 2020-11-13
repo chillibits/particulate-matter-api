@@ -11,10 +11,10 @@ import com.chillibits.particulatematterapi.model.dto.DataRecordCompressedDto;
 import com.chillibits.particulatematterapi.model.dto.DataRecordDto;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
 import com.chillibits.particulatematterapi.service.DataService;
-import org.junit.Before;
-import org.junit.Test;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -23,21 +23,21 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @ActiveProfiles("logging")
 @DisplayName("Data Controller")
 public class DataControllerTests {
@@ -74,7 +74,7 @@ public class DataControllerTests {
         }
     }
 
-    @Before
+    @Before("")
     public void init() {
         // Setup fake method calls
         when(template.find(any(Query.class), eq(DataRecord.class), eq("12345")))

@@ -7,10 +7,10 @@ package com.chillibits.particulatematterapi.controller.v1;
 import com.chillibits.particulatematterapi.model.db.main.User;
 import com.chillibits.particulatematterapi.repository.UserRepository;
 import com.chillibits.particulatematterapi.service.UserService;
-import org.junit.Before;
-import org.junit.Test;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -18,7 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +26,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @ActiveProfiles("logging")
 @DisplayName("Routing Controller")
 public class RoutingControllerTests {
@@ -60,7 +60,7 @@ public class RoutingControllerTests {
         private JavaMailSender mailSender;
     }
 
-    @Before
+    @Before("")
     public void init() {
         // Setup fake method calls
         when(userRepository.findByConfirmationToken(testData.get(0).getConfirmationToken())).thenReturn(testData.get(0));

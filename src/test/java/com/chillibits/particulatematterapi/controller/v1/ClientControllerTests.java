@@ -11,25 +11,25 @@ import com.chillibits.particulatematterapi.model.dto.ClientDto;
 import com.chillibits.particulatematterapi.model.dto.ClientInsertUpdateDto;
 import com.chillibits.particulatematterapi.repository.ClientRepository;
 import com.chillibits.particulatematterapi.service.ClientService;
-import org.junit.Before;
-import org.junit.Test;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
@@ -37,7 +37,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @ActiveProfiles("logging")
 @DisplayName("Client Controller")
 public class ClientControllerTests {
@@ -70,7 +70,7 @@ public class ClientControllerTests {
         }
     }
 
-    @Before
+    @Before("")
     public void init() {
         // Setup fake method calls
         when(clientRepository.findAll()).thenReturn(testData);

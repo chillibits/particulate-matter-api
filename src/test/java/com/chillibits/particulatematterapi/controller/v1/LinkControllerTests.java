@@ -17,18 +17,17 @@ import com.chillibits.particulatematterapi.repository.LinkRepository;
 import com.chillibits.particulatematterapi.repository.SensorRepository;
 import com.chillibits.particulatematterapi.repository.UserRepository;
 import com.chillibits.particulatematterapi.service.LinkService;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,7 +42,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @ActiveProfiles("logging")
 @DisplayName("Link Controller")
 public class LinkControllerTests {
@@ -82,7 +81,7 @@ public class LinkControllerTests {
         }
     }
 
-    @Before
+    @Before("")
     public void init() {
         // Setup fake method calls
         when(sensorRepository.findById(getInsertUpdateTestData().get(0).getSensor().getChipId())).thenReturn(Optional.of(sensorTestData.get(0)));
@@ -115,7 +114,7 @@ public class LinkControllerTests {
         );
 
         String expectedMessage = new LinkDataException(ErrorCode.SENSOR_NOT_EXISTING).getMessage();
-        Assert.assertEquals(expectedMessage, exception.getMessage());
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -126,7 +125,7 @@ public class LinkControllerTests {
         );
 
         String expectedMessage = new LinkDataException(ErrorCode.INVALID_LINK_DATA).getMessage();
-        Assert.assertEquals(expectedMessage, exception.getMessage());
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -137,7 +136,7 @@ public class LinkControllerTests {
         );
 
         String expectedMessage = new LinkDataException(ErrorCode.USER_NOT_EXISTING).getMessage();
-        Assert.assertEquals(expectedMessage, exception.getMessage());
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     // ------------------------------------------------- Update link ---------------------------------------------------
@@ -156,7 +155,7 @@ public class LinkControllerTests {
         );
 
         String expectedMessage = new LinkDataException(ErrorCode.INVALID_LINK_DATA).getMessage();
-        Assert.assertEquals(expectedMessage, exception.getMessage());
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     @Test
@@ -167,7 +166,7 @@ public class LinkControllerTests {
         );
 
         String expectedMessage = new LinkDataException(ErrorCode.USER_NOT_EXISTING).getMessage();
-        Assert.assertEquals(expectedMessage, exception.getMessage());
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     // ------------------------------------------------- Delete link ---------------------------------------------------

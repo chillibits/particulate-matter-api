@@ -10,10 +10,10 @@ import com.chillibits.particulatematterapi.model.db.data.LogItem;
 import com.chillibits.particulatematterapi.model.dto.LogItemDto;
 import com.chillibits.particulatematterapi.service.LogService;
 import com.chillibits.particulatematterapi.shared.ConstantUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -23,7 +23,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,7 +36,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @ActiveProfiles("logging")
 @DisplayName("Link Controller")
 public class LogControllerTests {
@@ -69,7 +69,7 @@ public class LogControllerTests {
         }
     }
 
-    @Before
+    @Before("")
     public void init() {
         when(template.find(any(Query.class), eq(LogItem.class)))
                 .thenReturn(testData)
