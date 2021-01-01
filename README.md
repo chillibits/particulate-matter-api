@@ -87,4 +87,4 @@ The registration process is as follows:
 -   We'll create a client record, which will have the appropriate access rights for our endpoints
 -   Let's go and start building your awesome application.
 
-© ChilliBits 2019 - 2020 (Designed and developed by Marc Auberer)
+© ChilliBits 2019 - 2021 (Designed and developed by Marc Auberer)
