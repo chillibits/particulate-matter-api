@@ -142,8 +142,8 @@ public class SensorService {
             sensor.setCity(place.getCity());
         } catch (Exception e) {
             log.warn("Was not able to retrieve country and city of sensor " + sensor.getChipId());
-            sensor.setCountry(ConstantUtils.BLANK_COLUMN);
-            sensor.setCity(ConstantUtils.BLANK_COLUMN);
+            sensor.setCountry(MapsPlaceResult.UNKNOWN_COUNTRY);
+            sensor.setCity(MapsPlaceResult.UNKNOWN_COUNTRY);
         }
     }
 
